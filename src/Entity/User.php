@@ -105,15 +105,6 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
     public function getFullName(): ?string
     {
         return $this->fullName;
