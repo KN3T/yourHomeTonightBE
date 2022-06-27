@@ -11,3 +11,20 @@
 
 /.idea/
 /.env
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+.php-cs-fixer.dist.php
+###< friendsofphp/php-cs-fixer ###
+
+phpunit.xml.dist
