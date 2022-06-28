@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Request;
+namespace App\Request\Hotel;
 
+use App\Request\BaseRequest;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateHotelRequest extends BaseRequest

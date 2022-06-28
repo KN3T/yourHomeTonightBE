@@ -9,7 +9,7 @@ use App\Mapping\CreateHotelRequestToAddress;
 use App\Mapping\CreateHotelRequestToHotel;
 use App\Repository\AddressRepository;
 use App\Repository\HotelRepository;
-use App\Request\CreateHotelRequest;
+use App\Request\Hotel\CreateHotelRequest;
 use Symfony\Component\Security\Core\Security;
 
 class HotelService
@@ -33,14 +33,10 @@ class HotelService
 
     }
 
-    public function create(CreateHotelRequest $createHotelRequest, Security $security): Hotel
+    public function create(CreateHotelRequest $createHotelRequest, User $currentUser): Hotel
     {
         $hotel = new Hotel();
         $address = new Address();
-        /**
-         * @var User $currentUser
-         */
-        $currentUser = $security->getUser();
         $this->createHotelRequestToAddress->mapping($createHotelRequest, $address);
         $this->createHotelRequestToHotel->mapping($createHotelRequest, $currentUser, $address, $hotel);
         $this->addressRepository->save($address);
@@ -48,4 +44,11 @@ class HotelService
         return $hotel;
     }
 
+    public function checkCreatedHotel(User $user): bool
+    {
+        if ($this->hotelRepository->findOneBy(['user' => $user]) != null) {
+            return true;
+        }
+        return false;
+    }
 }

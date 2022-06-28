@@ -2,12 +2,14 @@
 
 namespace App\Controller\API;
 
-use App\Request\CreateHotelRequest;
+use App\Entity\User;
+use App\Request\Hotel\CreateHotelRequest;
 use App\Service\HotelService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\HotelTransformer;
 use App\Transformer\ValidatorTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,6 +35,14 @@ class HotelController extends AbstractController
     {
     }
 
+    /**
+     * @param CreateHotelRequest $createHotelRequest
+     * @param Request $request
+     * @param HotelService $hotelService
+     * @param HotelTransformer $hotelTransformer
+     * @param Security $security
+     * @return JsonResponse
+     */
     #[Route('', name: 'create', methods: 'POST')]
     public function create(
         CreateHotelRequest $createHotelRequest,
@@ -40,14 +50,28 @@ class HotelController extends AbstractController
         HotelService       $hotelService,
         HotelTransformer   $hotelTransformer,
         Security           $security,
-    ) {
+    ): JsonResponse {
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $security->getUser();
+        if ($hotelService->checkCreatedHotel($currentUser)) {
+            return $this->error('Hotel already created', Response::HTTP_BAD_REQUEST);
+        }
         $array = json_decode($request->getContent(), true);
         $createHotelRequest->fromArray($array);
         $errors = $this->validator->validate($createHotelRequest);
         if (count($errors) > 0) {
             return $this->error($this->validatorTransformer->toArray($errors), Response::HTTP_BAD_REQUEST);
         }
-        $hotel = $hotelService->create($createHotelRequest, $security);
+        $hotel = $hotelService->create($createHotelRequest, $currentUser);
         $result = $hotelTransformer->toArray($hotel);
+        return $this->success($result, Response::HTTP_CREATED);
+    }
+
+    #[Route('', name: 'put', methods: 'PUT')]
+    public function put()
+    {
+
     }
 }

@@ -5,7 +5,7 @@ namespace App\Mapping;
 use App\Entity\Address;
 use App\Entity\Hotel;
 use App\Entity\User;
-use App\Request\CreateHotelRequest;
+use App\Request\Hotel\CreateHotelRequest;
 
 class CreateHotelRequestToHotel
 {

@@ -3,7 +3,7 @@
 namespace App\Mapping;
 
 use App\Entity\Address;
-use App\Request\CreateHotelRequest;
+use App\Request\Hotel\CreateHotelRequest;
 
 class CreateHotelRequestToAddress
 {
