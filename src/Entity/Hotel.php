@@ -19,9 +19,6 @@ class Hotel extends BaseEntity
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\Column(type: 'integer')]
-    private $rating;
-
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
@@ -70,18 +67,6 @@ class Hotel extends BaseEntity
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getRating(): ?int
-    {
-        return $this->rating;
-    }
-
-    public function setRating(int $rating): self
-    {
-        $this->rating = $rating;
 
         return $this;
     }
