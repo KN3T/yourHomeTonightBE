@@ -14,7 +14,6 @@ class HotelFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         foreach ($this->getHotelData() as [$id, $name, $description, $phoneNumber, $email, $rule]) {
-            $now = new \DateTime('now');
             $hotel = new Hotel();
             /**
              * @var User $user

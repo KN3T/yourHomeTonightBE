@@ -15,7 +15,6 @@ class AddressFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         foreach ($this->getAddressData() as [$id, $address, $city, $province]) {
-            $now = new \DateTime('now');
             $newAddress = new Address();
             /**
              * @var Hotel $hotel
