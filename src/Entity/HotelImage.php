@@ -21,7 +21,7 @@ class HotelImage extends BaseEntity
     private $createdAt;
 
     #[ORM\ManyToOne(targetEntity: Hotel::class, inversedBy: 'hotelImages')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $hotel;
 
     public function __construct()
