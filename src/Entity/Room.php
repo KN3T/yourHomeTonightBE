@@ -46,6 +46,9 @@ class Room extends BaseEntity
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: RoomImage::class, orphanRemoval: true)]
     private $roomImages;
 
+    #[ORM\ManyToOne(targetEntity: Hotel::class, inversedBy: 'rooms')]
+    private $hotel;
+
     public function __construct()
     {
         $this->roomImages = new ArrayCollection();
@@ -192,6 +195,18 @@ class Room extends BaseEntity
                 $roomImage->setRoom(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHotel(): ?Hotel
+    {
+        return $this->hotel;
+    }
+
+    public function setHotel(?Hotel $hotel): self
+    {
+        $this->hotel = $hotel;
 
         return $this;
     }

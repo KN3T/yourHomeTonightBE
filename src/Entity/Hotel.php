@@ -47,11 +47,15 @@ class Hotel extends BaseEntity
     #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: HotelImage::class)]
     private $hotelImages;
 
+    #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Room::class)]
+    private $rooms;
+
     public function __construct()
     {
         $this->hotelImages = new ArrayCollection();
         $this->createdAt = new DateTime('now');
         $this->updatedAt = new DateTime('now');
+        $this->rooms = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,6 +200,36 @@ class Hotel extends BaseEntity
             // set the owning side to null (unless already changed)
             if ($hotelImage->getHotel() === $this) {
                 $hotelImage->setHotel(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Room>
+     */
+    public function getRooms(): Collection
+    {
+        return $this->rooms;
+    }
+
+    public function addRoom(Room $room): self
+    {
+        if (!$this->rooms->contains($room)) {
+            $this->rooms[] = $room;
+            $room->setHotel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoom(Room $room): self
+    {
+        if ($this->rooms->removeElement($room)) {
+            // set the owning side to null (unless already changed)
+            if ($room->getHotel() === $this) {
+                $room->setHotel(null);
             }
         }
 
