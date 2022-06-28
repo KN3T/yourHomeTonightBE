@@ -1,0 +1,132 @@
+<?php
+
+namespace App\Request;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+class CreateHotelRequest extends BaseRequest
+{
+
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    private $name;
+
+
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    private $email;
+
+
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    private $phone;
+
+
+    #[Assert\Type('string')]
+    private $description;
+
+
+    #[Assert\Type('array')]
+    #[Assert\NotNull]
+    private $rules;
+
+    #[Assert\Type('array')]
+    #[Assert\NotNull]
+    private $images;
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone): void
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description): void
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRules()
+    {
+        return $this->rules;
+    }
+
+    /**
+     * @param mixed $rules
+     */
+    public function setRules($rules): void
+    {
+        $this->rules = $rules;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * @param mixed $images
+     */
+    public function setImages($images): void
+    {
+        $this->images = $images;
+    }
+}

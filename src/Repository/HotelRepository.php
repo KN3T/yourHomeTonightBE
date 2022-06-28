@@ -16,8 +16,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class HotelRepository extends BaseRepository
 {
+    public const HOTEL_ALIAS = "h";
+
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Hotel::class);
+        parent::__construct($registry, Hotel::class, static::HOTEL_ALIAS);
     }
 }
