@@ -28,7 +28,7 @@ class Hotel extends BaseEntity
     #[ORM\Column(type: 'string', length: 255)]
     private $email;
 
-    #[ORM\Column(type: 'array')]
+    #[ORM\Column(type: 'json')]
     private $rules = [];
 
     #[ORM\Column(type: 'datetime')]

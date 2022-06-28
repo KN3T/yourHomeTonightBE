@@ -31,7 +31,7 @@ class Room extends BaseEntity
     #[ORM\Column(type: 'integer')]
     private $children;
 
-    #[ORM\Column(type: 'array')]
+    #[ORM\Column(type: 'json')]
     private $asset = [];
 
     #[ORM\Column(type: 'text', nullable: true)]
