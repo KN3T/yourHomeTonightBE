@@ -21,6 +21,17 @@ class CreateHotelRequest extends BaseRequest
     #[Assert\NotBlank]
     private $phone;
 
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    private $city;
+
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    private $province;
+
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    private $address;
 
     #[Assert\Type('string')]
     private $description;
@@ -129,4 +140,54 @@ class CreateHotelRequest extends BaseRequest
     {
         $this->images = $images;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param mixed $city
+     */
+    public function setCity($city): void
+    {
+        $this->city = $city;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProvince()
+    {
+        return $this->province;
+    }
+
+    /**
+     * @param mixed $province
+     */
+    public function setProvince($province): void
+    {
+        $this->province = $province;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param mixed $address
+     */
+    public function setAddress($address): void
+    {
+        $this->address = $address;
+    }
+
+
 }

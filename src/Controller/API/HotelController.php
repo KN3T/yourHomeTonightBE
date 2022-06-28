@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/hotels', name: 'hotel_')]
@@ -38,6 +39,7 @@ class HotelController extends AbstractController
         Request            $request,
         HotelService       $hotelService,
         HotelTransformer   $hotelTransformer,
+        Security           $security,
     ) {
         $array = json_decode($request->getContent(), true);
         $createHotelRequest->fromArray($array);
@@ -45,8 +47,7 @@ class HotelController extends AbstractController
         if (count($errors) > 0) {
             return $this->error($this->validatorTransformer->toArray($errors), Response::HTTP_BAD_REQUEST);
         }
-        $hotel = $hotelService->create($createHotelRequest);
+        $hotel = $hotelService->create($createHotelRequest, $security);
         $result = $hotelTransformer->toArray($hotel);
-
     }
 }
