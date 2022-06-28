@@ -39,6 +39,9 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     #[ORM\Column(type: 'datetime')]
     private $updatedAt;
 
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Hotel::class, cascade: ['persist', 'remove'])]
+    private $hotel;
+
     public function __construct()
     {
         $now = new DateTime('now');
@@ -144,5 +147,22 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getHotel(): ?Hotel
+    {
+        return $this->hotel;
+    }
+
+    public function setHotel(Hotel $hotel): self
+    {
+        // set the owning side of the relation if necessary
+        if ($hotel->getUser() !== $this) {
+            $hotel->setUser($this);
+        }
+
+        $this->hotel = $hotel;
+
+        return $this;
     }
 }
