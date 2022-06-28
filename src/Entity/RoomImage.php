@@ -21,7 +21,7 @@ class RoomImage extends BaseEntity
     private $createdAt;
 
     #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'roomImages')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $room;
 
     public function __construct()
