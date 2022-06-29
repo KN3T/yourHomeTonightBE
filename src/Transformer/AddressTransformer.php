@@ -19,6 +19,7 @@ class AddressTransformer extends BaseTransformer
         foreach ($addresses as $address) {
             $result[] = $this->toArray($address);
         }
+
         return $result;
     }
 }

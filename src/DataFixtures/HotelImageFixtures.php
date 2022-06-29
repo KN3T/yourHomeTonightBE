@@ -18,16 +18,16 @@ class HotelImageFixtures extends Fixture implements DependentFixtureInterface
             /**
              * @var Hotel $hotel
              */
-            $hotel = $this->getReference('hotel_' . $hotelId);
+            $hotel = $this->getReference('hotel_'.$hotelId);
 
             /**
              * @var Image $image
              */
-            $image = $this->getReference('image_' . $imageId);
+            $image = $this->getReference('image_'.$imageId);
 
             $hotelImage->setHotel($hotel)->setImage($image);
             $manager->persist($hotelImage);
-            $this->addReference('hotel_image_' . $id, $hotelImage);
+            $this->addReference('hotel_image_'.$id, $hotelImage);
         }
         $manager->flush();
     }
