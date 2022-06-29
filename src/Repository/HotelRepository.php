@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Address;
 use App\Entity\Hotel;
 use App\Entity\Room;
 use App\Request\Hotel\ListHotelRequest;
@@ -35,8 +36,10 @@ class HotelRepository extends BaseRepository
         $hotels = $this->createQueryBuilder(static::HOTEL_ALIAS)
             ->select('h, MIN(r.price) AS price')
             ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
+            ->join(Address::class, 'ad', Join::WITH, 'ad.hotel = h.id')
             ->groupBy('r.hotel');
         $hotels = $this->filterByPrice($hotels, $hotelRequest->getMinPrice(), $hotelRequest->getMaxPrice());
+        $hotels = $this->filterByCity($hotels, $hotelRequest->getCity());
         $hotels = $this->orderByPrice($hotels, $hotelRequest);
         $hotels->setMaxResults($hotelRequest->getLimit())->setFirstResult($hotelRequest->getOffset());
         $total = (new Paginator($hotels))->count();
@@ -78,5 +81,13 @@ class HotelRepository extends BaseRepository
             ->setParameter('minPrice', $minPrice)
             ->andHaving('price <= :maxPrice')
             ->setParameter('maxPrice', $maxPrice);
+    }
+
+    private function filterByCity(QueryBuilder $hotels, mixed $city): QueryBuilder
+    {
+        if (null == $city) {
+            return $hotels;
+        }
+        return $hotels->where('ad.city = :city')->setParameter('city', $city);
     }
 }
