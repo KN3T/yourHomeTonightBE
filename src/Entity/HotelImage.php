@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\HotelImageRepository;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: HotelImageRepository::class)]
@@ -21,7 +20,6 @@ class HotelImage extends BaseEntity
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private $image;
-
 
     public function getId(): ?int
     {

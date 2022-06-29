@@ -2,11 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Address;
 use App\Entity\Hotel;
-use App\Entity\HotelImage;
 use App\Entity\Room;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -20,7 +17,7 @@ class RoomFixtures extends Fixture implements DependentFixtureInterface
             /**
              * @var Hotel $hotel
              */
-            $hotel = $this->getReference('hotel_' . $hotelId);
+            $hotel = $this->getReference('hotel_'.$hotelId);
 
             $room->setNumber($number)
                 ->setType($type)
@@ -31,7 +28,7 @@ class RoomFixtures extends Fixture implements DependentFixtureInterface
                 ->setDescription($description)
                 ->setHotel($hotel);
             $manager->persist($room);
-            $this->addReference('room_' . $id, $room);
+            $this->addReference('room_'.$id, $room);
         }
         $manager->flush();
     }

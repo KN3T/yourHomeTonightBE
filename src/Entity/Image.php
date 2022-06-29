@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
-class Image
+class Image extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

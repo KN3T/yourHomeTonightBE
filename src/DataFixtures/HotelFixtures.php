@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Hotel;
-use App\Entity\HotelImage;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -18,7 +17,7 @@ class HotelFixtures extends Fixture implements DependentFixtureInterface
             /**
              * @var User $user
              */
-            $user = $this->getReference('user_' . $id);
+            $user = $this->getReference('user_'.$id);
 
             $hotel->setName($name)
                 ->setDescription($description)
@@ -27,7 +26,7 @@ class HotelFixtures extends Fixture implements DependentFixtureInterface
                 ->setRules($rule)
                 ->setUser($user);
             $manager->persist($hotel);
-            $this->addReference('hotel_' . $id, $hotel);
+            $this->addReference('hotel_'.$id, $hotel);
         }
         $manager->flush();
     }

@@ -4,8 +4,6 @@ namespace App\DataFixtures;
 
 use App\Entity\Address;
 use App\Entity\Hotel;
-use App\Entity\HotelImage;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -19,7 +17,7 @@ class AddressFixtures extends Fixture implements DependentFixtureInterface
             /**
              * @var Hotel $hotel
              */
-            $hotel = $this->getReference('hotel_' . $id);
+            $hotel = $this->getReference('hotel_'.$id);
 
             $newAddress->setAddress($address)
                 ->setCity($city)

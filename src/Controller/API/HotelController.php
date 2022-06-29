@@ -12,6 +12,5 @@ class HotelController extends AbstractController
     #[Route('/', name: 'list')]
     public function index(): Response
     {
-        //
     }
 }
