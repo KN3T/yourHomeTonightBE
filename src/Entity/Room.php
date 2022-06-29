@@ -49,6 +49,9 @@ class Room extends BaseEntity
     #[ORM\ManyToOne(targetEntity: Hotel::class, inversedBy: 'rooms')]
     private $hotel;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $deletedAt;
+
     public function __construct()
     {
         $this->roomImages = new ArrayCollection();
@@ -207,6 +210,18 @@ class Room extends BaseEntity
     public function setHotel(?Hotel $hotel): self
     {
         $this->hotel = $hotel;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

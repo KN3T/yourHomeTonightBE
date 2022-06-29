@@ -14,48 +14,18 @@ class HotelImage extends BaseEntity
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $path;
-
-    #[ORM\Column(type: 'datetime')]
-    private $createdAt;
-
     #[ORM\ManyToOne(targetEntity: Hotel::class, inversedBy: 'hotelImages')]
     #[ORM\JoinColumn(nullable: true)]
     private $hotel;
 
-    public function __construct()
-    {
-        $this->createdAt = new DateTime('now');
-    }
+    #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private $image;
+
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): self
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     public function getHotel(): ?Hotel
@@ -66,6 +36,18 @@ class HotelImage extends BaseEntity
     public function setHotel(?Hotel $hotel): self
     {
         $this->hotel = $hotel;
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(Image $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

@@ -42,6 +42,9 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Hotel::class, cascade: ['persist', 'remove'])]
     private $hotel;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $deletedAt;
+
     public function __construct()
     {
         $now = new DateTime('now');
@@ -162,6 +165,18 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
         }
 
         $this->hotel = $hotel;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }
