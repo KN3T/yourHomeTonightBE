@@ -47,6 +47,7 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/hotels, methods: 'POST', roles: ROLE_HOTEL}
         - { path: ^/api/hotels, methods: 'PUT', roles: ROLE_HOTEL}
+        - { path: ^/images, methods: 'POST', roles: PUBLIC_ACCESS }
 
 when@test:
     security:

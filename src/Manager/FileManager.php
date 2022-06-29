@@ -38,12 +38,12 @@ class FileManager
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function upload(UploadedFile $file): string
+    public function upload(UploadedFile $file, string $path = ''): string
     {
         $fileName = $this->getFileName($file);
         $file->move($this->targetDirectory, $fileName);
         $filePath = $this->targetDirectory . $fileName;
-        $filePut = $this->s3Put($fileName, $filePath);
+        $filePut = $this->s3Put($path . $fileName, $filePath);
         unlink($filePath);
         $fileUrl = $filePut->get('ObjectURL');
         return $this->getRelativePath($fileUrl);
