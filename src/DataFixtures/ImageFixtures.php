@@ -15,7 +15,7 @@ class ImageFixtures extends Fixture
             $image->setPath($path);
 
             $manager->persist($image);
-            $this->addReference('image_' . $id, $image);
+            $this->addReference('image_'.$id, $image);
         }
 
         $manager->flush();
