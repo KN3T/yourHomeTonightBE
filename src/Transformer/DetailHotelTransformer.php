@@ -27,5 +27,4 @@ class DetailHotelTransformer extends BaseTransformer
 
         return $hotelArray;
     }
-
 }

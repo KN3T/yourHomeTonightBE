@@ -93,33 +93,21 @@ class ListHotelRequest extends BaseRequest
         $this->offset = $offset;
     }
 
-    /**
-     * @return float|null
-     */
     public function getMaxPrice(): ?float
     {
         return $this->maxPrice;
     }
 
-    /**
-     * @param float|null $maxPrice
-     */
     public function setMaxPrice(?float $maxPrice): void
     {
         $this->maxPrice = $maxPrice;
     }
 
-    /**
-     * @return float|null
-     */
     public function getMinPrice(): ?float
     {
         return $this->minPrice;
     }
 
-    /**
-     * @param float|null $minPrice
-     */
     public function setMinPrice(?float $minPrice): void
     {
         $this->minPrice = $minPrice;

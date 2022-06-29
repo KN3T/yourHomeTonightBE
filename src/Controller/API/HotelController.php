@@ -6,7 +6,6 @@ use App\Entity\Hotel;
 use App\Request\Hotel\ListHotelRequest;
 use App\Service\HotelService;
 use App\Traits\JsonResponseTrait;
-use App\Transformer\DetailHotelTransformer;
 use App\Transformer\ListHotelTransformer;
 use App\Transformer\ValidatorTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,6 +57,7 @@ class HotelController extends AbstractController
         HotelService $hotelService
     ): JsonResponse {
         $hotel = $hotelService->detail($hotel);
+
         return $this->success($hotelTransformer->toArray($hotel));
     }
 }

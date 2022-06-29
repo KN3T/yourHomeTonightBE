@@ -25,7 +25,6 @@ class HotelRepository extends BaseRepository
 {
     public const HOTEL_ALIAS = 'h';
 
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Hotel::class, static::HOTEL_ALIAS);
@@ -43,6 +42,7 @@ class HotelRepository extends BaseRepository
         $total = (new Paginator($hotels))->count();
         $hotels = $hotels->getQuery()->getResult();
         $hotels['total'] = $total;
+
         return $hotels;
     }
 
@@ -58,6 +58,7 @@ class HotelRepository extends BaseRepository
             ->setParameter('hotelId', $hotel->getId())
             ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
             ->groupBy('r.hotel');
+
         return $hotels->getQuery()->getOneOrNullResult();
     }
 
@@ -69,9 +70,10 @@ class HotelRepository extends BaseRepository
 
     private function filterByPrice(QueryBuilder $hotels, ?float $minPrice, ?float $maxPrice): QueryBuilder
     {
-        if ($minPrice == null || $maxPrice == null) {
+        if (null == $minPrice || null == $maxPrice) {
             return $hotels;
         }
+
         return $hotels->having('price >= :minPrice')
             ->setParameter('minPrice', $minPrice)
             ->andHaving('price <= :maxPrice')
