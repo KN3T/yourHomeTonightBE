@@ -16,6 +16,7 @@ class CreateHotelRequestToHotel
         $hotel->setPhone($createHotelRequest->getPhone());
         $hotel->setRules($createHotelRequest->getRules());
         $hotel->setDescription($createHotelRequest->getDescription());
+        $hotel->
         $hotel->setUser($user);
         $hotel->setAddress($address);
         return $hotel;
