@@ -42,7 +42,7 @@ class PutHotelRequest extends BaseRequest
 
     #[Assert\Type('array')]
     #[Assert\NotNull]
-    private $images;
+    private $images = [];
 
     /**
      * @return mixed
@@ -173,7 +173,7 @@ class PutHotelRequest extends BaseRequest
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getImages()
     {
@@ -181,9 +181,9 @@ class PutHotelRequest extends BaseRequest
     }
 
     /**
-     * @param mixed $images
+     * @param array $images
      */
-    public function setImages($images): void
+    public function setImages(array $images): void
     {
         $this->images = $images;
     }

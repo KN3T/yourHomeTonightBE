@@ -7,7 +7,6 @@ use App\Repository\HotelRepository;
 use App\Request\Hotel\ListHotelRequest;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use App\Entity\Address;
 use App\Entity\User;
 use App\Mapping\CreateHotelRequestToAddress;
 use App\Mapping\CreateHotelRequestToHotel;
@@ -24,47 +23,21 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class HotelService
 {
     private HotelRepository $hotelRepository;
-    private AddressRepository $addressRepository;
     private CreateHotelRequestToHotel $createHotelRequestToHotel;
-    private CreateHotelRequestToAddress $createHotelRequestToAddress;
-    private CreateHotelRequestToHotelImages $createHotelRequestToHotelImages;
     private PutHotelRequestToHotel      $putHotelRequestToHotel;
-    private PutHotelRequestToAddress    $putHotelRequestToAddress;
 
     public function __construct(
         HotelRepository             $hotelRepository,
-        AddressRepository           $addressRepository,
         CreateHotelRequestToHotel   $createHotelRequestToHotel,
-        CreateHotelRequestToAddress $createHotelRequestToAddress,
-        CreateHotelRequestToHotelImages $createHotelRequestToHotelImages,
         PutHotelRequestToHotel      $putHotelRequestToHotel,
-        PutHotelRequestToAddress    $putHotelRequestToAddress,
     )
     {
         $this->hotelRepository = $hotelRepository;
-        $this->addressRepository = $addressRepository;
         $this->createHotelRequestToHotel = $createHotelRequestToHotel;
-        $this->createHotelRequestToAddress = $createHotelRequestToAddress;
-        $this->createHotelRequestToHotelImages = $createHotelRequestToHotelImages;
-        $this->putHotelRequestToAddress = $putHotelRequestToAddress;
         $this->putHotelRequestToHotel = $putHotelRequestToHotel;
-
     }
 
-    public function findAll(ListHotelRequest $hotelRequest): array
-    {
-        return $this->hotelRepository->list($hotelRequest);
-    }
-
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
-    public function detail(Hotel $hotel): array
-    {
-        return $this->hotelRepository->detail($hotel);
-    }
-    public function create(CreateHotelRequest $createHotelRequest, User $currentUser): Hotel
+    public function create(CreateHotelRequest $createHotelRequest): Hotel
     {
         $hotel = new Hotel();
         $this->createHotelRequestToHotel->mapping($createHotelRequest, $hotel);
@@ -73,13 +46,7 @@ class HotelService
     }
     public function put(PutHotelRequest $putHotelRequest, Hotel $hotel): Hotel
     {
-        $address = $hotel->getAddress();
-        $this->putHotelRequestToAddress->mapping($putHotelRequest, $address);
         $this->putHotelRequestToHotel->mapping($putHotelRequest, $hotel);
-        $date = new DateTime('now');
-        $address->setUpdatedAt($date);
-        $hotel->setUpdatedAt($date);
-        $this->addressRepository->save($address);
         $this->hotelRepository->save($hotel);
         return $hotel;
     }
@@ -98,5 +65,18 @@ class HotelService
             return true;
         }
         return false;
+    }
+    public function findAll(ListHotelRequest $hotelRequest): array
+    {
+        return $this->hotelRepository->list($hotelRequest);
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function detail(Hotel $hotel): array
+    {
+        return $this->hotelRepository->detail($hotel);
     }
 }

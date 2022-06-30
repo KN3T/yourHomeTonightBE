@@ -48,7 +48,6 @@ class CreateHotelRequestToHotel
         $hotel->setAddress($address);
         $hotelImages = $this->createHotelRequestToHotelImages->mapping($createHotelRequest, $hotel);
         foreach ($hotelImages as $hotelImage) {
-            $hotelImage->setHotel($hotel);
             $this->hotelImageRepository->save($hotelImage);
             $hotel->addHotelImage($hotelImage);
         }

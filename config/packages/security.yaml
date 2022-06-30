@@ -48,7 +48,7 @@ security:
         - { path: ^/api/hotels, methods: 'DELETE', roles: ROLE_HOTEL }
         - { path: ^/api/hotels, methods: 'POST', roles: ROLE_HOTEL}
         - { path: ^/api/hotels, methods: 'PUT', roles: ROLE_HOTEL}
-        - { path: ^/images, methods: 'POST', roles: ROLE_HOTEL }
+        - { path: ^/api/images, methods: 'POST', roles: ROLE_HOTEL }
 
 when@test:
     security:

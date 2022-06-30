@@ -8,7 +8,6 @@ use App\Repository\ImageRepository;
 use App\Request\File\UploadImageRequest;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImageService
 {
@@ -36,5 +35,10 @@ class ImageService
             $result[] = $image;
         }
         return $result;
+    }
+
+    public function delete(Image $image)
+    {
+        $this->imageRepository->remove($image);
     }
 }
