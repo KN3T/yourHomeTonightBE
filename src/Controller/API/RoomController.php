@@ -5,8 +5,11 @@ namespace App\Controller\API;
 use App\Entity\Hotel;
 use App\Request\Room\CreateRoomRequest;
 use App\Service\RoomService;
+use App\Repository\HotelRepository;
+use App\Request\Room\ListRoomRequest;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\CreateRoomTransformer;
+use App\Transformer\ListRoomTransformer;
 use App\Transformer\ValidatorTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,5 +47,29 @@ class RoomController extends AbstractController
         $room = $roomService->create($createRoomRequest, $hotel);
         $result = $createRoomTransformer->toArray($room);
         return $this->success($result, Response::HTTP_CREATED);
+    }
+
+    #[Route('/hotels/{hotelId}/rooms', name: 'list', methods: ['GET'])]
+    public function index(
+        Request $request,
+        $hotelId,
+        ListRoomRequest $listRoomRequest,
+        RoomService $roomService,
+        HotelRepository $hotelRepository,
+        ListRoomTransformer $listRoomTransformer
+    ): Response {
+        $filters = $request->query->all();
+        $roomRequest = $listRoomRequest->fromArray($filters);
+        $errors = $this->validator->validate($roomRequest);
+        if (count($errors) > 0) {
+            $errorsTransformer = $this->validatorTransformer->toArray($errors);
+
+            return $this->error($errorsTransformer);
+        }
+        $hotel = $hotelRepository->find($hotelId);
+        $room = $roomService->findAll($hotel, $roomRequest);
+        $roomResult = $listRoomTransformer->listToArray($room);
+
+        return $this->success($roomResult);
     }
 }
