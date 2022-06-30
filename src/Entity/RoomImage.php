@@ -13,7 +13,7 @@ class RoomImage extends BaseEntity
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'roomImages')]
+    #[ORM\ManyToOne(targetEntity: Room::class, cascade: ['persist'], inversedBy: 'roomImages')]
     #[ORM\JoinColumn(nullable: true)]
     private $room;
 
