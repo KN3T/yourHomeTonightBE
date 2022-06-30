@@ -1,5 +1,5 @@
 parameters:
-
+    s3url: '%env(S3_URL)%'
 services:
     _defaults:
         autowire: true
@@ -35,11 +35,11 @@ services:
             - [ setAnnotationReader, [ '@annotation_reader' ] ]
     Aws\S3\S3Client:
         arguments:
-            - version: '%env(S3_BUCKET_VERSION)%'
-              region: '%env(S3_BUCKET_REGION)%'
-              credentials:
-                  key: '%env(AWS_KEY_ID)%'
-                  secret: '%env(AWS_SECRET)%'
+            -   version: '%env(S3_BUCKET_VERSION)%'
+                region: '%env(S3_BUCKET_REGION)%'
+                credentials:
+                    key: '%env(AWS_KEY_ID)%'
+                    secret: '%env(AWS_SECRET)%'
     App\Manager\FileManager:
         arguments:
             $targetDirectory: '%kernel.project_dir%/public/upload/image/'
