@@ -21,31 +21,18 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class HotelService
 {
     private HotelRepository $hotelRepository;
-    private AddressRepository $addressRepository;
     private CreateHotelRequestToHotel $createHotelRequestToHotel;
-    private CreateHotelRequestToAddress $createHotelRequestToAddress;
-    private CreateHotelRequestToHotelImages $createHotelRequestToHotelImages;
     private PutHotelRequestToHotel      $putHotelRequestToHotel;
-    private PutHotelRequestToAddress    $putHotelRequestToAddress;
 
     public function __construct(
         HotelRepository             $hotelRepository,
-        AddressRepository           $addressRepository,
         CreateHotelRequestToHotel   $createHotelRequestToHotel,
-        CreateHotelRequestToAddress $createHotelRequestToAddress,
-        CreateHotelRequestToHotelImages $createHotelRequestToHotelImages,
         PutHotelRequestToHotel      $putHotelRequestToHotel,
-        PutHotelRequestToAddress    $putHotelRequestToAddress,
     )
     {
         $this->hotelRepository = $hotelRepository;
-        $this->addressRepository = $addressRepository;
         $this->createHotelRequestToHotel = $createHotelRequestToHotel;
-        $this->createHotelRequestToAddress = $createHotelRequestToAddress;
-        $this->createHotelRequestToHotelImages = $createHotelRequestToHotelImages;
-        $this->putHotelRequestToAddress = $putHotelRequestToAddress;
         $this->putHotelRequestToHotel = $putHotelRequestToHotel;
-
     }
 
     public function create(CreateHotelRequest $createHotelRequest): Hotel
