@@ -42,9 +42,10 @@ security:
     role_hierarchy:
         ROLE_HOTEL: ROLE_HOTEL
         ROLE_ADMIN: [ ROLE_USER, ROLE_HOTEL ]
-#        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
+    #        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/hotels, methods: 'DELETE', roles: ROLE_HOTEL }
 
 when@test:
     security:

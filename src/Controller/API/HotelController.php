@@ -62,7 +62,7 @@ class HotelController extends AbstractController
         return $this->success($hotelTransformer->toArray($hotel));
     }
 
-    #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
     public function delete(Hotel $hotel, HotelRepository $hotelRepository): JsonResponse
     {
         $hotelRepository->remove($hotel);
