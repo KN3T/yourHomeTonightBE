@@ -3,6 +3,7 @@
 namespace App\Controller\API;
 
 use App\Entity\Hotel;
+use App\Repository\HotelRepository;
 use App\Request\Hotel\ListHotelRequest;
 use App\Service\HotelService;
 use App\Traits\JsonResponseTrait;
@@ -59,5 +60,12 @@ class HotelController extends AbstractController
         $hotel = $hotelService->detail($hotel);
 
         return $this->success($hotelTransformer->toArray($hotel));
+    }
+
+    #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    public function delete(Hotel $hotel, HotelRepository $hotelRepository): JsonResponse
+    {
+        $hotelRepository->remove($hotel);
+        return $this->success([], Response::HTTP_NO_CONTENT);
     }
 }
