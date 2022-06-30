@@ -5,13 +5,17 @@ namespace App\Controller\API;
 use App\Entity\Hotel;
 use App\Request\Room\CreateRoomRequest;
 use App\Service\RoomService;
+use App\Entity\Room;
 use App\Repository\HotelRepository;
+use App\Repository\RoomRepository;
 use App\Request\Room\ListRoomRequest;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\CreateRoomTransformer;
 use App\Transformer\ListRoomTransformer;
 use App\Transformer\ValidatorTransformer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +34,7 @@ class RoomController extends AbstractController
         $this->validator = $validator;
     }
 
+    #[Route('/hotels/{id}/rooms', name: 'list', methods: ['GET'])]
     #[Route('/hotels/{id}/rooms', name: 'create_rooms')]
     public function create(
         Request           $request,
@@ -49,13 +54,13 @@ class RoomController extends AbstractController
         return $this->success($result, Response::HTTP_CREATED);
     }
 
-    #[Route('/hotels/{hotelId}/rooms', name: 'list', methods: ['GET'])]
+    #[Route('/hotels/{id}/rooms', name: 'list', methods: ['GET'])]
     public function index(
-        Request $request,
-        $hotelId,
-        ListRoomRequest $listRoomRequest,
-        RoomService $roomService,
-        HotelRepository $hotelRepository,
+        Request             $request,
+        Hotel               $hotel,
+        ListRoomRequest     $listRoomRequest,
+        RoomService         $roomService,
+        HotelRepository     $hotelRepository,
         ListRoomTransformer $listRoomTransformer
     ): Response {
         $filters = $request->query->all();
@@ -66,10 +71,18 @@ class RoomController extends AbstractController
 
             return $this->error($errorsTransformer);
         }
-        $hotel = $hotelRepository->find($hotelId);
         $room = $roomService->findAll($hotel, $roomRequest);
         $roomResult = $listRoomTransformer->listToArray($room);
 
         return $this->success($roomResult);
+    }
+
+    #[Route('/hotels/{hotelId}/rooms/{id}', name: 'delete', methods: ['DELETE'])]
+    #[Entity('hotel', options: ['id' => 'hotelId'])]
+    public function delete(Hotel $hotel, Room $room, RoomRepository $roomRepository): JsonResponse
+    {
+        $roomRepository->remove($room);
+
+        return $this->success([], Response::HTTP_NO_CONTENT);
     }
 }

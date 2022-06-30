@@ -3,10 +3,13 @@
 namespace App\Request\Room;
 
 use App\Request\BaseRequest;
+use App\Traits\DateTimeTraits;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ListRoomRequest extends BaseRequest
 {
+    use DateTimeTraits;
+
     public const ORDER_BY_LIST = ['asc', 'desc'];
     public const DEFAULT_SORT_BY = 'price';
     public const DEFAULT_ORDER = 'asc';
@@ -39,6 +42,12 @@ class ListRoomRequest extends BaseRequest
 
     #[Assert\Type('numeric')]
     private ?float $minPrice = null;
+
+    #[Assert\Type('numeric')]
+    private ?int $checkIn = null;
+
+    #[Assert\Type('numeric')]
+    private ?int $checkOut = null;
 
     /**
      * @return null
@@ -166,5 +175,37 @@ class ListRoomRequest extends BaseRequest
     public function setMinPrice(?float $minPrice): void
     {
         $this->minPrice = $minPrice;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCheckIn(): ?string
+    {
+        return $this->timestampToDateTime($this->checkIn);
+    }
+
+    /**
+     * @param int|null $checkIn
+     */
+    public function setCheckIn(?int $checkIn): void
+    {
+        $this->checkIn = $checkIn;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCheckOut(): ?string
+    {
+        return $this->timestampToDateTime($this->checkOut);
+    }
+
+    /**
+     * @param int|null $checkOut
+     */
+    public function setCheckOut(?int $checkOut): void
+    {
+        $this->checkOut = $checkOut;
     }
 }
