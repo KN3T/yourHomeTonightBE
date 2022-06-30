@@ -48,7 +48,7 @@ class HotelService
 
     }
 
-    public function create(CreateHotelRequest $createHotelRequest, User $currentUser): Hotel
+    public function create(CreateHotelRequest $createHotelRequest): Hotel
     {
         $hotel = new Hotel();
         $this->createHotelRequestToHotel->mapping($createHotelRequest, $hotel);
@@ -57,13 +57,7 @@ class HotelService
     }
     public function put(PutHotelRequest $putHotelRequest, Hotel $hotel): Hotel
     {
-        $address = $hotel->getAddress();
-        $this->putHotelRequestToAddress->mapping($putHotelRequest, $address);
         $this->putHotelRequestToHotel->mapping($putHotelRequest, $hotel);
-        $date = new DateTime('now');
-        $address->setUpdatedAt($date);
-        $hotel->setUpdatedAt($date);
-        $this->addressRepository->save($address);
         $this->hotelRepository->save($hotel);
         return $hotel;
     }

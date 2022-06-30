@@ -67,8 +67,7 @@ class HotelController extends AbstractController
         if (count($errors) > 0) {
             return $this->error($this->validatorTransformer->toArray($errors), Response::HTTP_BAD_REQUEST);
         }
-        $hotel = $hotelService->create($createHotelRequest, $currentUser);
-        dd($hotel);
+        $hotel = $hotelService->create($createHotelRequest);
         $result = $hotelTransformer->toArray($hotel);
         return $this->success($result, Response::HTTP_CREATED);
     }
