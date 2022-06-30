@@ -4,13 +4,14 @@ namespace App\Controller\API;
 
 use App\Entity\Hotel;
 use App\Request\Room\CreateRoomRequest;
+use App\Service\HotelService;
 use App\Service\RoomService;
 use App\Entity\Room;
-use App\Repository\HotelRepository;
 use App\Repository\RoomRepository;
 use App\Request\Room\ListRoomRequest;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\CreateRoomTransformer;
+use App\Transformer\ListHotelTransformer;
 use App\Transformer\ListRoomTransformer;
 use App\Transformer\ValidatorTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
@@ -35,26 +36,6 @@ class RoomController extends AbstractController
     }
 
     #[Route('/hotels/{id}/rooms', name: 'list', methods: ['GET'])]
-    #[Route('/hotels/{id}/rooms', name: 'create_rooms')]
-    public function create(
-        Request           $request,
-        RoomService       $roomService,
-        CreateRoomRequest $createRoomRequest,
-        Hotel             $hotel,
-        CreateRoomTransformer $createRoomTransformer,
-    ) {
-        $request = json_decode($request->getContent(), true);
-        $createRoomRequest->fromArray($request);
-        $errors = $this->validator->validate($createRoomRequest);
-        if (count($errors) > 0) {
-            return $this->error($this->validatorTransformer->toArray($errors), Response::HTTP_BAD_REQUEST);
-        }
-        $room = $roomService->create($createRoomRequest, $hotel);
-        $result = $createRoomTransformer->toArray($room);
-        return $this->success($result, Response::HTTP_CREATED);
-    }
-
-    #[Route('/hotels/{id}/rooms', name: 'list', methods: ['GET'])]
     public function index(
         Request             $request,
         Hotel               $hotel,
@@ -74,6 +55,25 @@ class RoomController extends AbstractController
         $roomResult = $listRoomTransformer->listToArray($room);
 
         return $this->success($roomResult);
+    }
+
+    #[Route('/hotels/{id}/rooms', name: 'create_rooms', methods: ['POST'])]
+    public function create(
+        Request               $request,
+        RoomService           $roomService,
+        CreateRoomRequest     $createRoomRequest,
+        Hotel                 $hotel,
+        CreateRoomTransformer $createRoomTransformer,
+    ) {
+        $request = json_decode($request->getContent(), true);
+        $createRoomRequest->fromArray($request);
+        $errors = $this->validator->validate($createRoomRequest);
+        if (count($errors) > 0) {
+            return $this->error($this->validatorTransformer->toArray($errors), Response::HTTP_BAD_REQUEST);
+        }
+        $room = $roomService->create($createRoomRequest, $hotel);
+        $result = $createRoomTransformer->toArray($room);
+        return $this->success($result, Response::HTTP_CREATED);
     }
 
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'delete', methods: ['DELETE'])]
