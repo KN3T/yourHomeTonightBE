@@ -1,5 +1,6 @@
 parameters:
     s3url: '%env(S3_URL)%'
+    stripeKey: '%env(STRIPE_SECRET_KEY)%'
 services:
     _defaults:
         autowire: true
