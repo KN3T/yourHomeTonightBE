@@ -45,6 +45,10 @@ security:
 #        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/hotels, methods: 'DELETE', roles: ROLE_HOTEL }
+        - { path: ^/api/hotels, methods: 'POST', roles: ROLE_HOTEL}
+        - { path: ^/api/hotels, methods: 'PUT', roles: ROLE_HOTEL}
+        - { path: ^/api/images, methods: 'POST', roles: ROLE_HOTEL }
 
 when@test:
     security:

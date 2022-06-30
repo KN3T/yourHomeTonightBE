@@ -3,10 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\RoomRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use DateTime;
 
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 class Room extends BaseEntity
@@ -31,7 +31,7 @@ class Room extends BaseEntity
     #[ORM\Column(type: 'integer')]
     private $children;
 
-    #[ORM\Column(type: 'array')]
+    #[ORM\Column(type: 'json')]
     private $asset = [];
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -45,6 +45,12 @@ class Room extends BaseEntity
 
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: RoomImage::class, orphanRemoval: true)]
     private $roomImages;
+
+    #[ORM\ManyToOne(targetEntity: Hotel::class, inversedBy: 'rooms')]
+    private $hotel;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $deletedAt;
 
     public function __construct()
     {
@@ -192,6 +198,30 @@ class Room extends BaseEntity
                 $roomImage->setRoom(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHotel(): ?Hotel
+    {
+        return $this->hotel;
+    }
+
+    public function setHotel(?Hotel $hotel): self
+    {
+        $this->hotel = $hotel;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

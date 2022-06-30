@@ -1,5 +1,5 @@
 parameters:
-
+    s3url: '%env(S3_URL)%'
 services:
     _defaults:
         autowire: true
@@ -28,3 +28,22 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
 
+    Gedmo\SoftDeleteable\SoftDeleteableListener:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]
+    Aws\S3\S3Client:
+        arguments:
+            -   version: '%env(S3_BUCKET_VERSION)%'
+                region: '%env(S3_BUCKET_REGION)%'
+                credentials:
+                    key: '%env(AWS_KEY_ID)%'
+                    secret: '%env(AWS_SECRET)%'
+    App\Manager\FileManager:
+        arguments:
+            $targetDirectory: '%kernel.project_dir%/public/upload/image/'
+            $bucketName: '%env(S3_BUCKET_NAME)%'
+    App\Transformer\ImageTransformer:
+        arguments:
+            $s3Url: '%env(S3_URL)%'

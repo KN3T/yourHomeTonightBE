@@ -7,8 +7,10 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: HotelRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class Hotel extends BaseEntity
 {
     #[ORM\Id]
@@ -19,9 +21,6 @@ class Hotel extends BaseEntity
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\Column(type: 'integer')]
-    private $rating;
-
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
@@ -31,7 +30,7 @@ class Hotel extends BaseEntity
     #[ORM\Column(type: 'string', length: 255)]
     private $email;
 
-    #[ORM\Column(type: 'array')]
+    #[ORM\Column(type: 'json')]
     private $rules = [];
 
     #[ORM\Column(type: 'datetime')]
@@ -50,11 +49,18 @@ class Hotel extends BaseEntity
     #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: HotelImage::class)]
     private $hotelImages;
 
+    #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Room::class)]
+    private $rooms;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $deletedAt;
+
     public function __construct()
     {
         $this->hotelImages = new ArrayCollection();
         $this->createdAt = new DateTime('now');
         $this->updatedAt = new DateTime('now');
+        $this->rooms = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,18 +76,6 @@ class Hotel extends BaseEntity
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getRating(): ?int
-    {
-        return $this->rating;
-    }
-
-    public function setRating(int $rating): self
-    {
-        $this->rating = $rating;
 
         return $this;
     }
@@ -213,6 +207,48 @@ class Hotel extends BaseEntity
                 $hotelImage->setHotel(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Room>
+     */
+    public function getRooms(): Collection
+    {
+        return $this->rooms;
+    }
+
+    public function addRoom(Room $room): self
+    {
+        if (!$this->rooms->contains($room)) {
+            $this->rooms[] = $room;
+            $room->setHotel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoom(Room $room): self
+    {
+        if ($this->rooms->removeElement($room)) {
+            // set the owning side to null (unless already changed)
+            if ($room->getHotel() === $this) {
+                $room->setHotel(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }
