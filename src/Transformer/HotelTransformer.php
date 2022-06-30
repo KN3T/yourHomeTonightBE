@@ -6,7 +6,7 @@ use App\Entity\Hotel;
 
 class HotelTransformer extends BaseTransformer
 {
-    public const ALLOW = ['id', 'name', 'description', 'phone', 'email','rules'];
+    public const ALLOW = ['id', 'name', 'description', 'phone', 'email', 'rules'];
     private AddressTransformer $addressTransformer;
     private HotelImageTransformer $hotelImageTransformer;
 
@@ -18,9 +18,10 @@ class HotelTransformer extends BaseTransformer
 
     public function toArray(Hotel $hotel): array
     {
-        $result =  $this->transform($hotel, static::ALLOW);
+        $result = $this->transform($hotel, static::ALLOW);
         $result['address'] = $this->addressTransformer->toArray($hotel->getAddress());
         $result['images'] = $this->hotelImageTransformer->listToArray($hotel->getHotelImages());
+
         return $result;
     }
 
@@ -30,6 +31,7 @@ class HotelTransformer extends BaseTransformer
         foreach ($hotels as $hotel) {
             $result[] = $this->toArray($hotel);
         }
+
         return $result;
     }
 }

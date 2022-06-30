@@ -38,6 +38,7 @@ class AddressRepository extends BaseRepository
         if (null == $searchCity) {
             return $this->listTopCity($addressQuery, $cityRequest);
         }
+
         return $this->searchCity($addressQuery, $searchCity);
     }
 
@@ -50,8 +51,7 @@ class AddressRepository extends BaseRepository
 
     private function searchCity(QueryBuilder $addressQuery, $searchCity)
     {
-        return $addressQuery->where('ad.city LIKE :city')->setParameter('city', '%' . $searchCity . '%')
+        return $addressQuery->where('ad.city LIKE :city')->setParameter('city', '%'.$searchCity.'%')
             ->getQuery()->getResult();
-
     }
 }

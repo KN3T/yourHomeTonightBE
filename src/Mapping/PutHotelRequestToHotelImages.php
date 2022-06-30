@@ -6,7 +6,6 @@ use App\Entity\Hotel;
 use App\Entity\HotelImage;
 use App\Repository\HotelImageRepository;
 use App\Repository\ImageRepository;
-use App\Request\Hotel\CreateHotelRequest;
 use App\Request\Hotel\PutHotelRequest;
 
 class PutHotelRequestToHotelImages
@@ -27,7 +26,7 @@ class PutHotelRequestToHotelImages
         foreach ($imageIDs as $imageID) {
             $image = $this->imageRepository->find($imageID);
             $hotelImageExist = $this->hotelImageRepository->findOneBy(['image' => $image]);
-            if ($hotelImageExist != null) {
+            if (null != $hotelImageExist) {
                 $result[] = $hotelImageExist;
                 continue;
             }
@@ -45,6 +44,7 @@ class PutHotelRequestToHotelImages
                 $this->hotelImageRepository->remove($hotelImage);
             }
         }
+
         return $result;
     }
 
@@ -58,6 +58,7 @@ class PutHotelRequestToHotelImages
         foreach ($hotelImages2 as $hotelImage) {
             $arr2[] = $hotelImage->getId();
         }
+
         return array_diff($arr1, $arr2);
     }
 }

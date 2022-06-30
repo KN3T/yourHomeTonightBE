@@ -13,8 +13,10 @@ class HotelImageTransformer extends BaseTransformer
         $result = [];
         $result['imageId'] = $hotelImage->getImage()->getId();
         $result['src'] = $hotelImage->getImage()->getPath();
+
         return $result;
     }
+
     public function listToArray($hotelImages): array
     {
         $result = [];

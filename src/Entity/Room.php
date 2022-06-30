@@ -26,7 +26,7 @@ class Room extends BaseEntity
     private $price;
 
     #[ORM\Column(type: 'integer')]
-    private $guest;
+    private $adults;
 
     #[ORM\Column(type: 'integer')]
     private $children;
@@ -51,6 +51,9 @@ class Room extends BaseEntity
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $deletedAt;
+
+    #[ORM\Column(type: 'integer')]
+    private $beds;
 
     public function __construct()
     {
@@ -100,14 +103,14 @@ class Room extends BaseEntity
         return $this;
     }
 
-    public function getGuest(): ?int
+    public function getAdults(): ?int
     {
-        return $this->guest;
+        return $this->adults;
     }
 
-    public function setGuest(int $guest): self
+    public function setAdults(int $adults): self
     {
-        $this->guest = $guest;
+        $this->adults = $adults;
 
         return $this;
     }
@@ -222,6 +225,18 @@ class Room extends BaseEntity
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getBeds(): ?int
+    {
+        return $this->beds;
+    }
+
+    public function setBeds(int $beds): self
+    {
+        $this->beds = $beds;
 
         return $this;
     }

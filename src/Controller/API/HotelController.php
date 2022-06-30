@@ -3,23 +3,23 @@
 namespace App\Controller\API;
 
 use App\Entity\Hotel;
+use App\Entity\User;
 use App\Repository\HotelRepository;
+use App\Request\Hotel\CreateHotelRequest;
 use App\Request\Hotel\ListHotelRequest;
+use App\Request\Hotel\PutHotelRequest;
 use App\Service\HotelService;
 use App\Traits\JsonResponseTrait;
+use App\Transformer\HotelTransformer;
 use App\Transformer\ListHotelTransformer;
 use App\Transformer\ValidatorTransformer;
-use App\Entity\User;
-use App\Request\Hotel\CreateHotelRequest;
-use App\Request\Hotel\PutHotelRequest;
-use App\Transformer\HotelTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/hotels', name: 'hotel_')]
 class HotelController extends AbstractController
@@ -74,21 +74,23 @@ class HotelController extends AbstractController
 
         return $this->success([], Response::HTTP_NO_CONTENT);
     }
+
     /**
      * @param CreateHotelRequest $createHotelRequest
-     * @param Request $request
-     * @param HotelService $hotelService
-     * @param HotelTransformer $hotelTransformer
-     * @param Security $security
+     * @param Request            $request
+     * @param HotelService       $hotelService
+     * @param HotelTransformer   $hotelTransformer
+     * @param Security           $security
+     *
      * @return JsonResponse
      */
     #[Route('', name: 'create', methods: 'POST')]
     public function create(
         CreateHotelRequest $createHotelRequest,
-        Request            $request,
-        HotelService       $hotelService,
-        HotelTransformer   $hotelTransformer,
-        Security           $security,
+        Request $request,
+        HotelService $hotelService,
+        HotelTransformer $hotelTransformer,
+        Security $security,
     ): JsonResponse {
         /**
          * @var User $currentUser
@@ -105,17 +107,18 @@ class HotelController extends AbstractController
         }
         $hotel = $hotelService->create($createHotelRequest);
         $result = $hotelTransformer->toArray($hotel);
+
         return $this->success($result, Response::HTTP_CREATED);
     }
 
     #[Route('/{id}', name: 'put', methods: 'PUT')]
     public function put(
-        Hotel            $hotel,
-        Request          $request,
-        PutHotelRequest  $putHotelRequest,
+        Hotel $hotel,
+        Request $request,
+        PutHotelRequest $putHotelRequest,
         HotelTransformer $hotelTransformer,
-        Security         $security,
-        HotelService     $hotelService,
+        Security $security,
+        HotelService $hotelService,
     ): JsonResponse {
         /**
          * @var User $currentUser
@@ -132,6 +135,7 @@ class HotelController extends AbstractController
         }
         $hotel = $hotelService->put($putHotelRequest, $hotel);
         $result = $hotelTransformer->toArray($hotel);
+
         return $this->success($result, Response::HTTP_OK);
     }
 }
