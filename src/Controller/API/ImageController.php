@@ -2,6 +2,8 @@
 
 namespace App\Controller\API;
 
+use App\Entity\Image;
+use App\Request\File\DeleteImageRequest;
 use App\Request\File\UploadImageRequest;
 use App\Service\ImageService;
 use App\Traits\JsonResponseTrait;
@@ -42,8 +44,17 @@ class ImageController extends AbstractController
         if (count($errors) > 0) {
             return $this->error($validatorTransformer->toArray($errors), Response::HTTP_BAD_REQUEST);
         }
-        $result= $imageService->upload($uploadImageRequest);
+        $result = $imageService->upload($uploadImageRequest);
         return $this->success($imageTransformer->listToArray($result), Response::HTTP_CREATED);
     }
 
+    #[Route('/images/{id}', name: 'delete', methods: 'DELETE')]
+    public function delete(
+        Image                $image,
+        ImageService         $imageService,
+    ): JsonResponse
+    {
+        $imageService->delete($image);
+        return $this->success(['Image deleted'], status: Response::HTTP_NO_CONTENT);
+    }
 }
