@@ -88,6 +88,7 @@ class HotelRepository extends BaseRepository
         if (null == $city) {
             return $hotels;
         }
+
         return $hotels->where('ad.city = :city')->setParameter('city', $city);
     }
 }
