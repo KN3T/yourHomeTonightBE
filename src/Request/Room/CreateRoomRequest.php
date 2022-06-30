@@ -5,7 +5,6 @@ namespace App\Request\Room;
 use App\Request\BaseRequest;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 class CreateRoomRequest extends BaseRequest
 {
     #[Assert\Type('integer')]

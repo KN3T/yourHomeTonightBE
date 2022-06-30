@@ -16,8 +16,7 @@ class CreateRoomRequestMapper
     public function __construct(
         CreateRoomRequestRoomImageMapper $createRoomRequestRoomImageMapper,
         RoomImageRepository $roomImageRepository,
-    )
-    {
+    ) {
         $this->createRoomRequestRoomImageMapper = $createRoomRequestRoomImageMapper;
         $this->roomImageRepository = $roomImageRepository;
     }

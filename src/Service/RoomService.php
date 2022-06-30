@@ -16,14 +16,14 @@ class RoomService
     public function __construct(
         RoomRepository $roomRepository,
         CreateRoomRequestMapper $createRoomRequestMapper,
-    )
-    {
+    ) {
         $this->roomRepository = $roomRepository;
         $this->createRoomRequestMapper = $createRoomRequestMapper;
     }
 
     public function create(CreateRoomRequest $createRoomRequest, Hotel $hotel): Room
-    {;
+    {
+        ;
         $room = new Room();
         $this->createRoomRequestMapper->mapping($createRoomRequest, $room, $hotel);
         $this->roomRepository->save($room);

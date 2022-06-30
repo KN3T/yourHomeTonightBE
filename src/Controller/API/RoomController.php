@@ -34,8 +34,7 @@ class RoomController extends AbstractController
         CreateRoomRequest $createRoomRequest,
         Hotel             $hotel,
         CreateRoomTransformer $createRoomTransformer,
-    )
-    {
+    ) {
         $request = json_decode($request->getContent(), true);
         $createRoomRequest->fromArray($request);
         $errors = $this->validator->validate($createRoomRequest);
