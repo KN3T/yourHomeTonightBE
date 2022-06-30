@@ -42,9 +42,11 @@ class CreateHotelRequest extends BaseRequest
     #[Assert\NotNull]
     private $rules;
 
-    #[Assert\Type('array')]
-    #[Assert\NotNull]
-    private $images;
+    #[Assert\All(
+        new Assert\Type('numeric')
+    )]
+    #[Assert\NotBlank]
+    private $images = [];
 
     /**
      * @return mixed
@@ -97,54 +99,6 @@ class CreateHotelRequest extends BaseRequest
     /**
      * @return mixed
      */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description): void
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRules()
-    {
-        return $this->rules;
-    }
-
-    /**
-     * @param mixed $rules
-     */
-    public function setRules($rules): void
-    {
-        $this->rules = $rules;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImages()
-    {
-        return $this->images;
-    }
-
-    /**
-     * @param mixed $images
-     */
-    public function setImages($images): void
-    {
-        $this->images = $images;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCity()
     {
         return $this->city;
@@ -189,6 +143,55 @@ class CreateHotelRequest extends BaseRequest
     {
         $this->address = $address;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description): void
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRules()
+    {
+        return $this->rules;
+    }
+
+    /**
+     * @param mixed $rules
+     */
+    public function setRules($rules): void
+    {
+        $this->rules = $rules;
+    }
+
+    /**
+     * @return array
+     */
+    public function getImages(): array
+    {
+        return $this->images;
+    }
+
+    /**
+     * @param array $images
+     */
+    public function setImages(array $images): void
+    {
+        $this->images = $images;
+    }
+
 
 
 }

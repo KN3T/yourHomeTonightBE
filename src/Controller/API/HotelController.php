@@ -68,6 +68,7 @@ class HotelController extends AbstractController
             return $this->error($this->validatorTransformer->toArray($errors), Response::HTTP_BAD_REQUEST);
         }
         $hotel = $hotelService->create($createHotelRequest, $currentUser);
+        dd($hotel);
         $result = $hotelTransformer->toArray($hotel);
         return $this->success($result, Response::HTTP_CREATED);
     }

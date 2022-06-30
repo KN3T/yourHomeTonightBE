@@ -7,6 +7,7 @@ use App\Entity\Hotel;
 use App\Entity\User;
 use App\Mapping\CreateHotelRequestToAddress;
 use App\Mapping\CreateHotelRequestToHotel;
+use App\Mapping\CreateHotelRequestToHotelImages;
 use App\Mapping\PutHotelRequestToAddress;
 use App\Mapping\PutHotelRequestToHotel;
 use App\Repository\AddressRepository;
@@ -23,6 +24,7 @@ class HotelService
     private AddressRepository $addressRepository;
     private CreateHotelRequestToHotel $createHotelRequestToHotel;
     private CreateHotelRequestToAddress $createHotelRequestToAddress;
+    private CreateHotelRequestToHotelImages $createHotelRequestToHotelImages;
     private PutHotelRequestToHotel      $putHotelRequestToHotel;
     private PutHotelRequestToAddress    $putHotelRequestToAddress;
 
@@ -31,6 +33,7 @@ class HotelService
         AddressRepository           $addressRepository,
         CreateHotelRequestToHotel   $createHotelRequestToHotel,
         CreateHotelRequestToAddress $createHotelRequestToAddress,
+        CreateHotelRequestToHotelImages $createHotelRequestToHotelImages,
         PutHotelRequestToHotel      $putHotelRequestToHotel,
         PutHotelRequestToAddress    $putHotelRequestToAddress,
     )
@@ -39,6 +42,7 @@ class HotelService
         $this->addressRepository = $addressRepository;
         $this->createHotelRequestToHotel = $createHotelRequestToHotel;
         $this->createHotelRequestToAddress = $createHotelRequestToAddress;
+        $this->createHotelRequestToHotelImages = $createHotelRequestToHotelImages;
         $this->putHotelRequestToAddress = $putHotelRequestToAddress;
         $this->putHotelRequestToHotel = $putHotelRequestToHotel;
 
@@ -47,10 +51,7 @@ class HotelService
     public function create(CreateHotelRequest $createHotelRequest, User $currentUser): Hotel
     {
         $hotel = new Hotel();
-        $address = new Address();
-        $this->createHotelRequestToAddress->mapping($createHotelRequest, $address);
-        $this->createHotelRequestToHotel->mapping($createHotelRequest, $currentUser, $address, $hotel);
-        $this->addressRepository->save($address);
+        $this->createHotelRequestToHotel->mapping($createHotelRequest, $hotel);
         $this->hotelRepository->save($hotel);
         return $hotel;
     }

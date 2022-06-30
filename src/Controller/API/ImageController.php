@@ -34,14 +34,16 @@ class ImageController extends AbstractController
         ValidatorTransformer $validatorTransformer,
     ): JsonResponse
     {
-        $file = $request->files->get('image');
-        $uploadImageRequest->setImage($file);
+        $files = $request->files->get('images');
+        foreach ($files as $file) {
+            $uploadImageRequest->addImage($file);
+        }
         $errors = $validator->validate($uploadImageRequest);
         if (count($errors) > 0) {
             return $this->error($validatorTransformer->toArray($errors), Response::HTTP_BAD_REQUEST);
         }
-        $image = $imageService->upload($file);
-        return $this->success($imageTransformer->toArray($image), Response::HTTP_CREATED);
+        $result= $imageService->upload($uploadImageRequest);
+        return $this->success($imageTransformer->listToArray($result), Response::HTTP_CREATED);
     }
 
 }
