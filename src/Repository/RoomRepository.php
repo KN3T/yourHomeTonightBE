@@ -16,8 +16,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RoomRepository extends BaseRepository
 {
+    public const ROOM_ALIAS = 'r';
+
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Room::class);
+        parent::__construct($registry, Room::class, self::ROOM_ALIAS);
     }
 }

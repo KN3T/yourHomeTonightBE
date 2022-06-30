@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Image;
 use App\Manager\FileManager;
-use App\Mapping\DeleteImageRequestToImage;
 use App\Repository\ImageRepository;
 use App\Request\File\UploadImageRequest;
 use Psr\Container\ContainerExceptionInterface;
@@ -14,16 +13,13 @@ class ImageService
 {
     private FileManager $fileManager;
     private ImageRepository $imageRepository;
-    private DeleteImageRequestToImage $deleteImageRequestToImage;
 
     public function __construct(
         FileManager $fileManager,
         ImageRepository $imageRepository,
-        DeleteImageRequestToImage $deleteImageRequestToImage,
     ) {
         $this->fileManager = $fileManager;
         $this->imageRepository = $imageRepository;
-        $this->deleteImageRequestToImage = $deleteImageRequestToImage;
     }
 
     /**
@@ -49,7 +45,7 @@ class ImageService
         $this->imageRepository->remove($image);
     }
 
-    public function checkImageExist(Image $image)
+    public function checkImageExist(Image $image): bool
     {
         if (null != $this->imageRepository->find($image->getId())) {
             return true;
