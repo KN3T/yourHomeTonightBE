@@ -60,7 +60,6 @@ class RoomController extends AbstractController
         Hotel               $hotel,
         ListRoomRequest     $listRoomRequest,
         RoomService         $roomService,
-        HotelRepository     $hotelRepository,
         ListRoomTransformer $listRoomTransformer
     ): Response {
         $filters = $request->query->all();
@@ -79,7 +78,7 @@ class RoomController extends AbstractController
 
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'delete', methods: ['DELETE'])]
     #[Entity('hotel', options: ['id' => 'hotelId'])]
-    public function delete(Hotel $hotel, Room $room, RoomRepository $roomRepository): JsonResponse
+    public function delete(Room $room, RoomRepository $roomRepository): JsonResponse
     {
         $roomRepository->remove($room);
 
