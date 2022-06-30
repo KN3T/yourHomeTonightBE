@@ -8,7 +8,6 @@ use App\Request\Hotel\PutHotelRequest;
 
 class PutHotelRequestToAddress
 {
-
     public function mapping(PutHotelRequest $putHotelRequest, Hotel $hotel): Address
     {
         $hotel->getAddress()

@@ -25,8 +25,7 @@ class FileManager
         S3Client $s3Client,
         SluggerInterface $slugger,
         ContainerBagInterface $params
-    )
-    {
+    ) {
         $this->targetDirectory = $targetDirectory;
         $this->bucketName = $bucketName;
         $this->s3Client = $s3Client;

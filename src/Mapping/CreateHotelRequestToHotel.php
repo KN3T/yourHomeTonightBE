@@ -25,8 +25,7 @@ class CreateHotelRequestToHotel
         CreateHotelRequestToHotelImages $createHotelRequestToHotelImages,
         AddressRepository               $addressRepository,
         HotelImageRepository            $hotelImageRepository,
-    )
-    {
+    ) {
         $this->security = $security;
         $this->createHotelRequestToAddress = $createHotelRequestToAddress;
         $this->createHotelRequestToHotelImages = $createHotelRequestToHotelImages;
@@ -53,5 +52,4 @@ class CreateHotelRequestToHotel
         }
         return $hotel;
     }
-
 }
