@@ -60,5 +60,4 @@ class PutHotelRequestToHotelImages
         }
         return array_diff($arr1, $arr2);
     }
-
 }

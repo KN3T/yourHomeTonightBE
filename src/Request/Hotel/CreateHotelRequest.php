@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateHotelRequest extends BaseRequest
 {
-
     #[Assert\Type('string')]
     #[Assert\NotBlank]
     private $name;
@@ -191,7 +190,4 @@ class CreateHotelRequest extends BaseRequest
     {
         $this->images = $images;
     }
-
-
-
 }

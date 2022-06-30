@@ -89,8 +89,7 @@ class HotelController extends AbstractController
         HotelService       $hotelService,
         HotelTransformer   $hotelTransformer,
         Security           $security,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         /**
          * @var User $currentUser
          */
@@ -117,8 +116,7 @@ class HotelController extends AbstractController
         HotelTransformer $hotelTransformer,
         Security         $security,
         HotelService     $hotelService,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         /**
          * @var User $currentUser
          */

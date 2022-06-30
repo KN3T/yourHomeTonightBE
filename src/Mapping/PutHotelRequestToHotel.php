@@ -16,8 +16,7 @@ class PutHotelRequestToHotel
         PutHotelRequestToAddress $putHotelRequestToAddress,
         PutHotelRequestToHotelImages $putHotelRequestToHotelImages,
         HotelImageRepository    $hotelImageRepository,
-    )
-    {
+    ) {
         $this->putHotelRequestToAddress = $putHotelRequestToAddress;
         $this->putHotelRequestToHotelImages = $putHotelRequestToHotelImages;
         $this->hotelImageRepository = $hotelImageRepository;
@@ -38,6 +37,5 @@ class PutHotelRequestToHotel
             $hotel->addHotelImage($hotelImage);
         }
         return $hotel;
-
     }
 }

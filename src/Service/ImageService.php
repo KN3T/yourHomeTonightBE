@@ -21,8 +21,7 @@ class ImageService
         FileManager               $fileManager,
         ImageRepository           $imageRepository,
         DeleteImageRequestToImage $deleteImageRequestToImage,
-    )
-    {
+    ) {
         $this->fileManager = $fileManager;
         $this->imageRepository = $imageRepository;
         $this->deleteImageRequestToImage = $deleteImageRequestToImage;

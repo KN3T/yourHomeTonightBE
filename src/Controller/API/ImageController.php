@@ -34,8 +34,7 @@ class ImageController extends AbstractController
         UploadImageRequest   $uploadImageRequest,
         ValidatorInterface   $validator,
         ValidatorTransformer $validatorTransformer,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $files = $request->files->get('images');
         foreach ($files as $file) {
             $uploadImageRequest->addImage($file);
@@ -52,8 +51,7 @@ class ImageController extends AbstractController
     public function delete(
         Image                $image,
         ImageService         $imageService,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $imageService->delete($image);
         return $this->success(['Image deleted'], status: Response::HTTP_NO_CONTENT);
     }

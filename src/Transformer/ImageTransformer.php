@@ -6,7 +6,7 @@ use App\Entity\Image;
 
 class ImageTransformer extends BaseTransformer
 {
-    const ATTRIBUTES = ['id'];
+    public const ATTRIBUTES = ['id'];
     private string $s3Url;
 
     public function __construct($s3Url)

@@ -24,6 +24,5 @@ class CreateHotelRequestToAddress
         $address->setAddress($createHotelRequest->getAddress());
         $address->setHotel($hotel);
         return $address;
-
     }
 }

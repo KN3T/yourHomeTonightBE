@@ -29,5 +29,4 @@ class CreateHotelRequestToHotelImages
         }
         return $result;
     }
-
 }
