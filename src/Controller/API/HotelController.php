@@ -66,6 +66,7 @@ class HotelController extends AbstractController
     public function delete(Hotel $hotel, HotelRepository $hotelRepository): JsonResponse
     {
         $hotelRepository->remove($hotel);
+
         return $this->success([], Response::HTTP_NO_CONTENT);
     }
 }
