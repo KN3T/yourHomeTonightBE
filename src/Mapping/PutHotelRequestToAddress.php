@@ -15,6 +15,7 @@ class PutHotelRequestToAddress
         ->setProvince($putHotelRequest->getProvince())
         ->setAddress($putHotelRequest->getAddress())
         ->setUpdatedAt(new \DateTime('now'));
+
         return $hotel->getAddress();
     }
 }

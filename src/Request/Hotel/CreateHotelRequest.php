@@ -11,11 +11,9 @@ class CreateHotelRequest extends BaseRequest
     #[Assert\NotBlank]
     private $name;
 
-
     #[Assert\Type('string')]
     #[Assert\NotBlank]
     private $email;
-
 
     #[Assert\Type('string')]
     #[Assert\NotBlank]
@@ -35,7 +33,6 @@ class CreateHotelRequest extends BaseRequest
 
     #[Assert\Type('string')]
     private $description;
-
 
     #[Assert\Type('array')]
     #[Assert\NotNull]
@@ -175,17 +172,11 @@ class CreateHotelRequest extends BaseRequest
         $this->rules = $rules;
     }
 
-    /**
-     * @return array
-     */
     public function getImages(): array
     {
         return $this->images;
     }
 
-    /**
-     * @param array $images
-     */
     public function setImages(array $images): void
     {
         $this->images = $images;

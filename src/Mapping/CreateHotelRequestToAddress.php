@@ -23,6 +23,7 @@ class CreateHotelRequestToAddress
         $address->setProvince($createHotelRequest->getProvince());
         $address->setAddress($createHotelRequest->getAddress());
         $address->setHotel($hotel);
+
         return $address;
     }
 }

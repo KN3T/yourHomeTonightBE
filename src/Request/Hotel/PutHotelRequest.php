@@ -11,11 +11,9 @@ class PutHotelRequest extends BaseRequest
     #[Assert\NotBlank]
     private $name;
 
-
     #[Assert\Type('string')]
     #[Assert\NotBlank]
     private $email;
-
 
     #[Assert\Type('string')]
     #[Assert\NotBlank]
@@ -180,9 +178,6 @@ class PutHotelRequest extends BaseRequest
         return $this->images;
     }
 
-    /**
-     * @param array $images
-     */
     public function setImages(array $images): void
     {
         $this->images = $images;

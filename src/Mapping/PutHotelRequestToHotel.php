@@ -15,7 +15,7 @@ class PutHotelRequestToHotel
     public function __construct(
         PutHotelRequestToAddress $putHotelRequestToAddress,
         PutHotelRequestToHotelImages $putHotelRequestToHotelImages,
-        HotelImageRepository    $hotelImageRepository,
+        HotelImageRepository $hotelImageRepository,
     ) {
         $this->putHotelRequestToAddress = $putHotelRequestToAddress;
         $this->putHotelRequestToHotelImages = $putHotelRequestToHotelImages;
@@ -36,6 +36,7 @@ class PutHotelRequestToHotel
             $this->hotelImageRepository->save($hotelImage);
             $hotel->addHotelImage($hotelImage);
         }
+
         return $hotel;
     }
 }

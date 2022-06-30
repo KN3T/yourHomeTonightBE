@@ -27,6 +27,7 @@ class CreateHotelRequestToHotelImages
             $hotelImage->setHotel($hotel);
             $result[] = $hotelImage;
         }
+
         return $result;
     }
 }

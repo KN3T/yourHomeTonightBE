@@ -11,15 +11,14 @@ class UploadImageRequest extends BaseRequest
         new Assert\Image(
             maxSize: '5M',
             mimeTypes: [
-                'image/*'
+                'image/*',
             ],
             mimeTypesMessage: 'The type of the file is invalid ({{ type }}). Allowed types are {{ types }}.'
         ),
-        new Assert\NotBlank()
+        new Assert\NotBlank(),
     ])]
 
     private $images = [];
-
 
     /**
      * @return mixed

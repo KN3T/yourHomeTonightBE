@@ -2,13 +2,10 @@
 
 namespace App\Mapping;
 
-use App\Entity\Address;
 use App\Entity\Hotel;
-use App\Entity\User;
 use App\Repository\AddressRepository;
 use App\Repository\HotelImageRepository;
 use App\Request\Hotel\CreateHotelRequest;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Component\Security\Core\Security;
 
 class CreateHotelRequestToHotel
@@ -20,11 +17,11 @@ class CreateHotelRequestToHotel
     private HotelImageRepository $hotelImageRepository;
 
     public function __construct(
-        Security                        $security,
-        CreateHotelRequestToAddress     $createHotelRequestToAddress,
+        Security $security,
+        CreateHotelRequestToAddress $createHotelRequestToAddress,
         CreateHotelRequestToHotelImages $createHotelRequestToHotelImages,
-        AddressRepository               $addressRepository,
-        HotelImageRepository            $hotelImageRepository,
+        AddressRepository $addressRepository,
+        HotelImageRepository $hotelImageRepository,
     ) {
         $this->security = $security;
         $this->createHotelRequestToAddress = $createHotelRequestToAddress;
@@ -50,6 +47,7 @@ class CreateHotelRequestToHotel
             $this->hotelImageRepository->save($hotelImage);
             $hotel->addHotelImage($hotelImage);
         }
+
         return $hotel;
     }
 }

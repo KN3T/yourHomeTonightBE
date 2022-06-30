@@ -18,7 +18,6 @@ class FileManager
     private $slugger;
     private ContainerBagInterface $params;
 
-
     public function __construct(
         $targetDirectory,
         $bucketName,
@@ -41,10 +40,11 @@ class FileManager
     {
         $fileName = $this->getFileName($file);
         $file->move($this->targetDirectory, $fileName);
-        $filePath = $this->targetDirectory . $fileName;
-        $filePut = $this->s3Put($path . $fileName, $filePath);
+        $filePath = $this->targetDirectory.$fileName;
+        $filePut = $this->s3Put($path.$fileName, $filePath);
         unlink($filePath);
         $fileUrl = $filePut->get('ObjectURL');
+
         return $this->getRelativePath($fileUrl);
     }
 
@@ -55,6 +55,7 @@ class FileManager
     private function getRelativePath(string $fullPath): string
     {
         $s3Url = $this->params->get('s3url');
+
         return substr($fullPath, strlen($s3Url));
     }
 
@@ -62,7 +63,8 @@ class FileManager
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
-        return $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
+
+        return $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
     }
 
     private function s3Put(string $key, string $filePath): Result

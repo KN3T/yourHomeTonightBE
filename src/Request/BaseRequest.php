@@ -14,6 +14,7 @@ abstract class BaseRequest
 
             $this->{$action}($request);
         }
+
         return $this;
     }
 }
