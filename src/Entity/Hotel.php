@@ -49,7 +49,7 @@ class Hotel extends BaseEntity
     #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: HotelImage::class)]
     private $hotelImages;
 
-    #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Room::class)]
+    #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Room::class, cascade: ['persist'])]
     private $rooms;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
