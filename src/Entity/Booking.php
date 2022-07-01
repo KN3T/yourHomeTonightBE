@@ -6,18 +6,23 @@ use App\Repository\BookingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
-class Booking
+class Booking extends BaseEntity
 {
+    public const PENDING = 1;
+    public const SUCCESS = 2;
+    public const CANCELLED = 3;
+    public const DONE = 4;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'bookings')]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'bookings')]
+    #[ORM\ManyToOne(targetEntity: Room::class, cascade: ['persist'], inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
     private $room;
 
@@ -53,6 +58,7 @@ class Booking
         $date = new \DateTime('now');
         $this->setCreatedAt($date);
         $this->setUpdatedAt($date);
+        $this->setStatus(Booking::PENDING);
     }
 
     public function getId(): ?int
