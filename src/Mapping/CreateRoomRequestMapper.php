@@ -5,7 +5,6 @@ namespace App\Mapping;
 use App\Entity\Hotel;
 use App\Entity\Room;
 use App\Repository\RoomImageRepository;
-use App\Repository\RoomRepository;
 use App\Request\Room\CreateRoomRequest;
 
 class CreateRoomRequestMapper
@@ -37,6 +36,7 @@ class CreateRoomRequestMapper
             $this->roomImageRepository->save($roomImage);
             $room->addRoomImage($roomImage);
         }
+
         return $room;
     }
 }

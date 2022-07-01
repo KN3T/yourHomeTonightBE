@@ -15,6 +15,7 @@ class CreateRoomRequestRoomImageMapper
     {
         $this->imageRepository = $imageRepository;
     }
+
     public function mapping(CreateRoomRequest $createRoomRequest, Room $room): array
     {
         $imageIDs = $createRoomRequest->getImages();

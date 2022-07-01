@@ -24,7 +24,6 @@ class RoomService
 
     public function create(CreateRoomRequest $createRoomRequest, Hotel $hotel): Room
     {
-        ;
         $room = new Room();
         $this->createRoomRequestMapper->mapping($createRoomRequest, $room, $hotel);
         $this->roomRepository->save($room);

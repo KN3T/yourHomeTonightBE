@@ -16,7 +16,7 @@ class DetailRoomTransformer extends BaseTransformer
         'children',
         'asset',
         'beds',
-        'description'
+        'description',
     ];
     private RoomImageTransformer $roomImageTransformer;
 

@@ -13,6 +13,7 @@ class CreateRoomTransformer extends BaseTransformer
     {
         $this->roomImageTransformer = $roomImageTransformer;
     }
+
     public function toArray(Room $room): array
     {
         $result = $this->transform($room, static::ALLOW);

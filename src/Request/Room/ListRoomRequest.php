@@ -81,129 +81,81 @@ class ListRoomRequest extends BaseRequest
         $this->beds = $beds;
     }
 
-    /**
-     * @return string
-     */
     public function getSortBy(): string
     {
         return $this->sortBy;
     }
 
-    /**
-     * @param string $sortBy
-     */
     public function setSortBy(string $sortBy): void
     {
         $this->sortBy = $sortBy;
     }
 
-    /**
-     * @return string
-     */
     public function getOrder(): string
     {
         return $this->order;
     }
 
-    /**
-     * @param string $order
-     */
     public function setOrder(string $order): void
     {
         $this->order = $order;
     }
 
-    /**
-     * @return int
-     */
     public function getLimit(): int
     {
         return $this->limit;
     }
 
-    /**
-     * @param int $limit
-     */
     public function setLimit(int $limit): void
     {
         $this->limit = $limit;
     }
 
-    /**
-     * @return int
-     */
     public function getOffset(): int
     {
         return $this->offset;
     }
 
-    /**
-     * @param int $offset
-     */
     public function setOffset(int $offset): void
     {
         $this->offset = $offset;
     }
 
-    /**
-     * @return float|null
-     */
     public function getMaxPrice(): ?float
     {
         return $this->maxPrice;
     }
 
-    /**
-     * @param float|null $maxPrice
-     */
     public function setMaxPrice(?float $maxPrice): void
     {
         $this->maxPrice = $maxPrice;
     }
 
-    /**
-     * @return float|null
-     */
     public function getMinPrice(): ?float
     {
         return $this->minPrice;
     }
 
-    /**
-     * @param float|null $minPrice
-     */
     public function setMinPrice(?float $minPrice): void
     {
         $this->minPrice = $minPrice;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCheckIn(): ?string
     {
         return $this->timestampToDateTime($this->checkIn);
     }
 
-    /**
-     * @param int|null $checkIn
-     */
     public function setCheckIn(?int $checkIn): void
     {
         $this->checkIn = $checkIn;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCheckOut(): ?string
     {
         return $this->timestampToDateTime($this->checkOut);
     }
 
-    /**
-     * @param int|null $checkOut
-     */
     public function setCheckOut(?int $checkOut): void
     {
         $this->checkOut = $checkOut;

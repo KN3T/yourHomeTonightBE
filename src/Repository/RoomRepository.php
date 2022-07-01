@@ -42,6 +42,7 @@ class RoomRepository extends BaseRepository
         $total = (new Paginator($rooms))->count();
         $rooms = $rooms->getQuery()->getResult();
         $rooms['total'] = $total;
+
         return $rooms;
     }
 
