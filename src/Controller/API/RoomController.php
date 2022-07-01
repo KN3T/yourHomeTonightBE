@@ -11,6 +11,7 @@ use App\Repository\RoomRepository;
 use App\Request\Room\ListRoomRequest;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\CreateRoomTransformer;
+use App\Transformer\DetailRoomTransformer;
 use App\Transformer\ListHotelTransformer;
 use App\Transformer\ListRoomTransformer;
 use App\Transformer\ValidatorTransformer;
@@ -37,10 +38,10 @@ class RoomController extends AbstractController
 
     #[Route('/hotels/{id}/rooms', name: 'list', methods: ['GET'])]
     public function index(
-        Request             $request,
-        Hotel               $hotel,
-        ListRoomRequest     $listRoomRequest,
-        RoomService         $roomService,
+        Request $request,
+        Hotel $hotel,
+        ListRoomRequest $listRoomRequest,
+        RoomService $roomService,
         ListRoomTransformer $listRoomTransformer
     ): Response {
         $filters = $request->query->all();
@@ -59,10 +60,10 @@ class RoomController extends AbstractController
 
     #[Route('/hotels/{id}/rooms', name: 'create_rooms', methods: ['POST'])]
     public function create(
-        Request               $request,
-        RoomService           $roomService,
-        CreateRoomRequest     $createRoomRequest,
-        Hotel                 $hotel,
+        Request $request,
+        RoomService $roomService,
+        CreateRoomRequest $createRoomRequest,
+        Hotel $hotel,
         CreateRoomTransformer $createRoomTransformer,
     ) {
         $request = json_decode($request->getContent(), true);
@@ -74,6 +75,15 @@ class RoomController extends AbstractController
         $room = $roomService->create($createRoomRequest, $hotel);
         $result = $createRoomTransformer->toArray($room);
         return $this->success($result, Response::HTTP_CREATED);
+    }
+
+    #[Route('/hotels/{hotelId}/rooms/{id}', name: 'detail', methods: ['GET'])]
+    #[Entity('hotel', options: ['id' => 'hotelId'])]
+    public function detail(
+        Room $room,
+        DetailRoomTransformer $detailRoomTransformer,
+    ): JsonResponse {
+        return $this->success($detailRoomTransformer->toArray($room));
     }
 
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'delete', methods: ['DELETE'])]

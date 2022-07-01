@@ -8,6 +8,7 @@ use App\Request\Room\ListRoomRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,7 +38,11 @@ class RoomRepository extends BaseRepository
         $rooms = $this->filterByPrice($rooms, $roomRequest->getMinPrice(), $roomRequest->getMaxPrice());
         $rooms = $this->sortBy($rooms, $roomRequest->getSortBy(), $roomRequest->getOrder());
         $rooms->setMaxResults($roomRequest->getLimit())->setFirstResult($roomRequest->getOffset());
-        return $rooms->getQuery()->getResult();
+
+        $total = (new Paginator($rooms))->count();
+        $rooms = $rooms->getQuery()->getResult();
+        $rooms['total'] = $total;
+        return $rooms;
     }
 
     private function filterByPrice(QueryBuilder $rooms, ?float $minPrice, ?float $maxPrice): QueryBuilder

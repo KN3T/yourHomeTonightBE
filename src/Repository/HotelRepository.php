@@ -73,7 +73,7 @@ class HotelRepository extends BaseRepository
 
     private function filterByPrice(QueryBuilder $hotels, ?float $minPrice, ?float $maxPrice): QueryBuilder
     {
-        if (null == $minPrice || null == $maxPrice) {
+        if (null === $minPrice || null === $maxPrice) {
             return $hotels;
         }
 
