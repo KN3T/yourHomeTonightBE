@@ -4,9 +4,10 @@ namespace App\Transformer;
 
 use App\Entity\Room;
 
-class CreateRoomTransformer extends BaseTransformer
+class ListRoomTransformer extends BaseTransformer
 {
-    public const ALLOW = ['id', 'hotelId', 'number', 'type', 'price', 'adults', 'children', 'asset', 'beds', 'description'];
+    public const ALLOW = ['id', 'number', 'type', 'beds', 'price', 'adults', 'children', 'asset', 'description', ''];
+
     private RoomImageTransformer $roomImageTransformer;
 
     public function __construct(RoomImageTransformer $roomImageTransformer)
@@ -25,8 +26,10 @@ class CreateRoomTransformer extends BaseTransformer
     public function listToArray(array $rooms): array
     {
         $result = [];
+        $result['total'] = $rooms['total'];
+        unset($rooms['total']);
         foreach ($rooms as $room) {
-            $result[] = $this->toArray($room);
+            $result['rooms'][] = $this->toArray($room);
         }
 
         return $result;

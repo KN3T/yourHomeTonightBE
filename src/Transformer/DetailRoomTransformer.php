@@ -4,9 +4,20 @@ namespace App\Transformer;
 
 use App\Entity\Room;
 
-class CreateRoomTransformer extends BaseTransformer
+class DetailRoomTransformer extends BaseTransformer
 {
-    public const ALLOW = ['id', 'hotelId', 'number', 'type', 'price', 'adults', 'children', 'asset', 'beds', 'description'];
+    public const ALLOW = [
+        'id',
+        'hotelId',
+        'number',
+        'type',
+        'price',
+        'adults',
+        'children',
+        'asset',
+        'beds',
+        'description',
+    ];
     private RoomImageTransformer $roomImageTransformer;
 
     public function __construct(RoomImageTransformer $roomImageTransformer)
