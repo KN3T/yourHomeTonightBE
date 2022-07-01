@@ -7,8 +7,10 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class Room extends BaseEntity
 {
     #[ORM\Id]
@@ -43,7 +45,7 @@ class Room extends BaseEntity
     #[ORM\Column(type: 'datetime')]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'room', targetEntity: RoomImage::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: RoomImage::class, cascade: ['persist', 'remove'])]
     private $roomImages;
 
     #[ORM\ManyToOne(targetEntity: Hotel::class, inversedBy: 'rooms')]
