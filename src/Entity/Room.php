@@ -57,11 +57,15 @@ class Room extends BaseEntity
     #[ORM\Column(type: 'integer')]
     private $beds;
 
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Booking::class)]
+    private $bookings;
+
     public function __construct()
     {
         $this->roomImages = new ArrayCollection();
         $this->createdAt = new DateTime('now');
         $this->updatedAt = new DateTime('now');
+        $this->bookings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -239,6 +243,36 @@ class Room extends BaseEntity
     public function setBeds(int $beds): self
     {
         $this->beds = $beds;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Booking>
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): self
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): self
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getRoom() === $this) {
+                $booking->setRoom(null);
+            }
+        }
 
         return $this;
     }
