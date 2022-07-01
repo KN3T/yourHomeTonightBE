@@ -20,5 +20,4 @@ class BookingRepository extends BaseRepository
     {
         parent::__construct($registry, Booking::class);
     }
-
 }

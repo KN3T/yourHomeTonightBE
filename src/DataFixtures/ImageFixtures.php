@@ -15,7 +15,7 @@ class ImageFixtures extends Fixture
             $image->setPath($path);
 
             $manager->persist($image);
-            $this->addReference('image_' . $id, $image);
+            $this->addReference('image_'.$id, $image);
         }
 
         $manager->flush();
@@ -50,39 +50,39 @@ class ImageFixtures extends Fixture
             ],
             [
                 7,
-                'https://thumbs.dreamstime.com/b/hotel-room-beautiful-orange-sofa-included-43642330.jpg'
+                'https://thumbs.dreamstime.com/b/hotel-room-beautiful-orange-sofa-included-43642330.jpg',
             ],
             [
                 8,
-                'https://gos3.ibcdn.com/18f9b55eb22b11eb86440242ac110005.jpg'
+                'https://gos3.ibcdn.com/18f9b55eb22b11eb86440242ac110005.jpg',
             ],
             [
                 9,
-                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg'
+                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg',
             ],
             [
                 10,
-                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg'
+                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg',
             ],
             [
                 11,
-                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg'
+                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg',
             ],
             [
                 12,
-                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg'
+                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg',
             ],
             [
                 13,
-                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg'
+                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg',
             ],
             [
                 14,
-                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg'
+                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg',
             ],
             [
                 15,
-                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg'
+                'http://www.bedbreakfast.ee/wp-content/uploads/2016/10/hotel-room.jpg',
             ],
         ];
     }

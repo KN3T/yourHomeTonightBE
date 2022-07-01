@@ -8,10 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 class Booking extends BaseEntity
 {
-    const PENDING = 1;
-    const SUCCESS = 2;
-    const CANCELLED = 3;
-    const DONE = 4;
+    public const PENDING = 1;
+    public const SUCCESS = 2;
+    public const CANCELLED = 3;
+    public const DONE = 4;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

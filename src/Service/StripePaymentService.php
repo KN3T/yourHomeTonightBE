@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Booking;
-use App\Repository\RoomRepository;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -20,23 +19,29 @@ class StripePaymentService
     public function makePayment(Booking $booking): ?string
     {
         Stripe::setApiKey($this->parameterBag->get('stripeKey'));
-        $session = Session::create([
+        $session = Session::create($this->getPaymentInfo($booking));
+
+        return $session->url;
+    }
+
+    private function getPaymentInfo(Booking $booking): array
+    {
+        return [
             'line_items' => [
                 [
                     'price_data' => [
                         'currency' => 'usd',
                         'product_data' => [
-                            'name' => 'Room ' . $booking->getRoom()->getNumber(),
+                            'name' => 'Room '.$booking->getRoom()->getNumber(),
                         ],
                         'unit_amount' => $booking->getTotal() * 100,
                     ],
                     'quantity' => 1,
-                ]
+                ],
             ],
             'mode' => 'payment',
-            'success_url' => 'https://example.com/checkoutVerify/bookId=' . $booking->getId() . '&?sessionId={CHECKOUT_SESSION_ID}',
-            'cancel_url' => 'https://example.com/checkoutVerify/bookId=' . $booking->getId() . '&?sessionId={CHECKOUT_SESSION_ID}',
-        ]);
-        return $session->url;
+            'success_url' => 'https://example.com/checkoutVerify/bookId='.$booking->getId().'&?sessionId={CHECKOUT_SESSION_ID}',
+            'cancel_url' => 'https://example.com/checkoutVerify/bookId='.$booking->getId().'&?sessionId={CHECKOUT_SESSION_ID}',
+        ];
     }
 }

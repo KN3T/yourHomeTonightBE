@@ -17,7 +17,7 @@ class UserController extends AbstractController
 
     #[Route('', name: 'detail', methods: ['GET'])]
     public function detail(
-        Security              $security,
+        Security $security,
         UserDetailTransformer $userDetailTransformer,
     ): JsonResponse {
         /**
@@ -25,6 +25,7 @@ class UserController extends AbstractController
          */
         $user = $security->getUser();
         $result = $userDetailTransformer->toArray($user);
+
         return $this->success($result);
     }
 }

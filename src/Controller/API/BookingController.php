@@ -10,15 +10,12 @@ use App\Service\StripePaymentService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\BookingTransformer;
 use App\Transformer\ValidatorTransformer;
-use Stripe\Checkout\Session;
 use Stripe\Exception\ApiErrorException;
-use Stripe\Stripe;
 use Stripe\StripeClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -58,6 +55,7 @@ class BookingController extends AbstractController
         }
         $booking = $bookingService->createBooking($createBookingRequest);
         $paymentUrl = $stripePaymentService->makePayment($booking);
+
         return $this->success([$paymentUrl]);
     }
 
@@ -73,11 +71,13 @@ class BookingController extends AbstractController
         $booking = $bookingRepository->find($bookingId);
         $stripe = new StripeClient($this->parameterBag->get('stripeKey'));
         $result = $stripe->checkout->sessions->retrieve($sessionPayment);
-        if ($result->payment_status === 'paid') {
+        if ('paid' === $result->payment_status) {
             $booking->setStatus(Booking::SUCCESS);
             $bookingResult = $bookingTransformer->toArray($booking);
+
             return $this->success(['message' => 'Payment success', 'booking' => $bookingResult]);
         }
-        return $this->error("Payment fail");
+
+        return $this->error('Payment fail');
     }
 }

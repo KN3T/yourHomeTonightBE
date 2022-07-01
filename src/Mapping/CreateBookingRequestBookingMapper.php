@@ -5,7 +5,6 @@ namespace App\Mapping;
 use App\Entity\Booking;
 use App\Entity\User;
 use App\Repository\RoomRepository;
-use App\Repository\UserRepository;
 use App\Request\Booking\CreateBookingRequest;
 use Symfony\Component\Security\Core\Security;
 
@@ -40,7 +39,7 @@ class CreateBookingRequestBookingMapper
 
         $days = $createBookingRequest->getCheckIn()->diff($createBookingRequest->getCheckOut())->format('%a');
         $booking->setTotal($days * $room->getPrice());
+
         return $booking;
     }
-
 }

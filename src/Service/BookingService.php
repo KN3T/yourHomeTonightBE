@@ -23,6 +23,7 @@ class BookingService
     {
         $booking = $this->createBookingRequestBookingMapper->mapping($createBookingRequest);
         $this->bookingRepository->save($booking);
+
         return $booking;
     }
 }

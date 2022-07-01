@@ -2,8 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Hotel;
-use App\Entity\HotelImage;
 use App\Entity\Image;
 use App\Entity\Room;
 use App\Entity\RoomImage;
@@ -20,16 +18,16 @@ class RoomImageFixtures extends Fixture implements DependentFixtureInterface
             /**
              * @var Room $room
              */
-            $room = $this->getReference('room_' . $roomId);
+            $room = $this->getReference('room_'.$roomId);
 
             /**
              * @var Image $image
              */
-            $image = $this->getReference('image_' . $imageId);
+            $image = $this->getReference('image_'.$imageId);
 
             $roomImage->setRoom($room)->setImage($image);
             $manager->persist($roomImage);
-            $this->addReference('room_image_' . $id, $roomImage);
+            $this->addReference('room_image_'.$id, $roomImage);
         }
         $manager->flush();
     }

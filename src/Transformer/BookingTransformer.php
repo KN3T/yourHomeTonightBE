@@ -3,7 +3,6 @@
 namespace App\Transformer;
 
 use App\Entity\Booking;
-use App\Repository\UserRepository;
 
 class BookingTransformer extends BaseTransformer
 {
