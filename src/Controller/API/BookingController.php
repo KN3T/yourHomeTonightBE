@@ -10,6 +10,7 @@ use App\Service\StripePaymentService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\BookingTransformer;
 use App\Transformer\ValidatorTransformer;
+use Stripe\Checkout\Session as StripeSession;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,8 +30,8 @@ class BookingController extends AbstractController
 
     public function __construct(
         ParameterBagInterface $parameterBag,
-        ValidatorTransformer $validatorTransformer,
-        ValidatorInterface $validator
+        ValidatorTransformer  $validatorTransformer,
+        ValidatorInterface    $validator
     ) {
         $this->parameterBag = $parameterBag;
         $this->validator = $validator;
@@ -42,9 +43,9 @@ class BookingController extends AbstractController
      */
     #[Route('/booking', name: 'booking', methods: ['POST'])]
     public function index(
-        Request $request,
+        Request              $request,
         CreateBookingRequest $createBookingRequest,
-        BookingService $bookingService,
+        BookingService       $bookingService,
         StripePaymentService $stripePaymentService
     ): JsonResponse {
         $request = json_decode($request->getContent(), true);
@@ -61,8 +62,8 @@ class BookingController extends AbstractController
 
     #[Route('/payment/check', name: 'check-payment', methods: ['POST'])]
     public function checkPayment(
-        Request $request,
-        BookingRepository $bookingRepository,
+        Request            $request,
+        BookingRepository  $bookingRepository,
         BookingTransformer $bookingTransformer
     ): JsonResponse {
         $request = json_decode($request->getContent(), true);
@@ -73,11 +74,23 @@ class BookingController extends AbstractController
         $result = $stripe->checkout->sessions->retrieve($sessionPayment);
         if ('paid' === $result->payment_status) {
             $booking->setStatus(Booking::SUCCESS);
-            $bookingResult = $bookingTransformer->toArray($booking);
-
-            return $this->success(['message' => 'Payment success', 'booking' => $bookingResult]);
+            return $this->success($this->getCheckoutInfo($result, $bookingTransformer, $booking));
         }
 
-        return $this->error('Payment fail');
+        return $this->error('Payment failed');
+    }
+
+    private function getCheckoutInfo(StripeSession $session, BookingTransformer $bookingTransformer, Booking $booking): array
+    {
+        $paymentInfo = $session->customer_details->toArray();
+        $bookingResult = $bookingTransformer->toArray($booking);
+
+        return [
+            'paymentInfo' => [
+                'billingName' => $paymentInfo['name'],
+                'purchasedAt' => $booking->getCreatedAt(),
+            ],
+            'booking' => $bookingResult,
+        ];
     }
 }
