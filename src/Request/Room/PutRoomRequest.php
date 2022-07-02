@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class PutRoomRequest extends BaseRequest
 {
-
     #[Assert\Type('integer')]
     #[Assert\NotBlank]
     private $number;
@@ -188,6 +187,4 @@ class PutRoomRequest extends BaseRequest
     {
         $this->images = $images;
     }
-
-
 }

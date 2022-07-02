@@ -6,7 +6,6 @@ use App\Entity\Room;
 
 class PutRoomTransformer extends BaseTransformer
 {
-
     public const ALLOW = [
         'id',
         'hotelId',
