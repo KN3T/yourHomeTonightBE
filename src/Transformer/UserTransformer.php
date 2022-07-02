@@ -6,7 +6,7 @@ use App\Entity\User;
 
 class UserTransformer extends BaseTransformer
 {
-    public const ALLOW = ['id', 'email', 'fullName'];
+    public const ALLOW = ['id', 'email', 'fullName', 'phone'];
 
     public function toArray(User $user): array
     {
