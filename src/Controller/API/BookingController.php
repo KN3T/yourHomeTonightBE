@@ -73,11 +73,13 @@ class BookingController extends AbstractController
         $stripe = new StripeClient($this->parameterBag->get('stripeKey'));
         $result = $stripe->checkout->sessions->retrieve($sessionPayment);
         if ('paid' === $result->payment_status) {
-            $booking->setStatus(Booking::SUCCESS);
+            $booking->setStatus(Booking::SUCCESS)
+                ->setPurchasedAt(new \DateTime('now'))
+                ->setUpdatedAt(new \DateTime('now'));
             $bookingRepository->save($booking);
             return $this->success($this->getCheckoutInfo($result, $bookingTransformer, $booking));
         }
-
+        $booking->setStatus(Booking::CANCELLED)->setUpdatedAt(new \DateTime('now'));
         return $this->error('Payment failed');
     }
 
@@ -89,7 +91,7 @@ class BookingController extends AbstractController
         return [
             'paymentInfo' => [
                 'billingName' => $paymentInfo['name'],
-                'purchasedAt' => $booking->getCreatedAt(),
+                'purchasedAt' => $booking->getPurchasedAt(),
             ],
             'booking' => $bookingResult,
         ];

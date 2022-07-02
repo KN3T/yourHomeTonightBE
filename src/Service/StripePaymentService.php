@@ -34,7 +34,7 @@ class StripePaymentService
                         'product_data' => [
                             'name' => 'Room '.$booking->getRoom()->getNumber(),
                         ],
-                        'unit_amount' => $booking->getTotal() * 100,
+                        'unit_amount' => $booking->getTotal() * (100 + Booking::VAT),
                     ],
                     'quantity' => 1,
                 ],

@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 class Booking extends BaseEntity
 {
+    public const VAT = 10;
     public const PENDING = 1;
     public const SUCCESS = 2;
     public const CANCELLED = 3;
@@ -52,6 +53,9 @@ class Booking extends BaseEntity
 
     #[ORM\Column(type: 'datetime')]
     private $updatedAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $purchasedAt;
 
     public function __construct()
     {
@@ -194,6 +198,18 @@ class Booking extends BaseEntity
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPurchasedAt(): ?\DateTimeInterface
+    {
+        return $this->purchasedAt;
+    }
+
+    public function setPurchasedAt(?\DateTimeInterface $purchasedAt): self
+    {
+        $this->purchasedAt = $purchasedAt;
 
         return $this;
     }
