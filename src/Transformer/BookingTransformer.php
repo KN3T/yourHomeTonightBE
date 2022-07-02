@@ -28,4 +28,15 @@ class BookingTransformer extends BaseTransformer
 
         return $result;
     }
+
+    public function listToArray(array $bookings): array
+    {
+        $result = [];
+        if (!empty($bookings)) {
+            foreach ($bookings as $booking) {
+                $result[] = $this->toArray($booking);
+            }
+        }
+        return $result;
+    }
 }
