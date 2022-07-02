@@ -8,20 +8,23 @@ class BookingTransformer extends BaseTransformer
 {
     private UserTransformer $userTransformer;
     private DetailRoomTransformer $roomTransformer;
+    private HotelTransformer $hotelTransformer;
 
-    public function __construct(DetailRoomTransformer $roomTransformer, UserTransformer $userTransformer)
+    public function __construct(DetailRoomTransformer $roomTransformer, UserTransformer $userTransformer, HotelTransformer $hotelTransformer)
     {
         $this->userTransformer = $userTransformer;
         $this->roomTransformer = $roomTransformer;
+        $this->hotelTransformer = $hotelTransformer;
     }
 
-    public const ALLOW = ['id', 'fullName', 'phone', 'email', 'checkIn', 'checkOut', 'status', 'createdAt'];
+    public const ALLOW = ['id', 'fullName', 'phone', 'email', 'checkIn', 'checkOut', 'total', 'status', 'createdAt'];
 
     public function toArray(Booking $booking): array
     {
         $result = $this->transform($booking, static::ALLOW);
         $result['user'] = $this->userTransformer->toArray($booking->getUser());
         $result['room'] = $this->roomTransformer->toArray($booking->getRoom());
+        $result['hotel'] = $this->hotelTransformer->toArray($booking->getRoom()->getHotel());
 
         return $result;
     }
