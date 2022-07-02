@@ -118,7 +118,5 @@ class HotelRepository extends BaseRepository
         ))
             ->setParameter('adults', $adults)
             ->setParameter('children', $children);
-
     }
-
 }

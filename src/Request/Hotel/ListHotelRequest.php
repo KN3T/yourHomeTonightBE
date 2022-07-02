@@ -15,8 +15,8 @@ class ListHotelRequest extends BaseRequest
     public const DEFAULT_ORDER = 'asc';
     public const DEFAULT_LIMIT = 10;
     public const DEFAULT_OFFSET = 0;
-    const DEFAULT_ADULTS = 1;
-    const DEFAULT_CHILDREN = 1;
+    public const DEFAULT_ADULTS = 1;
+    public const DEFAULT_CHILDREN = 1;
 
     #[Assert\Type('string')]
     private $city = null;
@@ -189,5 +189,4 @@ class ListHotelRequest extends BaseRequest
     {
         $this->children = $children;
     }
-
 }

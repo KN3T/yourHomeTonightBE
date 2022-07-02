@@ -81,6 +81,5 @@ class RoomRepository extends BaseRepository
         ))
             ->setParameter('adults', $adults)
             ->setParameter('children', $children);
-
     }
 }
