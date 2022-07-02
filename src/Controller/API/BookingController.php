@@ -10,6 +10,7 @@ use App\Service\StripePaymentService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\BookingTransformer;
 use App\Transformer\ValidatorTransformer;
+use Stripe\Checkout\Session as StripeSession;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,12 +73,25 @@ class BookingController extends AbstractController
         $stripe = new StripeClient($this->parameterBag->get('stripeKey'));
         $result = $stripe->checkout->sessions->retrieve($sessionPayment);
         if ('paid' === $result->payment_status) {
-            $booking = $booking->setStatus(Booking::SUCCESS);
-            $bookingResult = $bookingTransformer->toArray($booking);
+            $booking->setStatus(Booking::SUCCESS);
             $bookingRepository->save($booking);
-            return $this->success(['message' => 'Payment success', 'booking' => $bookingResult]);
+            return $this->success($this->getCheckoutInfo($result, $bookingTransformer, $booking));
         }
 
-        return $this->error('Payment fail');
+        return $this->error('Payment failed');
+    }
+
+    private function getCheckoutInfo(StripeSession $session, BookingTransformer $bookingTransformer, Booking $booking): array
+    {
+        $paymentInfo = $session->customer_details->toArray();
+        $bookingResult = $bookingTransformer->toArray($booking);
+
+        return [
+            'paymentInfo' => [
+                'billingName' => $paymentInfo['name'],
+                'purchasedAt' => $booking->getCreatedAt(),
+            ],
+            'booking' => $bookingResult,
+        ];
     }
 }
