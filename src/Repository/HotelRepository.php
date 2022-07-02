@@ -45,7 +45,9 @@ class HotelRepository extends BaseRepository
         $hotels->where('1=1');
         $hotels = $this->filterByDate($hotels, $hotelRequest->getCheckIn(), $hotelRequest->getCheckOut());
         $hotels = $this->filterByCity($hotels, $hotelRequest->getCity());
+        $hotels = $this->filterByPeople($hotels, $hotelRequest->getAdults(), $hotelRequest->getChildren());
         $hotels = $this->orderByPrice($hotels, $hotelRequest);
+
         $hotels->setMaxResults($hotelRequest->getLimit())->setFirstResult($hotelRequest->getOffset());
         $total = (new Paginator($hotels))->count();
         $hotels = $hotels->getQuery()->getResult();
@@ -106,6 +108,17 @@ class HotelRepository extends BaseRepository
         ))
             ->setParameter('checkIn', $checkIn)
             ->setParameter('checkOut', $checkOut);
+    }
+
+    private function filterByPeople(QueryBuilder $hotels, ?int $adults, ?int $children): QueryBuilder
+    {
+        return $hotels->andWhere($hotels->expr()->andX(
+            $hotels->expr()->gte('r.adults', ':adults'),
+            $hotels->expr()->gte('r.children', ':children')
+        ))
+            ->setParameter('adults', $adults)
+            ->setParameter('children', $children);
+
     }
 
 }

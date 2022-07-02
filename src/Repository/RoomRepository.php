@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Booking;
 use App\Entity\Hotel;
 use App\Entity\Room;
 use App\Request\Room\ListRoomRequest;
@@ -32,9 +33,12 @@ class RoomRepository extends BaseRepository
     {
         $rooms = $this->createQueryBuilder(static::ROOM_ALIAS)
             ->join(Hotel::class, 'h', Join::WITH, 'h.id=r.hotel')
+            ->leftJoin(Booking::class, 'b', Join::WITH, 'r.id=b.room')
             ->where('h.id=:hotelID')->setParameter('hotelID', $hotel->getId());
         $rooms = $this->andFilter($rooms, 'beds', $roomRequest->getBeds());
         $rooms = $this->andFilter($rooms, 'type', $roomRequest->getType());
+        $rooms = $this->filterByDate($rooms, $roomRequest->getCheckIn(), $roomRequest->getCheckOut());
+        $rooms = $this->filterByPeople($rooms, $roomRequest->getAdults(), $roomRequest->getChildren());
         $rooms = $this->filterByPrice($rooms, $roomRequest->getMinPrice(), $roomRequest->getMaxPrice());
         $rooms = $this->sortBy($rooms, $roomRequest->getSortBy(), $roomRequest->getOrder());
         $rooms->setMaxResults($roomRequest->getLimit())->setFirstResult($roomRequest->getOffset());
@@ -56,5 +60,27 @@ class RoomRepository extends BaseRepository
             ->setParameter('minPrice', $minPrice)
             ->andWhere('r.price <= :maxPrice')
             ->setParameter('maxPrice', $maxPrice);
+    }
+
+    private function filterByDate(QueryBuilder $rooms, ?\DateTime $checkIn, ?\DateTime $checkOut): QueryBuilder
+    {
+        return $rooms->andWhere($rooms->expr()->orX(
+            $rooms->expr()->gt('b.checkIn', ':checkOut'),
+            $rooms->expr()->lt('b.checkOut', ':checkIn'),
+            $rooms->expr()->isNull('b.checkIn'),
+        ))
+            ->setParameter('checkIn', $checkIn)
+            ->setParameter('checkOut', $checkOut);
+    }
+
+    private function filterByPeople(QueryBuilder $rooms, ?int $adults, ?int $children): QueryBuilder
+    {
+        return $rooms->andWhere($rooms->expr()->andX(
+            $rooms->expr()->gte('r.adults', ':adults'),
+            $rooms->expr()->gte('r.children', ':children')
+        ))
+            ->setParameter('adults', $adults)
+            ->setParameter('children', $children);
+
     }
 }
