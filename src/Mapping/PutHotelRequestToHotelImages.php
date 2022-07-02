@@ -48,7 +48,7 @@ class PutHotelRequestToHotelImages
         return $result;
     }
 
-    private function hotelImagesDiff(array $hotelImages1, array $hotelImages2)
+    private function hotelImagesDiff(array $hotelImages1, array $hotelImages2): array
     {
         $arr1 = [];
         $arr2 = [];
