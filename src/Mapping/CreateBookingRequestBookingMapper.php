@@ -6,10 +6,13 @@ use App\Entity\Booking;
 use App\Entity\User;
 use App\Repository\RoomRepository;
 use App\Request\Booking\CreateBookingRequest;
+use App\Traits\DateTimeTraits;
 use Symfony\Component\Security\Core\Security;
 
 class CreateBookingRequestBookingMapper
 {
+    use DateTimeTraits;
+
     private RoomRepository $roomRepository;
     private Security $security;
 
@@ -37,7 +40,7 @@ class CreateBookingRequestBookingMapper
         $room->addBooking($booking);
         $currentUser->addBooking($booking);
 
-        $days = $createBookingRequest->getCheckIn()->diff($createBookingRequest->getCheckOut())->format('%a');
+        $days = $this->diffDay($createBookingRequest->getCheckIn(), $createBookingRequest->getCheckOut());
         $booking->setTotal($days * $room->getPrice());
 
         return $booking;

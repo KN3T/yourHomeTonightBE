@@ -49,6 +49,14 @@ class ListRoomRequest extends BaseRequest
     #[Assert\Type('numeric')]
     private ?int $checkOut = null;
 
+    public function __construct()
+    {
+        $now = new \DateTimeImmutable('now');
+        $this->checkIn = $this->datetime2Timestamp($now);
+        $future = $now->modify('+3 day');
+        $this->checkOut = $this->datetime2Timestamp($future);
+    }
+
     /**
      * @return null
      */

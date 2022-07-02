@@ -3,10 +3,13 @@
 namespace App\Request\Hotel;
 
 use App\Request\BaseRequest;
+use App\Traits\DateTimeTraits;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ListHotelRequest extends BaseRequest
 {
+    use DateTimeTraits;
+
     public const ORDER_BY_LIST = ['asc', 'desc'];
     public const DEFAULT_SORT_BY = 'price';
     public const DEFAULT_ORDER = 'asc';
@@ -36,6 +39,20 @@ class ListHotelRequest extends BaseRequest
 
     #[Assert\Type('numeric')]
     private ?float $minPrice = null;
+
+    #[Assert\Type('numeric')]
+    private ?int $checkIn = null;
+
+    #[Assert\Type('numeric')]
+    private ?int $checkOut = null;
+
+    public function __construct()
+    {
+        $now = new \DateTimeImmutable('now');
+        $this->checkIn = $this->datetime2Timestamp($now);
+        $future = $now->modify('+3 day');
+        $this->checkOut = $this->datetime2Timestamp($future);
+    }
 
     /**
      * @return mixed
@@ -111,5 +128,25 @@ class ListHotelRequest extends BaseRequest
     public function setMinPrice(?float $minPrice): void
     {
         $this->minPrice = $minPrice;
+    }
+
+    public function getCheckIn(): ?\DateTime
+    {
+        return $this->timestampToDateTime($this->checkIn);
+    }
+
+    public function setCheckIn(?int $checkIn): void
+    {
+        $this->checkIn = $checkIn;
+    }
+
+    public function getCheckOut(): ?\DateTime
+    {
+        return $this->timestampToDateTime($this->checkOut);
+    }
+
+    public function setCheckOut(?int $checkOut): void
+    {
+        $this->checkOut = $checkOut;
     }
 }

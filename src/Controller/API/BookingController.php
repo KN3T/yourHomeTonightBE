@@ -29,9 +29,10 @@ class BookingController extends AbstractController
 
     public function __construct(
         ParameterBagInterface $parameterBag,
-        ValidatorTransformer $validatorTransformer,
-        ValidatorInterface $validator
-    ) {
+        ValidatorTransformer  $validatorTransformer,
+        ValidatorInterface    $validator
+    )
+    {
         $this->parameterBag = $parameterBag;
         $this->validator = $validator;
         $this->validatorTransformer = $validatorTransformer;
@@ -42,11 +43,12 @@ class BookingController extends AbstractController
      */
     #[Route('/booking', name: 'booking', methods: ['POST'])]
     public function index(
-        Request $request,
+        Request              $request,
         CreateBookingRequest $createBookingRequest,
-        BookingService $bookingService,
+        BookingService       $bookingService,
         StripePaymentService $stripePaymentService
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $request = json_decode($request->getContent(), true);
         $bookingRequest = $createBookingRequest->fromArray($request);
         $errors = $this->validator->validate($bookingRequest);
@@ -61,10 +63,11 @@ class BookingController extends AbstractController
 
     #[Route('/payment/check', name: 'check-payment', methods: ['POST'])]
     public function checkPayment(
-        Request $request,
-        BookingRepository $bookingRepository,
+        Request            $request,
+        BookingRepository  $bookingRepository,
         BookingTransformer $bookingTransformer
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $request = json_decode($request->getContent(), true);
         $sessionPayment = $request['session'];
         $bookingId = $request['bookingId'];
@@ -72,9 +75,9 @@ class BookingController extends AbstractController
         $stripe = new StripeClient($this->parameterBag->get('stripeKey'));
         $result = $stripe->checkout->sessions->retrieve($sessionPayment);
         if ('paid' === $result->payment_status) {
-            $booking->setStatus(Booking::SUCCESS);
+            $booking = $booking->setStatus(Booking::SUCCESS);
             $bookingResult = $bookingTransformer->toArray($booking);
-
+            $bookingRepository->save($booking);
             return $this->success(['message' => 'Payment success', 'booking' => $bookingResult]);
         }
 
