@@ -3,9 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Address;
+use App\Entity\Booking;
 use App\Entity\Hotel;
 use App\Entity\Room;
 use App\Request\Hotel\ListHotelRequest;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -35,12 +37,17 @@ class HotelRepository extends BaseRepository
     {
         $hotels = $this->createQueryBuilder(static::HOTEL_ALIAS)
             ->select('h, MIN(r.price) AS price')
-            ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
             ->join(Address::class, 'ad', Join::WITH, 'ad.hotel = h.id')
+            ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
+            ->leftJoin(Booking::class, 'b', Join::WITH, 'b.room = r.id')
             ->groupBy('r.hotel');
         $hotels = $this->filterByPrice($hotels, $hotelRequest->getMinPrice(), $hotelRequest->getMaxPrice());
+        $hotels->where('1=1');
+        $hotels = $this->filterByDate($hotels, $hotelRequest->getCheckIn(), $hotelRequest->getCheckOut());
         $hotels = $this->filterByCity($hotels, $hotelRequest->getCity());
+        $hotels = $this->filterByPeople($hotels, $hotelRequest->getAdults(), $hotelRequest->getChildren());
         $hotels = $this->orderByPrice($hotels, $hotelRequest);
+
         $hotels->setMaxResults($hotelRequest->getLimit())->setFirstResult($hotelRequest->getOffset());
         $total = (new Paginator($hotels))->count();
         $hotels = $hotels->getQuery()->getResult();
@@ -89,6 +96,27 @@ class HotelRepository extends BaseRepository
             return $hotels;
         }
 
-        return $hotels->where('ad.city = :city')->setParameter('city', $city);
+        return $hotels->andWhere('ad.city = :city')->setParameter('city', $city);
+    }
+
+    private function filterByDate(QueryBuilder $hotels, ?DateTime $checkIn, ?DateTime $checkOut): QueryBuilder
+    {
+        return $hotels->andWhere($hotels->expr()->orX(
+            $hotels->expr()->gt('b.checkIn', ':checkOut'),
+            $hotels->expr()->lt('b.checkOut', ':checkIn'),
+            $hotels->expr()->isNull('b.checkIn'),
+        ))
+            ->setParameter('checkIn', $checkIn)
+            ->setParameter('checkOut', $checkOut);
+    }
+
+    private function filterByPeople(QueryBuilder $hotels, ?int $adults, ?int $children): QueryBuilder
+    {
+        return $hotels->andWhere($hotels->expr()->andX(
+            $hotels->expr()->gte('r.adults', ':adults'),
+            $hotels->expr()->gte('r.children', ':children')
+        ))
+            ->setParameter('adults', $adults)
+            ->setParameter('children', $children);
     }
 }

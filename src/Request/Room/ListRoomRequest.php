@@ -15,6 +15,8 @@ class ListRoomRequest extends BaseRequest
     public const DEFAULT_ORDER = 'asc';
     public const DEFAULT_LIMIT = 10;
     public const DEFAULT_OFFSET = 0;
+    public const DEFAULT_ADULTS = 1;
+    public const DEFAULT_CHILDREN = 1;
 
     #[Assert\Type('string')]
     private $type = null;
@@ -48,6 +50,20 @@ class ListRoomRequest extends BaseRequest
 
     #[Assert\Type('numeric')]
     private ?int $checkOut = null;
+
+    #[Assert\Type('int')]
+    private ?int $adults = self::DEFAULT_ADULTS;
+
+    #[Assert\Type('int')]
+    private ?int $children = self::DEFAULT_CHILDREN;
+
+    public function __construct()
+    {
+        $now = new \DateTimeImmutable('now');
+        $this->checkIn = $this->datetime2Timestamp($now);
+        $future = $now->modify('+3 day');
+        $this->checkOut = $this->datetime2Timestamp($future);
+    }
 
     /**
      * @return null
@@ -141,7 +157,7 @@ class ListRoomRequest extends BaseRequest
         $this->minPrice = $minPrice;
     }
 
-    public function getCheckIn(): ?string
+    public function getCheckIn(): ?\DateTime
     {
         return $this->timestampToDateTime($this->checkIn);
     }
@@ -151,7 +167,7 @@ class ListRoomRequest extends BaseRequest
         $this->checkIn = $checkIn;
     }
 
-    public function getCheckOut(): ?string
+    public function getCheckOut(): ?\DateTime
     {
         return $this->timestampToDateTime($this->checkOut);
     }
@@ -159,5 +175,37 @@ class ListRoomRequest extends BaseRequest
     public function setCheckOut(?int $checkOut): void
     {
         $this->checkOut = $checkOut;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getAdults(): ?int
+    {
+        return $this->adults;
+    }
+
+    /**
+     * @param int|null $adults
+     */
+    public function setAdults(?int $adults): void
+    {
+        $this->adults = $adults;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getChildren(): ?int
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param int|null $children
+     */
+    public function setChildren(?int $children): void
+    {
+        $this->children = $children;
     }
 }

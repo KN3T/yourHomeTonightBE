@@ -3,15 +3,20 @@
 namespace App\Request\Hotel;
 
 use App\Request\BaseRequest;
+use App\Traits\DateTimeTraits;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ListHotelRequest extends BaseRequest
 {
+    use DateTimeTraits;
+
     public const ORDER_BY_LIST = ['asc', 'desc'];
     public const DEFAULT_SORT_BY = 'price';
     public const DEFAULT_ORDER = 'asc';
     public const DEFAULT_LIMIT = 10;
     public const DEFAULT_OFFSET = 0;
+    public const DEFAULT_ADULTS = 1;
+    public const DEFAULT_CHILDREN = 1;
 
     #[Assert\Type('string')]
     private $city = null;
@@ -36,6 +41,26 @@ class ListHotelRequest extends BaseRequest
 
     #[Assert\Type('numeric')]
     private ?float $minPrice = null;
+
+    #[Assert\Type('numeric')]
+    private ?int $checkIn = null;
+
+    #[Assert\Type('numeric')]
+    private ?int $checkOut = null;
+
+    #[Assert\Type('int')]
+    private ?int $adults = self::DEFAULT_ADULTS;
+
+    #[Assert\Type('int')]
+    private ?int $children = self::DEFAULT_CHILDREN;
+
+    public function __construct()
+    {
+        $now = new \DateTimeImmutable('now');
+        $this->checkIn = $this->datetime2Timestamp($now);
+        $future = $now->modify('+3 day');
+        $this->checkOut = $this->datetime2Timestamp($future);
+    }
 
     /**
      * @return mixed
@@ -111,5 +136,57 @@ class ListHotelRequest extends BaseRequest
     public function setMinPrice(?float $minPrice): void
     {
         $this->minPrice = $minPrice;
+    }
+
+    public function getCheckIn(): ?\DateTime
+    {
+        return $this->timestampToDateTime($this->checkIn);
+    }
+
+    public function setCheckIn(?int $checkIn): void
+    {
+        $this->checkIn = $checkIn;
+    }
+
+    public function getCheckOut(): ?\DateTime
+    {
+        return $this->timestampToDateTime($this->checkOut);
+    }
+
+    public function setCheckOut(?int $checkOut): void
+    {
+        $this->checkOut = $checkOut;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getAdults(): ?int
+    {
+        return $this->adults;
+    }
+
+    /**
+     * @param int|null $adults
+     */
+    public function setAdults(?int $adults): void
+    {
+        $this->adults = $adults;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getChildren(): ?int
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param int|null $children
+     */
+    public function setChildren(?int $children): void
+    {
+        $this->children = $children;
     }
 }

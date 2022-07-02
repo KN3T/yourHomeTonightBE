@@ -74,6 +74,7 @@ class BookingController extends AbstractController
         $result = $stripe->checkout->sessions->retrieve($sessionPayment);
         if ('paid' === $result->payment_status) {
             $booking->setStatus(Booking::SUCCESS);
+            $bookingRepository->save($booking);
             return $this->success($this->getCheckoutInfo($result, $bookingTransformer, $booking));
         }
 
