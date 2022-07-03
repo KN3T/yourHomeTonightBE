@@ -100,4 +100,11 @@ class RoomRepository extends BaseRepository
         }
         return false;
     }
+
+    public function getMinAndMaxPrice(): array
+    {
+        return $this->createQueryBuilder(static::ROOM_ALIAS)
+            ->select('min(r.price) as minPrice, max(r.price) as maxPrice')
+            ->getQuery()->getResult();
+    }
 }

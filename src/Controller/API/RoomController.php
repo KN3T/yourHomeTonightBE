@@ -43,7 +43,8 @@ class RoomController extends AbstractController
         ListRoomRequest     $listRoomRequest,
         RoomService         $roomService,
         ListRoomTransformer $listRoomTransformer
-    ): Response {
+    ): Response
+    {
         $filters = $request->query->all();
         $roomRequest = $listRoomRequest->fromArray($filters);
         $errors = $this->validator->validate($roomRequest);
@@ -65,7 +66,8 @@ class RoomController extends AbstractController
         CreateRoomRequest     $createRoomRequest,
         Hotel                 $hotel,
         CreateRoomTransformer $createRoomTransformer,
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $request = json_decode($request->getContent(), true);
         $createRoomRequest->fromArray($request);
         $errors = $this->validator->validate($createRoomRequest);
@@ -83,7 +85,8 @@ class RoomController extends AbstractController
     public function detail(
         Room                  $room,
         DetailRoomTransformer $detailRoomTransformer,
-    ): JsonResponse {
+    ): JsonResponse
+    {
         return $this->success($detailRoomTransformer->toArray($room));
     }
 
@@ -96,6 +99,13 @@ class RoomController extends AbstractController
         return $this->success([], Response::HTTP_NO_CONTENT);
     }
 
+    #[Route('/getPrices', name: 'getPrices', methods: ['GET'])]
+    public function getPrices(RoomRepository $roomRepository): JsonResponse
+    {
+        $minMaxPrice = $roomRepository->getMinAndMaxPrice();
+        return $this->success($minMaxPrice[0]);
+    }
+
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'put_rooms', methods: ['PUT'])]
     #[Entity('hotel', options: ['id' => 'hotelId'])]
     public function put(
@@ -105,7 +115,8 @@ class RoomController extends AbstractController
         Hotel              $hotel,
         Room               $room,
         PutRoomTransformer $putRoomTransformer,
-    ): JsonResponse {
+    ): JsonResponse
+    {
         if (!$this->checkRoomInHotel($room, $hotel)) {
             return $this->error('Room not in Hotel');
         }
