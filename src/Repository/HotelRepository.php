@@ -136,9 +136,9 @@ class HotelRepository extends BaseRepository
         if ($rating === null) {
             return $hotels;
         }
-        return $hotels->andHaving('rating >= :rating')
+        return $hotels->andHaving('rating > :rating')
             ->andHaving('rating < :ratingBias')
-            ->setParameter('rating', $rating)
+            ->setParameter('rating', $rating - 0.25)
             ->setParameter('ratingBias', $rating + 0.25);
     }
 }

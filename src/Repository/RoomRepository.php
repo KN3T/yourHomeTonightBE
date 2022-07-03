@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Booking;
 use App\Entity\Hotel;
+use App\Entity\Rating;
 use App\Entity\Room;
 use App\Request\Booking\CreateBookingRequest;
 use App\Request\Room\ListRoomRequest;
@@ -33,9 +34,13 @@ class RoomRepository extends BaseRepository
     public function list(Hotel $hotel, ListRoomRequest $roomRequest)
     {
         $rooms = $this->createQueryBuilder(static::ROOM_ALIAS)
+            ->select('r, SUM(ra.rating)/count(ra.rating)  as rating')
             ->join(Hotel::class, 'h', Join::WITH, 'h.id=r.hotel')
             ->leftJoin(Booking::class, 'b', Join::WITH, 'r.id=b.room')
-            ->where('h.id=:hotelID')->setParameter('hotelID', $hotel->getId());
+            ->leftJoin(Rating::class, 'ra', Join::WITH, 'ra.booking = b.id')
+            ->groupBy('r.id');
+        $rooms = $this->filterByRating($rooms, $roomRequest->getRating());
+        $rooms->where('h.id=:hotelID')->setParameter('hotelID', $hotel->getId());
         $rooms = $this->andFilter($rooms, 'beds', $roomRequest->getBeds());
         $rooms = $this->andFilter($rooms, 'type', $roomRequest->getType());
         $rooms = $this->filterByDate($rooms, $roomRequest->getCheckIn(), $roomRequest->getCheckOut());
@@ -106,5 +111,28 @@ class RoomRepository extends BaseRepository
         return $this->createQueryBuilder(static::ROOM_ALIAS)
             ->select('min(r.price) as minPrice, max(r.price) as maxPrice')
             ->getQuery()->getResult();
+    }
+
+    public function getDetails(Room $room)
+    {
+        $rooms = $this->createQueryBuilder(static::ROOM_ALIAS)
+            ->select('r, SUM(ra.rating)/count(ra.rating)  as rating')
+            ->join(Hotel::class, 'h', Join::WITH, 'h.id=r.hotel')
+            ->leftJoin(Booking::class, 'b', Join::WITH, 'r.id=b.room')
+            ->leftJoin(Rating::class, 'ra', Join::WITH, 'ra.booking = b.id')
+            ->where('r.id=:roomId')->setParameter('roomId', $room->getId())
+            ->groupBy('r.id');
+        return $rooms->getQuery()->getOneOrNullResult();
+    }
+
+    private function filterByRating(QueryBuilder $rooms, $rating): QueryBuilder
+    {
+        if ($rating === null) {
+            return $rooms;
+        }
+        return $rooms->having('rating > :rating')
+            ->andHaving('rating < :ratingBias')
+            ->setParameter('rating', $rating - 0.25)
+            ->setParameter('ratingBias', $rating + 0.25);
     }
 }

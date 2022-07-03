@@ -43,7 +43,8 @@ class RoomController extends AbstractController
         ListRoomRequest     $listRoomRequest,
         RoomService         $roomService,
         ListRoomTransformer $listRoomTransformer
-    ): Response {
+    ): Response
+    {
         $filters = $request->query->all();
         $roomRequest = $listRoomRequest->fromArray($filters);
         $errors = $this->validator->validate($roomRequest);
@@ -65,7 +66,8 @@ class RoomController extends AbstractController
         CreateRoomRequest     $createRoomRequest,
         Hotel                 $hotel,
         CreateRoomTransformer $createRoomTransformer,
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $request = json_decode($request->getContent(), true);
         $createRoomRequest->fromArray($request);
         $errors = $this->validator->validate($createRoomRequest);
@@ -81,10 +83,15 @@ class RoomController extends AbstractController
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'detail', methods: ['GET'])]
     #[Entity('hotel', options: ['id' => 'hotelId'])]
     public function detail(
-        Room                  $room,
-        DetailRoomTransformer $detailRoomTransformer,
-    ): JsonResponse {
-        return $this->success($detailRoomTransformer->toArray($room));
+        Room                $room,
+        RoomRepository      $roomRepository,
+        ListRoomTransformer $listRoomTransformer
+    ): JsonResponse
+    {
+        $room = $roomRepository->getDetails($room);
+        $roomArray = $listRoomTransformer->toArray($room);
+
+        return $this->success($roomArray);
     }
 
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'delete', methods: ['DELETE'])]
@@ -112,7 +119,8 @@ class RoomController extends AbstractController
         Hotel              $hotel,
         Room               $room,
         PutRoomTransformer $putRoomTransformer,
-    ): JsonResponse {
+    ): JsonResponse
+    {
         if (!$this->checkRoomInHotel($room, $hotel)) {
             return $this->error('Room not in Hotel');
         }
