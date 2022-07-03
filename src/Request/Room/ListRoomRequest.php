@@ -227,5 +227,4 @@ class ListRoomRequest extends BaseRequest
     {
         $this->rating = $rating;
     }
-
 }

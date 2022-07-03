@@ -228,5 +228,4 @@ class ListHotelRequest extends BaseRequest
     {
         $this->rating = $rating;
     }
-
 }
