@@ -37,7 +37,7 @@ class HotelRepository extends BaseRepository
     public function list(ListHotelRequest $hotelRequest): array
     {
         $hotels = $this->createQueryBuilder(static::HOTEL_ALIAS)
-            ->select('h, MIN(r.price) AS price, SUM(ra.rating)*2/count(ra.rating)  as rating')
+            ->select('h, MIN(r.price) AS price, SUM(ra.rating)/count(ra.rating)  as rating')
             ->join(Address::class, 'ad', Join::WITH, 'ad.hotel = h.id')
             ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
             ->leftJoin(Booking::class, 'b', Join::WITH, 'b.room = r.id')
@@ -66,7 +66,7 @@ class HotelRepository extends BaseRepository
     public function detail(Hotel $hotel)
     {
         $hotels = $this->createQueryBuilder(static::HOTEL_ALIAS)
-            ->select('h, MIN(r.price) AS price, (SUM(ra.rating)*2/count(ra.rating))  as rating')
+            ->select('h, MIN(r.price) AS price, (SUM(ra.rating)/count(ra.rating))  as rating')
             ->where('h.id=:hotelId')
             ->setParameter('hotelId', $hotel->getId())
             ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
@@ -136,6 +136,9 @@ class HotelRepository extends BaseRepository
         if ($rating === null) {
             return $hotels;
         }
-        return $hotels->andHaving('rating = :rating')->setParameter('rating', $rating);
+        return $hotels->andHaving('rating >= :rating')
+            ->andHaving('rating < :ratingBias')
+            ->setParameter('rating', $rating)
+            ->setParameter('ratingBias', $rating + 0.25);
     }
 }
