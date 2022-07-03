@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class PutRatingRequest extends BaseRequest
 {
-
     #[Assert\Type('string')]
     #[Assert\NotNull]
     private $content;

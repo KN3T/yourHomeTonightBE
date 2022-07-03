@@ -20,8 +20,7 @@ class RatingService
         RatingRepository $ratingRepository,
         CreateRatingRequestRatingMapper $createRatingRequestRatingMapper,
         PutRatingRequestRatingMapper $putRatingRequestRatingMapper
-    )
-    {
+    ) {
         $this->ratingRepository = $ratingRepository;
         $this->createRatingRequestRatingMapper = $createRatingRequestRatingMapper;
         $this->putRatingRequestRatingMapper = $putRatingRequestRatingMapper;

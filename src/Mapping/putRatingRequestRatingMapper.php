@@ -14,5 +14,4 @@ class putRatingRequestRatingMapper
         $rating->setUpdatedAt(new \DateTime('now'));
         return $rating;
     }
-
 }

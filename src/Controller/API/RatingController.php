@@ -41,8 +41,7 @@ class RatingController extends AbstractController
         CreateRatingRequest $createRatingRequest,
         RatingService       $ratingService,
         RatingTransformer   $ratingTransformer,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         /**
          * @var User $currentUser
          */
@@ -68,8 +67,7 @@ class RatingController extends AbstractController
         PutRatingRequest  $putRatingRequest,
         RatingService     $ratingService,
         RatingTransformer $ratingTransformer,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         /**
          * @var User $currentUser
          */

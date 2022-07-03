@@ -47,6 +47,4 @@ class CreateRatingRequest extends BaseRequest
     {
         $this->rating = $rating;
     }
-
-
 }

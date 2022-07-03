@@ -14,5 +14,4 @@ class CreateRatingRequestRatingMapper
         $rating->setRating($createRatingRequest->getRating());
         return $rating;
     }
-
 }
