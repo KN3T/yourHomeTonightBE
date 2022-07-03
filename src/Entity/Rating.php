@@ -6,7 +6,7 @@ use App\Repository\RatingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
-class Rating
+class Rating extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
