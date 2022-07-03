@@ -17,7 +17,7 @@ class ImageTransformer extends BaseTransformer
     public function toArray(Image $image): array
     {
         $result = $this->transform($image, self::ATTRIBUTES);
-        $result['src'] = $this->s3Url.$image->getPath();
+        $result['src'] = $image->getPath();
 
         return $result;
     }

@@ -41,7 +41,7 @@ class BookingController extends AbstractController
     /**
      * @throws ApiErrorException
      */
-    #[Route('/booking', name: 'booking', methods: ['POST'])]
+    #[Route('/bookings', name: 'booking', methods: ['POST'])]
     public function index(
         Request              $request,
         CreateBookingRequest $createBookingRequest,
