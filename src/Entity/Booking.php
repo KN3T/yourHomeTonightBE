@@ -57,6 +57,9 @@ class Booking extends BaseEntity
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $purchasedAt;
 
+    #[ORM\OneToOne(mappedBy: 'booking', targetEntity: Rating::class, cascade: ['persist'])]
+    private $rating;
+
     public function __construct()
     {
         $date = new \DateTime('now');
@@ -210,6 +213,23 @@ class Booking extends BaseEntity
     public function setPurchasedAt(?\DateTimeInterface $purchasedAt): self
     {
         $this->purchasedAt = $purchasedAt;
+
+        return $this;
+    }
+
+    public function getRating(): ?Rating
+    {
+        return $this->rating;
+    }
+
+    public function setRating(Rating $rating): self
+    {
+        // set the owning side of the relation if necessary
+        if ($rating->getBooking() !== $this) {
+            $rating->setBooking($this);
+        }
+
+        $this->rating = $rating;
 
         return $this;
     }
