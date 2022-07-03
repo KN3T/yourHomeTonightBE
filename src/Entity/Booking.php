@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 class Booking extends BaseEntity
 {
-    public const VAT = 10;
+    public const VAT = 0.1;
     public const PENDING = 1;
     public const SUCCESS = 2;
     public const CANCELLED = 3;
