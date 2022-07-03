@@ -58,6 +58,9 @@ class ListHotelRequest extends BaseRequest
     #[Assert\Type('int')]
     private ?int $beds = self::DEFAULT_BEDS;
 
+    #[Assert\Type('numeric')]
+    private $rating = null;
+
     public function __construct()
     {
         $now = new \DateTimeImmutable('now');
@@ -209,4 +212,21 @@ class ListHotelRequest extends BaseRequest
     {
         $this->beds = $beds;
     }
+
+    /**
+     * @return null
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param null $rating
+     */
+    public function setRating($rating): void
+    {
+        $this->rating = $rating;
+    }
+
 }

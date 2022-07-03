@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Address;
 use App\Entity\Booking;
 use App\Entity\Hotel;
+use App\Entity\Rating;
 use App\Entity\Room;
 use App\Request\Hotel\ListHotelRequest;
 use DateTime;
@@ -36,12 +37,14 @@ class HotelRepository extends BaseRepository
     public function list(ListHotelRequest $hotelRequest): array
     {
         $hotels = $this->createQueryBuilder(static::HOTEL_ALIAS)
-            ->select('h, MIN(r.price) AS price')
+            ->select('h, MIN(r.price) AS price, SUM(ra.rating)*2/count(ra.rating)  as rating')
             ->join(Address::class, 'ad', Join::WITH, 'ad.hotel = h.id')
             ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
             ->leftJoin(Booking::class, 'b', Join::WITH, 'b.room = r.id')
+            ->leftJoin(Rating::class, 'ra', Join::WITH, 'ra.booking = b.id')
             ->groupBy('r.hotel');
         $hotels = $this->filterByPrice($hotels, $hotelRequest->getMinPrice(), $hotelRequest->getMaxPrice());
+        $hotels = $this->filterByRating($hotels, $hotelRequest->getRating());
         $hotels->where('1=1');
         $hotels = $this->filterByDate($hotels, $hotelRequest->getCheckIn(), $hotelRequest->getCheckOut());
         $hotels = $this->filterByCity($hotels, $hotelRequest->getCity());
@@ -53,7 +56,6 @@ class HotelRepository extends BaseRepository
         $total = (new Paginator($hotels))->count();
         $hotels = $hotels->getQuery()->getResult();
         $hotels['total'] = $total;
-
         return $hotels;
     }
 
@@ -64,10 +66,12 @@ class HotelRepository extends BaseRepository
     public function detail(Hotel $hotel)
     {
         $hotels = $this->createQueryBuilder(static::HOTEL_ALIAS)
-            ->select('h, MIN(r.price) AS price')
+            ->select('h, MIN(r.price) AS price, (SUM(ra.rating)*2/count(ra.rating))  as rating')
             ->where('h.id=:hotelId')
             ->setParameter('hotelId', $hotel->getId())
             ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
+            ->leftJoin(Booking::class, 'b', Join::WITH, 'b.room = r.id')
+            ->leftJoin(Rating::class, 'ra', Join::WITH, 'ra.booking = b.id')
             ->groupBy('r.hotel');
 
         return $hotels->getQuery()->getOneOrNullResult();
@@ -125,5 +129,13 @@ class HotelRepository extends BaseRepository
     {
         return $hotels->andWhere('r.beds >= :beds')
             ->setParameter('beds', $beds);
+    }
+
+    private function filterByRating(QueryBuilder $hotels, $rating): QueryBuilder
+    {
+        if ($rating === null) {
+            return $hotels;
+        }
+        return $hotels->andHaving('rating = :rating')->setParameter('rating', $rating);
     }
 }
