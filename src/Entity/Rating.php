@@ -32,6 +32,12 @@ class Rating extends BaseEntity
     #[ORM\JoinColumn(nullable: false)]
     private $booking;
 
+    public function __construct()
+    {
+        $date = new \DateTime('now');
+        $this->setCreatedAt($date)->setUpdatedAt($date);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
