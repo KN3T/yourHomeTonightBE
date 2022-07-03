@@ -45,7 +45,7 @@ class FileManager
         unlink($filePath);
         $fileUrl = $filePut->get('ObjectURL');
 
-        return $this->getRelativePath($fileUrl);
+        return $fileUrl;
     }
 
     /**
