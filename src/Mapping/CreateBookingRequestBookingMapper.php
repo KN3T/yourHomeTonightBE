@@ -41,7 +41,7 @@ class CreateBookingRequestBookingMapper
         $currentUser->addBooking($booking);
 
         $days = $this->diffDay($createBookingRequest->getCheckIn(), $createBookingRequest->getCheckOut());
-        $booking->setTotal($days * $room->getPrice());
+        $booking->setTotal($days * $room->getPrice() * (1 + Booking::VAT));
 
         return $booking;
     }
