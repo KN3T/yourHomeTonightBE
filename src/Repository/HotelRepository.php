@@ -46,6 +46,7 @@ class HotelRepository extends BaseRepository
         $hotels = $this->filterByDate($hotels, $hotelRequest->getCheckIn(), $hotelRequest->getCheckOut());
         $hotels = $this->filterByCity($hotels, $hotelRequest->getCity());
         $hotels = $this->filterByPeople($hotels, $hotelRequest->getAdults(), $hotelRequest->getChildren());
+        $hotels = $this->filterByBeds($hotels, $hotelRequest->getBeds());
         $hotels = $this->orderByPrice($hotels, $hotelRequest);
 
         $hotels->setMaxResults($hotelRequest->getLimit())->setFirstResult($hotelRequest->getOffset());
@@ -118,5 +119,11 @@ class HotelRepository extends BaseRepository
         ))
             ->setParameter('adults', $adults)
             ->setParameter('children', $children);
+    }
+
+    private function filterByBeds(QueryBuilder $hotels, ?int $beds): QueryBuilder
+    {
+        return $hotels->andWhere('r.beds >= :beds')
+            ->setParameter('beds', $beds);
     }
 }

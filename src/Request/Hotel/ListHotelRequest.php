@@ -17,6 +17,7 @@ class ListHotelRequest extends BaseRequest
     public const DEFAULT_OFFSET = 0;
     public const DEFAULT_ADULTS = 1;
     public const DEFAULT_CHILDREN = 1;
+    public const DEFAULT_BEDS = 1;
 
     #[Assert\Type('string')]
     private $city = null;
@@ -53,6 +54,9 @@ class ListHotelRequest extends BaseRequest
 
     #[Assert\Type('int')]
     private ?int $children = self::DEFAULT_CHILDREN;
+
+    #[Assert\Type('int')]
+    private ?int $beds = self::DEFAULT_BEDS;
 
     public function __construct()
     {
@@ -188,5 +192,21 @@ class ListHotelRequest extends BaseRequest
     public function setChildren(?int $children): void
     {
         $this->children = $children;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getBeds(): ?int
+    {
+        return $this->beds;
+    }
+
+    /**
+     * @param int|null $beds
+     */
+    public function setBeds(?int $beds): void
+    {
+        $this->beds = $beds;
     }
 }
