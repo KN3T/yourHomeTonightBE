@@ -54,6 +54,7 @@ class BookingController extends AbstractController
         if (count($errors) > 0) {
             return $this->error($this->validatorTransformer->toArray($errors));
         }
+
         $booking = $bookingService->createBooking($createBookingRequest);
         $paymentUrl = $stripePaymentService->makePayment($booking);
 

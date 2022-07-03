@@ -2,26 +2,36 @@
 
 namespace App\Service;
 
+use App\Entity\Booking;
 use App\Mapping\CreateBookingRequestBookingMapper;
 use App\Repository\BookingRepository;
+use App\Repository\RoomRepository;
 use App\Request\Booking\CreateBookingRequest;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class BookingService
 {
     private BookingRepository $bookingRepository;
+    private RoomRepository $roomRepository;
     private CreateBookingRequestBookingMapper $createBookingRequestBookingMapper;
 
     public function __construct(
-        BookingRepository $bookingRepository,
+        BookingRepository                 $bookingRepository,
+        RoomRepository                    $roomRepository,
         CreateBookingRequestBookingMapper $createBookingRequestBookingMapper
     ) {
         $this->bookingRepository = $bookingRepository;
+        $this->roomRepository = $roomRepository;
         $this->createBookingRequestBookingMapper = $createBookingRequestBookingMapper;
     }
 
-    public function createBooking(CreateBookingRequest $createBookingRequest)
+    public function createBooking(CreateBookingRequest $createBookingRequest): Booking
     {
         $booking = $this->createBookingRequestBookingMapper->mapping($createBookingRequest);
+        $checkRoomAvailable = $this->roomRepository->checkRoomAvailable($createBookingRequest);
+        if (!$checkRoomAvailable) {
+            throw new BadRequestException("This room is not available");
+        }
         $this->bookingRepository->save($booking);
 
         return $booking;

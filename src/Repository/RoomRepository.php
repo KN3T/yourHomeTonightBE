@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Booking;
 use App\Entity\Hotel;
 use App\Entity\Room;
+use App\Request\Booking\CreateBookingRequest;
 use App\Request\Room\ListRoomRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -81,5 +82,22 @@ class RoomRepository extends BaseRepository
         ))
             ->setParameter('adults', $adults)
             ->setParameter('children', $children);
+    }
+
+    public function checkRoomAvailable(CreateBookingRequest $createBookingRequest): bool
+    {
+        $room = $this->createQueryBuilder(static::ROOM_ALIAS)
+            ->join(Booking::class, 'b', Join::WITH, 'r.id=b.room')
+            ->where('r.id=:roomId')
+            ->andWhere('b.checkIn <= :checkOut')
+            ->andWhere('b.checkOut >= :checkIn')
+            ->setParameter('roomId', $createBookingRequest->getRoomId())
+            ->setParameter('checkIn', $createBookingRequest->getCheckIn())
+            ->setParameter('checkOut', $createBookingRequest->getCheckOut());
+        $roomCount = (new Paginator($room))->count();
+        if ($roomCount === 0) {
+            return true;
+        }
+        return false;
     }
 }
