@@ -32,8 +32,7 @@ class BookingController extends AbstractController
         ParameterBagInterface $parameterBag,
         ValidatorTransformer  $validatorTransformer,
         ValidatorInterface    $validator
-    )
-    {
+    ) {
         $this->parameterBag = $parameterBag;
         $this->validator = $validator;
         $this->validatorTransformer = $validatorTransformer;
@@ -48,8 +47,7 @@ class BookingController extends AbstractController
         CreateBookingRequest $createBookingRequest,
         BookingService       $bookingService,
         StripePaymentService $stripePaymentService
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $request = json_decode($request->getContent(), true);
         $bookingRequest = $createBookingRequest->fromArray($request);
         $errors = $this->validator->validate($bookingRequest);
@@ -68,8 +66,7 @@ class BookingController extends AbstractController
         Request            $request,
         BookingRepository  $bookingRepository,
         BookingTransformer $bookingTransformer
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $request = json_decode($request->getContent(), true);
         $sessionPayment = $request['session'];
         $bookingId = $request['bookingId'];

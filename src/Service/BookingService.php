@@ -19,8 +19,7 @@ class BookingService
         BookingRepository                 $bookingRepository,
         RoomRepository                    $roomRepository,
         CreateBookingRequestBookingMapper $createBookingRequestBookingMapper
-    )
-    {
+    ) {
         $this->bookingRepository = $bookingRepository;
         $this->roomRepository = $roomRepository;
         $this->createBookingRequestBookingMapper = $createBookingRequestBookingMapper;
