@@ -96,6 +96,13 @@ class RoomController extends AbstractController
         return $this->success([], Response::HTTP_NO_CONTENT);
     }
 
+    #[Route('/getPrices', name: 'getPrices', methods: ['GET'])]
+    public function getPrices(RoomRepository $roomRepository): JsonResponse
+    {
+        $minMaxPrice = $roomRepository->getMinAndMaxPrice();
+        return $this->success($minMaxPrice[0]);
+    }
+
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'put_rooms', methods: ['PUT'])]
     #[Entity('hotel', options: ['id' => 'hotelId'])]
     public function put(
