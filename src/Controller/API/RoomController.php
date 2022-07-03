@@ -81,10 +81,14 @@ class RoomController extends AbstractController
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'detail', methods: ['GET'])]
     #[Entity('hotel', options: ['id' => 'hotelId'])]
     public function detail(
-        Room                  $room,
-        DetailRoomTransformer $detailRoomTransformer,
+        Room                $room,
+        RoomRepository      $roomRepository,
+        ListRoomTransformer $listRoomTransformer
     ): JsonResponse {
-        return $this->success($detailRoomTransformer->toArray($room));
+        $room = $roomRepository->getDetails($room);
+        $roomArray = $listRoomTransformer->toArray($room);
+
+        return $this->success($roomArray);
     }
 
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'delete', methods: ['DELETE'])]

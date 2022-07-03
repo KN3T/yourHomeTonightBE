@@ -57,6 +57,9 @@ class ListRoomRequest extends BaseRequest
     #[Assert\Type('int')]
     private ?int $children = self::DEFAULT_CHILDREN;
 
+    #[Assert\Type('numeric')]
+    private $rating = null;
+
     public function __construct()
     {
         $now = new \DateTimeImmutable('now');
@@ -207,5 +210,21 @@ class ListRoomRequest extends BaseRequest
     public function setChildren(?int $children): void
     {
         $this->children = $children;
+    }
+
+    /**
+     * @return null
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param null $rating
+     */
+    public function setRating($rating): void
+    {
+        $this->rating = $rating;
     }
 }

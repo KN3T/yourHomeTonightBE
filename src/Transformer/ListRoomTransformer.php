@@ -15,12 +15,14 @@ class ListRoomTransformer extends BaseTransformer
         $this->roomImageTransformer = $roomImageTransformer;
     }
 
-    public function toArray(Room $room): array
+    public function toArray(array $room): array
     {
-        $result = $this->transform($room, static::ALLOW);
-        $result['images'] = $this->roomImageTransformer->listToArray($room->getRoomImages());
+        $roomEntity = $room[0];
+        $roomArray = $this->transform($roomEntity, static::ALLOW);
+        $roomArray['rating'] = round($room['rating'] * 2 ?? 0) / 2;
+        $roomArray['images'] = $this->roomImageTransformer->listToArray($roomEntity->getRoomImages());
 
-        return $result;
+        return $roomArray;
     }
 
     public function listToArray(array $rooms): array

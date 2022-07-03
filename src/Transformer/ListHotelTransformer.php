@@ -20,6 +20,7 @@ class ListHotelTransformer extends BaseTransformer
         $hotelEntity = $hotel[0];
         $hotelArray = $this->transform($hotelEntity, static::ALLOW);
         $hotelArray['price'] = $hotel['price'];
+        $hotelArray['rating'] = round($hotel['rating'] * 2 ?? 0) / 2;
         $hotelArray['address'] = $this->addressTransformer->toArray($hotelEntity->getAddress());
 
         $hotelArray['images'] = $this->hotelImageTransformer->listToArray($hotelEntity->getHotelImages());
