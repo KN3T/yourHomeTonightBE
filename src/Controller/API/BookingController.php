@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -30,8 +31,8 @@ class BookingController extends AbstractController
 
     public function __construct(
         ParameterBagInterface $parameterBag,
-        ValidatorTransformer $validatorTransformer,
-        ValidatorInterface $validator
+        ValidatorTransformer  $validatorTransformer,
+        ValidatorInterface    $validator
     ) {
         $this->parameterBag = $parameterBag;
         $this->validator = $validator;
@@ -43,9 +44,9 @@ class BookingController extends AbstractController
      */
     #[Route('/bookings', name: 'booking', methods: ['POST'])]
     public function index(
-        Request $request,
+        Request              $request,
         CreateBookingRequest $createBookingRequest,
-        BookingService $bookingService,
+        BookingService       $bookingService,
         StripePaymentService $stripePaymentService
     ): JsonResponse {
         $request = json_decode($request->getContent(), true);
@@ -61,10 +62,23 @@ class BookingController extends AbstractController
         return $this->success([$paymentUrl]);
     }
 
+    #[Route('/bookings/{id}/repay', name: 'repay_booking', methods: ['POST'])]
+    public function repay(
+        Booking              $booking,
+        StripePaymentService $stripePaymentService,
+    ): JsonResponse {
+        if ($booking->getStatus() == Booking::CANCELLED) {
+            return $this->error('Booking has been cancelled');
+        }
+        $paymentUrl = $stripePaymentService->makePayment($booking);
+
+        return $this->success([$paymentUrl]);
+    }
+
     #[Route('/bookings/{id}', name: 'booking_detail', methods: ['GET'])]
     public function detail(
-        Booking $booking,
-        BookingService $bookingService,
+        Booking            $booking,
+        BookingService     $bookingService,
         BookingTransformer $bookingTransformer,
     ): JsonResponse {
         $booking = $bookingTransformer->toArray($booking);
@@ -74,8 +88,8 @@ class BookingController extends AbstractController
 
     #[Route('/payment/check', name: 'check-payment', methods: ['POST'])]
     public function checkPayment(
-        Request $request,
-        BookingRepository $bookingRepository,
+        Request            $request,
+        BookingRepository  $bookingRepository,
         BookingTransformer $bookingTransformer
     ): JsonResponse {
         $request = json_decode($request->getContent(), true);
@@ -98,9 +112,9 @@ class BookingController extends AbstractController
     }
 
     private function getCheckoutInfo(
-        StripeSession $session,
+        StripeSession      $session,
         BookingTransformer $bookingTransformer,
-        Booking $booking
+        Booking            $booking
     ): array {
         $paymentInfo = $session->customer_details->toArray();
         $bookingResult = $bookingTransformer->toArray($booking);
