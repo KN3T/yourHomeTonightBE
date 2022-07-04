@@ -52,5 +52,4 @@ class RoomService
 
         return $room;
     }
-    
 }

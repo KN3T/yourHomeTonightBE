@@ -46,6 +46,11 @@ class RoomRepository extends BaseRepository
         $rooms = $this->filterByDate($rooms, $roomRequest->getCheckIn(), $roomRequest->getCheckOut());
         $rooms = $this->filterByPeople($rooms, $roomRequest->getAdults(), $roomRequest->getChildren());
         $rooms = $this->filterByPrice($rooms, $roomRequest->getMinPrice(), $roomRequest->getMaxPrice());
+        $rooms->andWhere($rooms->expr()->orX(
+            $rooms->expr()->eq('b.status', Booking::CANCELLED),
+            $rooms->expr()->eq('b.status', Booking::DONE),
+            $rooms->expr()->isNull('b.status'),
+        ));
         $rooms = $this->sortBy($rooms, $roomRequest->getSortBy(), $roomRequest->getOrder());
         $rooms->setMaxResults($roomRequest->getLimit())->setFirstResult($roomRequest->getOffset());
 
@@ -102,6 +107,7 @@ class RoomRepository extends BaseRepository
         $room->andWhere($room->expr()->orX(
             $room->expr()->eq('b.status', Booking::PENDING),
             $room->expr()->eq('b.status', Booking::SUCCESS),
+            $room->expr()->isNull('b.status'),
         ));
         $roomCount = (new Paginator($room))->count();
         if (0 === $roomCount) {
