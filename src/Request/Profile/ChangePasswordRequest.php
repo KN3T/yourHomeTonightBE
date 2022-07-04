@@ -81,5 +81,10 @@ class ChangePasswordRequest extends BaseRequest
                 ->atPath('confirmPassword')
                 ->addViolation();
         }
+        if ($changePasswordRequest->getCurrentPassword() === $changePasswordRequest->getNewPassword()) {
+            $context->buildViolation('New password must be different from current')
+                ->atPath('newPassword')
+                ->addViolation();
+        }
     }
 }
