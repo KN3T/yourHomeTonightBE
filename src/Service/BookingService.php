@@ -16,8 +16,8 @@ class BookingService
     private CreateBookingRequestBookingMapper $createBookingRequestBookingMapper;
 
     public function __construct(
-        BookingRepository                 $bookingRepository,
-        RoomRepository                    $roomRepository,
+        BookingRepository $bookingRepository,
+        RoomRepository $roomRepository,
         CreateBookingRequestBookingMapper $createBookingRequestBookingMapper
     ) {
         $this->bookingRepository = $bookingRepository;
@@ -30,7 +30,7 @@ class BookingService
         $booking = $this->createBookingRequestBookingMapper->mapping($createBookingRequest);
         $checkRoomAvailable = $this->roomRepository->checkRoomAvailable($createBookingRequest);
         if (!$checkRoomAvailable) {
-            throw new BadRequestException("This room is not available");
+            throw new BadRequestException('This room is not available');
         }
         $this->bookingRepository->save($booking);
 

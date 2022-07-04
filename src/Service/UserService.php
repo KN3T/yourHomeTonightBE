@@ -25,6 +25,7 @@ class UserService
         $hashedPassword = $this->passwordHasher->hashPassword($user, $changePasswordRequest->getNewPassword());
         $user->setPassword($hashedPassword);
         $this->userRepository->save($user);
+
         return $user;
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Transformer;
 
-use App\Entity\Room;
-
 class ListRoomTransformer extends BaseTransformer
 {
     public const ALLOW = ['id', 'number', 'type', 'beds', 'price', 'adults', 'children', 'asset', 'description', ''];

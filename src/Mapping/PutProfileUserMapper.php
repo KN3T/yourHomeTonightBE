@@ -11,6 +11,7 @@ class PutProfileUserMapper
     {
         $user->setFullName($profileRequest->getFullName());
         $user->setPhone($profileRequest->getPhone());
+
         return $user;
     }
 }

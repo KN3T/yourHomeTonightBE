@@ -12,6 +12,7 @@ class putRatingRequestRatingMapper
         $rating->setContent($putRatingRequest->getContent());
         $rating->setRating($putRatingRequest->getRating());
         $rating->setUpdatedAt(new \DateTime('now'));
+
         return $rating;
     }
 }

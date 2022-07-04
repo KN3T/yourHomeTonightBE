@@ -172,17 +172,11 @@ class PutRoomRequest extends BaseRequest
         $this->description = $description;
     }
 
-    /**
-     * @return array
-     */
     public function getImages(): array
     {
         return $this->images;
     }
 
-    /**
-     * @param array $images
-     */
     public function setImages(array $images): void
     {
         $this->images = $images;

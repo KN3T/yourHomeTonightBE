@@ -180,33 +180,21 @@ class ListRoomRequest extends BaseRequest
         $this->checkOut = $checkOut;
     }
 
-    /**
-     * @return int|null
-     */
     public function getAdults(): ?int
     {
         return $this->adults;
     }
 
-    /**
-     * @param int|null $adults
-     */
     public function setAdults(?int $adults): void
     {
         $this->adults = $adults;
     }
 
-    /**
-     * @return int|null
-     */
     public function getChildren(): ?int
     {
         return $this->children;
     }
 
-    /**
-     * @param int|null $children
-     */
     public function setChildren(?int $children): void
     {
         $this->children = $children;

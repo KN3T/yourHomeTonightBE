@@ -35,12 +35,12 @@ class RatingController extends AbstractController
 
     #[Route('/bookings/{id}/rating', name: 'create_rating', methods: ['POST'])]
     public function createRating(
-        Request             $request,
-        Security            $security,
-        Booking             $booking,
+        Request $request,
+        Security $security,
+        Booking $booking,
         CreateRatingRequest $createRatingRequest,
-        RatingService       $ratingService,
-        RatingTransformer   $ratingTransformer,
+        RatingService $ratingService,
+        RatingTransformer $ratingTransformer,
     ): JsonResponse {
         /**
          * @var User $currentUser
@@ -56,16 +56,17 @@ class RatingController extends AbstractController
             return $this->error($this->validatorTransformer->toArray($errors));
         }
         $rating = $ratingService->create($createRatingRequest, $booking);
+
         return $this->success($ratingTransformer->toArray($rating));
     }
 
     #[Route('/bookings/{id}/rating', name: 'put_rating', methods: ['PUT'])]
     public function putRating(
-        Request           $request,
-        Security          $security,
-        Booking           $booking,
-        PutRatingRequest  $putRatingRequest,
-        RatingService     $ratingService,
+        Request $request,
+        Security $security,
+        Booking $booking,
+        PutRatingRequest $putRatingRequest,
+        RatingService $ratingService,
         RatingTransformer $ratingTransformer,
     ): JsonResponse {
         /**
@@ -83,6 +84,7 @@ class RatingController extends AbstractController
         }
         $rating = $booking->getRating();
         $ratingService->put($putRatingRequest, $rating);
+
         return $this->success($ratingTransformer->toArray($rating));
     }
 
@@ -92,16 +94,17 @@ class RatingController extends AbstractController
     {
         $rating = $booking->getRating();
         $ratingRepository->remove($rating);
+
         return $this->success([], Response::HTTP_NO_CONTENT);
     }
 
     private function checkUserCreateBooking(Booking $booking, User $user): bool
     {
-        return ($booking->getUser() !== $user || $booking->getRating() !== null);
+        return $booking->getUser() !== $user || null !== $booking->getRating();
     }
 
     private function checkUserPutBooking(Booking $booking, User $user): bool
     {
-        return ($booking->getUser() !== $user || $booking->getRating() === null);
+        return $booking->getUser() !== $user || null === $booking->getRating();
     }
 }

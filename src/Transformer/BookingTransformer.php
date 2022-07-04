@@ -37,6 +37,7 @@ class BookingTransformer extends BaseTransformer
                 $result[] = $this->toArray($booking);
             }
         }
+
         return $result;
     }
 }

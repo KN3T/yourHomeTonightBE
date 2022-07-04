@@ -3,8 +3,8 @@
 namespace App\Request\Profile;
 
 use App\Request\BaseRequest;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[Assert\Callback([ChangePasswordRequest::class, 'validate'])]
@@ -72,7 +72,6 @@ class ChangePasswordRequest extends BaseRequest
     {
         $this->confirmPassword = $confirmPassword;
     }
-
 
     public static function validate(ChangePasswordRequest $changePasswordRequest, ExecutionContextInterface $context)
     {

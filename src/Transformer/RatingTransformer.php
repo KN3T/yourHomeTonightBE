@@ -6,7 +6,7 @@ use App\Entity\Rating;
 
 class RatingTransformer extends BaseTransformer
 {
-    public const ALLOW = ['id','content', 'rating' ,'createdAt', 'updatedAt'];
+    public const ALLOW = ['id', 'content', 'rating', 'createdAt', 'updatedAt'];
     private UserTransformer $userTransformer;
 
     public function __construct(UserTransformer $userTransformer)
@@ -19,6 +19,7 @@ class RatingTransformer extends BaseTransformer
         $result = $this->transform($rating, static::ALLOW);
         $result['roomId'] = $rating->getBooking()->getRoom()->getId();
         $result['user'] = $this->userTransformer->toArray($rating->getBooking()->getUser());
+
         return $result;
     }
 
@@ -30,6 +31,7 @@ class RatingTransformer extends BaseTransformer
                 $result[] = $this->toArray($rating);
             }
         }
+
         return $result;
     }
 }

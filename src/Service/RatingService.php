@@ -31,6 +31,7 @@ class RatingService
         $rating = $this->createRatingRequestRatingMapper->mapping($createRatingRequest);
         $rating->setBooking($booking);
         $this->ratingRepository->save($rating);
+
         return $rating;
     }
 
@@ -38,6 +39,7 @@ class RatingService
     {
         $this->putRatingRequestRatingMapper->mapping($putRatingRequest, $rating);
         $this->ratingRepository->save($rating);
+
         return $rating;
     }
 }

@@ -30,8 +30,8 @@ class BookingController extends AbstractController
 
     public function __construct(
         ParameterBagInterface $parameterBag,
-        ValidatorTransformer  $validatorTransformer,
-        ValidatorInterface    $validator
+        ValidatorTransformer $validatorTransformer,
+        ValidatorInterface $validator
     ) {
         $this->parameterBag = $parameterBag;
         $this->validator = $validator;
@@ -43,9 +43,9 @@ class BookingController extends AbstractController
      */
     #[Route('/bookings', name: 'booking', methods: ['POST'])]
     public function index(
-        Request              $request,
+        Request $request,
         CreateBookingRequest $createBookingRequest,
-        BookingService       $bookingService,
+        BookingService $bookingService,
         StripePaymentService $stripePaymentService
     ): JsonResponse {
         $request = json_decode($request->getContent(), true);
@@ -61,10 +61,21 @@ class BookingController extends AbstractController
         return $this->success([$paymentUrl]);
     }
 
+    #[Route('/bookings/{id}', name: 'booking_detail', methods: ['GET'])]
+    public function detail(
+        Booking $booking,
+        BookingService $bookingService,
+        BookingTransformer $bookingTransformer,
+    ): JsonResponse {
+        $booking = $bookingTransformer->toArray($booking);
+
+        return $this->success($booking);
+    }
+
     #[Route('/payment/check', name: 'check-payment', methods: ['POST'])]
     public function checkPayment(
-        Request            $request,
-        BookingRepository  $bookingRepository,
+        Request $request,
+        BookingRepository $bookingRepository,
         BookingTransformer $bookingTransformer
     ): JsonResponse {
         $request = json_decode($request->getContent(), true);
@@ -78,14 +89,19 @@ class BookingController extends AbstractController
                 ->setPurchasedAt(new \DateTime('now'))
                 ->setUpdatedAt(new \DateTime('now'));
             $bookingRepository->save($booking);
+
             return $this->success($this->getCheckoutInfo($result, $bookingTransformer, $booking));
         }
         $booking->setStatus(Booking::CANCELLED)->setUpdatedAt(new \DateTime('now'));
+
         return $this->error('Payment failed');
     }
 
-    private function getCheckoutInfo(StripeSession $session, BookingTransformer $bookingTransformer, Booking $booking): array
-    {
+    private function getCheckoutInfo(
+        StripeSession $session,
+        BookingTransformer $bookingTransformer,
+        Booking $booking
+    ): array {
         $paymentInfo = $session->customer_details->toArray();
         $bookingResult = $bookingTransformer->toArray($booking);
 
