@@ -13,9 +13,9 @@ class BookingTransformer extends BaseTransformer
 
     public function __construct(
         DetailRoomTransformer $roomTransformer,
-        UserTransformer       $userTransformer,
-        HotelTransformer      $hotelTransformer,
-        RatingTransformer     $ratingTransformer,
+        UserTransformer $userTransformer,
+        HotelTransformer $hotelTransformer,
+        RatingTransformer $ratingTransformer,
     ) {
         $this->userTransformer = $userTransformer;
         $this->roomTransformer = $roomTransformer;
@@ -31,7 +31,7 @@ class BookingTransformer extends BaseTransformer
         $result['user'] = $this->userTransformer->toArray($booking->getUser());
         $result['room'] = $this->roomTransformer->toArray($booking->getRoom());
         $result['hotel'] = $this->hotelTransformer->toArray($booking->getRoom()->getHotel());
-        if ($booking->getRating() !== null) {
+        if (null !== $booking->getRating()) {
             $result['rating'] = $this->ratingTransformer->toArray($booking->getRating());
         }
 
