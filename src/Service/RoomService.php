@@ -6,6 +6,7 @@ use App\Entity\Hotel;
 use App\Entity\Room;
 use App\Mapping\CreateRoomRequestMapper;
 use App\Mapping\PutRoomRequestRoomMapper;
+use App\Repository\BookingRepository;
 use App\Repository\RoomRepository;
 use App\Request\Room\CreateRoomRequest;
 use App\Request\Room\ListRoomRequest;
@@ -16,15 +17,18 @@ class RoomService
     private RoomRepository $roomRepository;
     private CreateRoomRequestMapper $createRoomRequestMapper;
     private PutRoomRequestRoomMapper $putRoomRequestRoomMapper;
+    private BookingRepository $bookingRepository;
 
     public function __construct(
         RoomRepository $roomRepository,
         CreateRoomRequestMapper $createRoomRequestMapper,
         PutRoomRequestRoomMapper $putRoomRequestRoomMapper,
+        BookingRepository $bookingRepository
     ) {
         $this->roomRepository = $roomRepository;
         $this->createRoomRequestMapper = $createRoomRequestMapper;
         $this->putRoomRequestRoomMapper = $putRoomRequestRoomMapper;
+        $this->bookingRepository = $bookingRepository;
     }
 
     public function create(CreateRoomRequest $createRoomRequest, Hotel $hotel): Room
@@ -48,4 +52,5 @@ class RoomService
 
         return $room;
     }
+    
 }

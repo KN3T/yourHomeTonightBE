@@ -99,6 +99,10 @@ class RoomRepository extends BaseRepository
             ->setParameter('roomId', $createBookingRequest->getRoomId())
             ->setParameter('checkIn', $createBookingRequest->getCheckIn())
             ->setParameter('checkOut', $createBookingRequest->getCheckOut());
+        $room->andWhere($room->expr()->orX(
+            $room->expr()->eq('b.status', Booking::CANCELLED),
+            $room->expr()->eq('b.status', Booking::DONE),
+        ));
         $roomCount = (new Paginator($room))->count();
         if (0 === $roomCount) {
             return true;

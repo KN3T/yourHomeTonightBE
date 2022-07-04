@@ -23,14 +23,4 @@ class BookingRepository extends BaseRepository
     {
         parent::__construct($registry, Booking::class);
     }
-
-    public function getLatestBooking(Room $room)
-    {
-        $roomId = $room->getId();
-        $bookings = $this->createQueryBuilder(self::BOOKING_ALIAS)
-            ->select('b')
-            ->where('b.room = :roomId')->setParameter('roomId', $roomId)
-            ->orderBy('b.createdAt', 'desc');
-        return $bookings->getQuery()->getResult();
-    }
 }
