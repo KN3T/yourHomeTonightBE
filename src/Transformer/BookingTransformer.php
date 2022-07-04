@@ -16,8 +16,7 @@ class BookingTransformer extends BaseTransformer
         UserTransformer       $userTransformer,
         HotelTransformer      $hotelTransformer,
         RatingTransformer     $ratingTransformer,
-    )
-    {
+    ) {
         $this->userTransformer = $userTransformer;
         $this->roomTransformer = $roomTransformer;
         $this->hotelTransformer = $hotelTransformer;
