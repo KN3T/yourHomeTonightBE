@@ -9,12 +9,19 @@ class BookingTransformer extends BaseTransformer
     private UserTransformer $userTransformer;
     private DetailRoomTransformer $roomTransformer;
     private HotelTransformer $hotelTransformer;
+    private RatingTransformer $ratingTransformer;
 
-    public function __construct(DetailRoomTransformer $roomTransformer, UserTransformer $userTransformer, HotelTransformer $hotelTransformer)
+    public function __construct(
+        DetailRoomTransformer $roomTransformer,
+        UserTransformer       $userTransformer,
+        HotelTransformer      $hotelTransformer,
+        RatingTransformer     $ratingTransformer,
+    )
     {
         $this->userTransformer = $userTransformer;
         $this->roomTransformer = $roomTransformer;
         $this->hotelTransformer = $hotelTransformer;
+        $this->ratingTransformer = $ratingTransformer;
     }
 
     public const ALLOW = ['id', 'fullName', 'phone', 'email', 'checkIn', 'checkOut', 'total', 'status', 'createdAt'];
@@ -25,6 +32,9 @@ class BookingTransformer extends BaseTransformer
         $result['user'] = $this->userTransformer->toArray($booking->getUser());
         $result['room'] = $this->roomTransformer->toArray($booking->getRoom());
         $result['hotel'] = $this->hotelTransformer->toArray($booking->getRoom()->getHotel());
+        if ($booking->getRating() !== null) {
+            $result['rating'] = $this->ratingTransformer->toArray($booking->getRating());
+        }
 
         return $result;
     }
