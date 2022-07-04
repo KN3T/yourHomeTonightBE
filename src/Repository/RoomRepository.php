@@ -40,17 +40,20 @@ class RoomRepository extends BaseRepository
             ->leftJoin(Rating::class, 'ra', Join::WITH, 'ra.booking = b.id')
             ->groupBy('r.id');
         $rooms = $this->filterByRating($rooms, $roomRequest->getRating());
-        $rooms->where('h.id=:hotelID')->setParameter('hotelID', $hotel->getId());
-        $rooms = $this->andFilter($rooms, 'beds', $roomRequest->getBeds());
-        $rooms = $this->andFilter($rooms, 'type', $roomRequest->getType());
+        $rooms->where('1=1');
         $rooms = $this->filterByDate($rooms, $roomRequest->getCheckIn(), $roomRequest->getCheckOut());
-        $rooms = $this->filterByPeople($rooms, $roomRequest->getAdults(), $roomRequest->getChildren());
-        $rooms = $this->filterByPrice($rooms, $roomRequest->getMinPrice(), $roomRequest->getMaxPrice());
-        $rooms->andWhere($rooms->expr()->orX(
+
+        $rooms->orWhere($rooms->expr()->orX(
             $rooms->expr()->eq('b.status', Booking::CANCELLED),
             $rooms->expr()->eq('b.status', Booking::DONE),
             $rooms->expr()->isNull('b.status'),
         ));
+        $rooms = $this->filterByPrice($rooms, $roomRequest->getMinPrice(), $roomRequest->getMaxPrice());
+        $rooms = $this->andFilter($rooms, 'beds', $roomRequest->getBeds());
+        $rooms = $this->andFilter($rooms, 'type', $roomRequest->getType());
+
+        $rooms = $this->filterByPeople($rooms, $roomRequest->getAdults(), $roomRequest->getChildren());
+        $rooms->andWhere('h.id=:hotelID')->setParameter('hotelID', $hotel->getId());
         $rooms = $this->sortBy($rooms, $roomRequest->getSortBy(), $roomRequest->getOrder());
         $rooms->setMaxResults($roomRequest->getLimit())->setFirstResult($roomRequest->getOffset());
 
