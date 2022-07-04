@@ -78,6 +78,17 @@ class HotelRepository extends BaseRepository
         return $hotels->getQuery()->getOneOrNullResult();
     }
 
+    public function listRatings(Hotel $hotel)
+    {
+        $ratings = $this->createQueryBuilder(static::HOTEL_ALIAS)
+            ->select('r.number as roomNumber, ra as review')
+            ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
+            ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
+            ->join(Rating::class, 'ra', Join::WITH, 'ra.booking = b.id')
+            ->where('h.id = :hotelId')->setParameter('hotelId', $hotel->getId());
+        return $ratings->getQuery()->getResult();
+    }
+
     private function orderByPrice(QueryBuilder $hotels, ListHotelRequest $hotelRequest): QueryBuilder
     {
         return $hotels
