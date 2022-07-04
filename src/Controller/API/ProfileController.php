@@ -85,6 +85,7 @@ class ProfileController extends AbstractController
         $putProfileUserMapper->mapping($putProfileRequest, $user);
         $userRepository->save($user);
         $result = $userTransformer->toArray($user);
+
         return $this->success($result);
     }
 
@@ -93,7 +94,7 @@ class ProfileController extends AbstractController
         Security $security,
         Request $request,
         UserTransformer $userTransformer,
-        UserService     $userService,
+        UserService $userService,
         ChangePasswordRequest $changePasswordRequest,
     ): JsonResponse {
         /**
@@ -108,6 +109,7 @@ class ProfileController extends AbstractController
         }
         $userService->changePassword($user, $changePasswordRequest);
         $result = $userTransformer->toArray($user);
+
         return $this->success($result);
     }
 }

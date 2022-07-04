@@ -100,9 +100,10 @@ class RoomRepository extends BaseRepository
             ->setParameter('checkIn', $createBookingRequest->getCheckIn())
             ->setParameter('checkOut', $createBookingRequest->getCheckOut());
         $roomCount = (new Paginator($room))->count();
-        if ($roomCount === 0) {
+        if (0 === $roomCount) {
             return true;
         }
+
         return false;
     }
 
@@ -122,14 +123,16 @@ class RoomRepository extends BaseRepository
             ->leftJoin(Rating::class, 'ra', Join::WITH, 'ra.booking = b.id')
             ->where('r.id=:roomId')->setParameter('roomId', $room->getId())
             ->groupBy('r.id');
+
         return $rooms->getQuery()->getOneOrNullResult();
     }
 
     private function filterByRating(QueryBuilder $rooms, $rating): QueryBuilder
     {
-        if ($rating === null) {
+        if (null === $rating) {
             return $rooms;
         }
+
         return $rooms->having('rating > :rating')
             ->andHaving('rating < :ratingBias')
             ->setParameter('rating', $rating - 0.25)

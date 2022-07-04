@@ -12,6 +12,7 @@ class CreateRatingRequestRatingMapper
         $rating = new Rating();
         $rating->setContent($createRatingRequest->getContent());
         $rating->setRating($createRatingRequest->getRating());
+
         return $rating;
     }
 }

@@ -56,6 +56,7 @@ class HotelRepository extends BaseRepository
         $total = (new Paginator($hotels))->count();
         $hotels = $hotels->getQuery()->getResult();
         $hotels['total'] = $total;
+
         return $hotels;
     }
 
@@ -144,9 +145,10 @@ class HotelRepository extends BaseRepository
 
     private function filterByRating(QueryBuilder $hotels, $rating): QueryBuilder
     {
-        if ($rating === null) {
+        if (null === $rating) {
             return $hotels;
         }
+
         return $hotels->andHaving('rating > :rating')
             ->andHaving('rating < :ratingBias')
             ->setParameter('rating', $rating - 0.25)
