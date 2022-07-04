@@ -50,6 +50,11 @@ class HotelRepository extends BaseRepository
         $hotels = $this->filterByCity($hotels, $hotelRequest->getCity());
         $hotels = $this->filterByPeople($hotels, $hotelRequest->getAdults(), $hotelRequest->getChildren());
         $hotels = $this->filterByBeds($hotels, $hotelRequest->getBeds());
+        $hotels->andWhere($hotels->expr()->orX(
+            $hotels->expr()->eq('b.status', Booking::CANCELLED),
+            $hotels->expr()->eq('b.status', Booking::DONE),
+            $hotels->expr()->isNull('b.status'),
+        ));
         $hotels = $this->orderByPrice($hotels, $hotelRequest);
 
         $hotels->setMaxResults($hotelRequest->getLimit())->setFirstResult($hotelRequest->getOffset());
@@ -86,6 +91,7 @@ class HotelRepository extends BaseRepository
             ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
             ->join(Rating::class, 'ra', Join::WITH, 'ra.booking = b.id')
             ->where('h.id = :hotelId')->setParameter('hotelId', $hotel->getId());
+
         return $ratings->getQuery()->getResult();
     }
 

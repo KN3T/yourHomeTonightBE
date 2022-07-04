@@ -2,8 +2,6 @@
 
 namespace App\Transformer;
 
-use App\Entity\Rating;
-
 class ListHotelRatingsTransformer extends BaseTransformer
 {
     private UserTransformer $userTransformer;
@@ -22,6 +20,7 @@ class ListHotelRatingsTransformer extends BaseTransformer
         $ratingArray = $this->transform($ratingEntity, ListHotelRatingsTransformer::ALLOW);
         $ratingArray['roomNumber'] = $hotelRating['roomNumber'];
         $ratingArray['user'] = $this->userTransformer->toArray($user);
+
         return $ratingArray;
     }
 

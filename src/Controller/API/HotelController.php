@@ -38,9 +38,9 @@ class HotelController extends AbstractController
 
     #[Route('', name: 'list', methods: ['GET'])]
     public function index(
-        Request              $request,
-        ListHotelRequest     $listHotelRequest,
-        HotelService         $hotelService,
+        Request $request,
+        ListHotelRequest $listHotelRequest,
+        HotelService $hotelService,
         ListHotelTransformer $listHotelTransformer
     ): Response {
         $filters = $request->query->all();
@@ -59,9 +59,9 @@ class HotelController extends AbstractController
 
     #[Route('/{id}', name: 'detail', methods: ['GET'])]
     public function detail(
-        Hotel                $hotel,
+        Hotel $hotel,
         ListHotelTransformer $hotelTransformer,
-        HotelService         $hotelService
+        HotelService $hotelService
     ): JsonResponse {
         $hotel = $hotelService->detail($hotel);
 
@@ -78,20 +78,20 @@ class HotelController extends AbstractController
 
     /**
      * @param CreateHotelRequest $createHotelRequest
-     * @param Request $request
-     * @param HotelService $hotelService
-     * @param HotelTransformer $hotelTransformer
-     * @param Security $security
+     * @param Request            $request
+     * @param HotelService       $hotelService
+     * @param HotelTransformer   $hotelTransformer
+     * @param Security           $security
      *
      * @return JsonResponse
      */
     #[Route('', name: 'create', methods: 'POST')]
     public function create(
         CreateHotelRequest $createHotelRequest,
-        Request            $request,
-        HotelService       $hotelService,
-        HotelTransformer   $hotelTransformer,
-        Security           $security,
+        Request $request,
+        HotelService $hotelService,
+        HotelTransformer $hotelTransformer,
+        Security $security,
     ): JsonResponse {
         /**
          * @var User $currentUser
@@ -114,12 +114,12 @@ class HotelController extends AbstractController
 
     #[Route('/{id}', name: 'put', methods: 'PUT')]
     public function put(
-        Hotel            $hotel,
-        Request          $request,
-        PutHotelRequest  $putHotelRequest,
+        Hotel $hotel,
+        Request $request,
+        PutHotelRequest $putHotelRequest,
         HotelTransformer $hotelTransformer,
-        Security         $security,
-        HotelService     $hotelService,
+        Security $security,
+        HotelService $hotelService,
     ): JsonResponse {
         /**
          * @var User $currentUser
@@ -148,6 +148,7 @@ class HotelController extends AbstractController
     ): JsonResponse {
         $ratings = $hotelRepository->listRatings($hotel);
         $result = $listHotelRatingsTransformer->listToArray($ratings);
+
         return $this->success($result);
     }
 }
