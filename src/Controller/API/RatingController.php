@@ -97,6 +97,13 @@ class RatingController extends AbstractController
 
         return $this->success([], Response::HTTP_NO_CONTENT);
     }
+    #[Route('/bookings/{id}/rating', name: 'detail_rating', methods: ['GET'])]
+    public function detailRating(Booking $booking, RatingTransformer $ratingTransformer): JsonResponse
+    {
+        $rating = $booking->getRating();
+        $result = $ratingTransformer->toArray($rating);
+        return $this->success($result);
+    }
 
     private function checkUserCreateBooking(Booking $booking, User $user): bool
     {
