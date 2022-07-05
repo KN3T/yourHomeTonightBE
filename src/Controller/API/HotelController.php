@@ -149,7 +149,16 @@ class HotelController extends AbstractController
         Hotel $hotel,
         HotelRepository $hotelRepository,
         ListHotelRatingsTransformer $listHotelRatingsTransformer,
+        Security $security,
+        HotelService $hotelService,
     ): JsonResponse {
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $security->getUser();
+        if (!$hotelService->checkHotelOwner($hotel, $currentUser)) {
+            return $this->error('Access denied', Response::HTTP_FORBIDDEN);
+        }
         $ratings = $hotelRepository->listRatings($hotel);
         $result = $listHotelRatingsTransformer->listToArray($ratings);
 
@@ -161,8 +170,18 @@ class HotelController extends AbstractController
     public function listBookings(
         Hotel $hotel,
         HotelRepository $hotelRepository,
-        ListHotelBookingsTransformer $bookingTransformer
+        ListHotelBookingsTransformer $bookingTransformer,
+        HotelService $hotelService,
+        Security $security,
     ): JsonResponse {
+
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $security->getUser();
+        if (!$hotelService->checkHotelOwner($hotel, $currentUser)) {
+            return $this->error('Access denied', Response::HTTP_FORBIDDEN);
+        }
         $bookings = $hotelRepository->listBookings($hotel);
         $result = $bookingTransformer->listToArray($bookings);
 
@@ -174,8 +193,18 @@ class HotelController extends AbstractController
         Hotel $hotel,
         HotelRepository $hotelRepository,
         HotelRevenueTransformer $hotelRevenueTransformer,
-    ): JsonResponse
-    {
+        HotelService $hotelService,
+        Security    $security,
+    ): JsonResponse {
+
+
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $security->getUser();
+        if (!$hotelService->checkHotelOwner($hotel, $currentUser)) {
+            return $this->error('Access denied', Response::HTTP_FORBIDDEN);
+        }
         $revenues = $hotelRepository->getYearlyRevenue($hotel);
         $result = $hotelRevenueTransformer->listToArray($revenues);
 
