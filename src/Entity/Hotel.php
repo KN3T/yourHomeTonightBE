@@ -252,4 +252,5 @@ class Hotel extends BaseEntity
 
         return $this;
     }
+
 }

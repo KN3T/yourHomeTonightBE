@@ -28,6 +28,9 @@ class AuthenticationSuccessListener
 
         $userJson = $this->userTransformer->toArray($user);
         $userJson['token'] = $token;
+        if ($user->isHotel() && !$user->getHotel() !== null) {
+            $userJson['hotelId'] = $user->getHotel()->getId();
+        }
         $data = [
             'status' => 'success',
             'data' => $userJson,
