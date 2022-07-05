@@ -192,5 +192,4 @@ class RoomRepository extends BaseRepository
 
         return $revenue->getQuery()->getOneOrNullResult();
     }
-
 }

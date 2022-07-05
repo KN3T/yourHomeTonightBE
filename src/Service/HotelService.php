@@ -23,8 +23,7 @@ class HotelService
         HotelRepository           $hotelRepository,
         CreateHotelRequestToHotel $createHotelRequestToHotel,
         PutHotelRequestToHotel    $putHotelRequestToHotel,
-    )
-    {
+    ) {
         $this->hotelRepository = $hotelRepository;
         $this->createHotelRequestToHotel = $createHotelRequestToHotel;
         $this->putHotelRequestToHotel = $putHotelRequestToHotel;

@@ -44,8 +44,7 @@ class RoomController extends AbstractController
         ListRoomRequest     $listRoomRequest,
         RoomService         $roomService,
         ListRoomTransformer $listRoomTransformer
-    ): Response
-    {
+    ): Response {
         $filters = $request->query->all();
         $roomRequest = $listRoomRequest->fromArray($filters);
         $errors = $this->validator->validate($roomRequest);
@@ -67,8 +66,7 @@ class RoomController extends AbstractController
         CreateRoomRequest     $createRoomRequest,
         Hotel                 $hotel,
         CreateRoomTransformer $createRoomTransformer,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $request = json_decode($request->getContent(), true);
         $createRoomRequest->fromArray($request);
         $errors = $this->validator->validate($createRoomRequest);
@@ -87,8 +85,7 @@ class RoomController extends AbstractController
         Room                $room,
         RoomRepository      $roomRepository,
         ListRoomTransformer $listRoomTransformer
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $room = $roomRepository->getDetails($room);
         $roomArray = $listRoomTransformer->toArray($room);
 
@@ -121,8 +118,7 @@ class RoomController extends AbstractController
         Hotel              $hotel,
         Room               $room,
         PutRoomTransformer $putRoomTransformer,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if (!$this->checkRoomInHotel($room, $hotel)) {
             return $this->error('Room not found in Hotel');
         }
@@ -146,8 +142,7 @@ class RoomController extends AbstractController
         Room                        $room,
         RoomRepository              $roomRepository,
         ListRoomBookingsTransformer $bookingTransformer,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if (!$this->checkRoomInHotel($room, $hotel)) {
             return $this->error('Room not found in Hotel');
         }
@@ -165,7 +160,6 @@ class RoomController extends AbstractController
         RoomRepository $roomRepository,
     ): JsonResponse {
         if (!$this->checkRoomInHotel($room, $hotel)) {
-
             return $this->error('Room not found in Hotel');
         }
         $revenue = $roomRepository->getYearlyRevenue($room);
