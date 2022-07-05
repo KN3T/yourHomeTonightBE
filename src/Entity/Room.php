@@ -57,7 +57,7 @@ class Room extends BaseEntity
     #[ORM\Column(type: 'integer')]
     private $beds;
 
-    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Booking::class)]
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Booking::class, cascade: ['persist', 'remove'])]
     private $bookings;
 
     public function __construct()

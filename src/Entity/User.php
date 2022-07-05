@@ -50,7 +50,7 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $phone;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Booking::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Booking::class, cascade: ['persist', 'remove'])]
     private $bookings;
 
     public function __construct()
