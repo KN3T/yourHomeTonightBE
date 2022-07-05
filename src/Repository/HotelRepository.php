@@ -53,6 +53,12 @@ class HotelRepository extends BaseRepository
             $hotels->expr()->eq('b.status', Booking::DONE),
             $hotels->expr()->isNull('b.status'),
         ));
+
+        $hotels->orWhere($hotels->expr()->orX(
+            $hotels->expr()->eq('b.status', Booking::CANCELLED),
+            $hotels->expr()->eq('b.status', Booking::DONE),
+            $hotels->expr()->isNull('b.status'),
+        ));
         $hotels = $this->filterByCity($hotels, $hotelRequest->getCity());
         $hotels = $this->filterByPeople($hotels, $hotelRequest->getAdults(), $hotelRequest->getChildren());
         $hotels = $this->filterByBeds($hotels, $hotelRequest->getBeds());
