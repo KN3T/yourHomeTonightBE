@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Entity\Booking;
 
-
 #[AsCommand(
     name: 'app:set:booking:expired-status',
     description: 'Set Booking Expired Status',
@@ -33,7 +32,6 @@ class SetBookingExpiredStatus extends Command
         $now = new \DateTimeImmutable('now');
         $bookings = $this->bookingRepository->findByStatus(Booking::PENDING);
         foreach ($bookings as $booking) {
-
             if ($now->getTimestamp() - $booking->getCreatedAt()->getTimestamp() >   Booking::TIME_TO_EXPIRED) {
                 $output->writeln('Booking id: ' . $booking->getId() . ' is expired');
                 $booking->setStatus(Booking::CANCELLED);
@@ -42,6 +40,4 @@ class SetBookingExpiredStatus extends Command
         }
         return Command::SUCCESS;
     }
-
-
 }

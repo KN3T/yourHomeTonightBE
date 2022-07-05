@@ -17,6 +17,7 @@ use App\Transformer\ListHotelBookingsTransformer;
 use App\Transformer\ListHotelRatingsTransformer;
 use App\Transformer\ListHotelTransformer;
 use App\Transformer\ValidatorTransformer;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -187,12 +188,15 @@ class HotelController extends AbstractController
 
         return $this->success($result);
     }
+
+    /**
+     * @throws Exception
+     */
     #[Route('/{id}/revenue', name: 'get_revenue', methods: 'GET')]
     #[IsGranted('ROLE_HOTEL')]
     public function getYearlyRevenue(
         Hotel $hotel,
         HotelRepository $hotelRepository,
-        HotelRevenueTransformer $hotelRevenueTransformer,
         HotelService $hotelService,
         Security    $security,
     ): JsonResponse {
@@ -206,8 +210,7 @@ class HotelController extends AbstractController
             return $this->error('Access denied', Response::HTTP_FORBIDDEN);
         }
         $revenues = $hotelRepository->getYearlyRevenue($hotel);
-        $result = $hotelRevenueTransformer->listToArray($revenues);
 
-        return $this->success($result);
+        return $this->success($revenues);
     }
 }
