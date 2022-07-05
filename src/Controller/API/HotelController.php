@@ -11,11 +11,13 @@ use App\Request\Hotel\PutHotelRequest;
 use App\Service\HotelService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\BookingTransformer;
+use App\Transformer\HotelRevenueTransformer;
 use App\Transformer\HotelTransformer;
 use App\Transformer\ListHotelBookingsTransformer;
 use App\Transformer\ListHotelRatingsTransformer;
 use App\Transformer\ListHotelTransformer;
 use App\Transformer\ValidatorTransformer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -147,7 +149,16 @@ class HotelController extends AbstractController
         Hotel $hotel,
         HotelRepository $hotelRepository,
         ListHotelRatingsTransformer $listHotelRatingsTransformer,
+        Security $security,
+        HotelService $hotelService,
     ): JsonResponse {
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $security->getUser();
+        if (!$hotelService->checkHotelOwner($hotel, $currentUser)) {
+            return $this->error('Access denied', Response::HTTP_FORBIDDEN);
+        }
         $ratings = $hotelRepository->listRatings($hotel);
         $result = $listHotelRatingsTransformer->listToArray($ratings);
 
@@ -155,13 +166,47 @@ class HotelController extends AbstractController
     }
 
     #[Route('/{id}/bookings', name: 'list_bookings', methods: 'GET')]
+    #[IsGranted('ROLE_HOTEL')]
     public function listBookings(
         Hotel $hotel,
         HotelRepository $hotelRepository,
-        ListHotelBookingsTransformer $bookingTransformer
+        ListHotelBookingsTransformer $bookingTransformer,
+        HotelService $hotelService,
+        Security $security,
     ): JsonResponse {
+
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $security->getUser();
+        if (!$hotelService->checkHotelOwner($hotel, $currentUser)) {
+            return $this->error('Access denied', Response::HTTP_FORBIDDEN);
+        }
         $bookings = $hotelRepository->listBookings($hotel);
         $result = $bookingTransformer->listToArray($bookings);
+
+        return $this->success($result);
+    }
+    #[Route('/{id}/revenue', name: 'get_revenue', methods: 'GET')]
+    #[IsGranted('ROLE_HOTEL')]
+    public function getYearlyRevenue(
+        Hotel $hotel,
+        HotelRepository $hotelRepository,
+        HotelRevenueTransformer $hotelRevenueTransformer,
+        HotelService $hotelService,
+        Security    $security,
+    ): JsonResponse {
+
+
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $security->getUser();
+        if (!$hotelService->checkHotelOwner($hotel, $currentUser)) {
+            return $this->error('Access denied', Response::HTTP_FORBIDDEN);
+        }
+        $revenues = $hotelRepository->getYearlyRevenue($hotel);
+        $result = $hotelRevenueTransformer->listToArray($revenues);
 
         return $this->success($result);
     }

@@ -17,12 +17,12 @@ class HotelService
 {
     private HotelRepository $hotelRepository;
     private CreateHotelRequestToHotel $createHotelRequestToHotel;
-    private PutHotelRequestToHotel      $putHotelRequestToHotel;
+    private PutHotelRequestToHotel $putHotelRequestToHotel;
 
     public function __construct(
-        HotelRepository $hotelRepository,
+        HotelRepository           $hotelRepository,
         CreateHotelRequestToHotel $createHotelRequestToHotel,
-        PutHotelRequestToHotel $putHotelRequestToHotel,
+        PutHotelRequestToHotel    $putHotelRequestToHotel,
     ) {
         $this->hotelRepository = $hotelRepository;
         $this->createHotelRequestToHotel = $createHotelRequestToHotel;
@@ -57,11 +57,7 @@ class HotelService
 
     public function checkHotelOwner(Hotel $hotel, User $user): bool
     {
-        if ($this->hotelRepository->findOneBy(['id' => $hotel->getId(), 'user' => $user])) {
-            return true;
-        }
-
-        return false;
+        return ($hotel->getUser() === $user || $user->isAdmin());
     }
 
     public function findAll(ListHotelRequest $hotelRequest): array

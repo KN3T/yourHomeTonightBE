@@ -61,6 +61,11 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
         $this->bookings = new ArrayCollection();
     }
 
+    public function isAdmin(): bool
+    {
+        return in_array(self::ROLE_ADMIN, $this->getRoles());
+    }
+
     public function getId(): ?int
     {
         return $this->id;
