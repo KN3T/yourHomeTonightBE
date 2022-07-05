@@ -113,6 +113,21 @@ class HotelRepository extends BaseRepository
         return $ratings->getQuery()->getResult();
     }
 
+    public function getYearlyRevenue(Hotel $hotel)
+    {
+        $revenue = $this->createQueryBuilder(static::HOTEL_ALIAS)
+            ->select('SUM(b.total) as revenue, r.id as roomId, r.number as roomNumber')
+            ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
+            ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
+            ->where('h.id = :hotelId')->setParameter('hotelId', $hotel->getId())
+            ->andWhere('b.status = :status')->setParameter('status', Booking::DONE)
+            ->andWhere('b.checkOut >= :year')->setParameter('year', new DateTime('first day of January this year'))
+            ->groupBy('r.id')
+        ;
+
+        return $revenue->getQuery()->getResult();
+    }
+
     private function orderByPrice(QueryBuilder $hotels, ListHotelRequest $hotelRequest): QueryBuilder
     {
         return $hotels

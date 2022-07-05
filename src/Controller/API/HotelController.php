@@ -11,11 +11,13 @@ use App\Request\Hotel\PutHotelRequest;
 use App\Service\HotelService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\BookingTransformer;
+use App\Transformer\HotelRevenueTransformer;
 use App\Transformer\HotelTransformer;
 use App\Transformer\ListHotelBookingsTransformer;
 use App\Transformer\ListHotelRatingsTransformer;
 use App\Transformer\ListHotelTransformer;
 use App\Transformer\ValidatorTransformer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -155,6 +157,7 @@ class HotelController extends AbstractController
     }
 
     #[Route('/{id}/bookings', name: 'list_bookings', methods: 'GET')]
+    #[IsGranted('ROLE_HOTEL')]
     public function listBookings(
         Hotel $hotel,
         HotelRepository $hotelRepository,
@@ -162,6 +165,19 @@ class HotelController extends AbstractController
     ): JsonResponse {
         $bookings = $hotelRepository->listBookings($hotel);
         $result = $bookingTransformer->listToArray($bookings);
+
+        return $this->success($result);
+    }
+    #[Route('/{id}/revenue', name: 'get_revenue', methods: 'GET')]
+    #[IsGranted('ROLE_HOTEL')]
+    public function getYearlyRevenue(
+        Hotel $hotel,
+        HotelRepository $hotelRepository,
+        HotelRevenueTransformer $hotelRevenueTransformer,
+    ): JsonResponse
+    {
+        $revenues = $hotelRepository->getYearlyRevenue($hotel);
+        $result = $hotelRevenueTransformer->listToArray($revenues);
 
         return $this->success($result);
     }

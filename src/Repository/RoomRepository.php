@@ -167,4 +167,30 @@ class RoomRepository extends BaseRepository
 
         return $ratings->getQuery()->getResult();
     }
+
+    public function getYearlyRevenue(Room $room)
+    {
+        $revenue = $this->createQueryBuilder(static::ROOM_ALIAS)
+            ->select('SUM(b.total) as revenue, r.number as RoomNumber')
+            ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
+            ->where('r.id = :roomId')->setParameter('roomId', $room->getId())
+            ->andWhere('b.status = :status')->setParameter('status', Booking::DONE)
+            ->andWhere('b.checkOut >= :year')->setParameter('year', new \DateTime('first day of January this year'));
+        ;
+
+        return $revenue->getQuery()->getOneOrNullResult();
+    }
+    public function getLastYearRevenue(Room $room)
+    {
+        $revenue = $this->createQueryBuilder(static::ROOM_ALIAS)
+            ->select('SUM(b.total) as revenue, r.number as RoomNumber')
+            ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
+            ->where('r.id = :roomId')->setParameter('roomId', $room->getId())
+            ->andWhere('b.status = :status')->setParameter('status', Booking::DONE)
+            ->andWhere('b.checkOut >= :year')->setParameter('year', new \DateTime('first day of January last year'));
+        ;
+
+        return $revenue->getQuery()->getOneOrNullResult();
+    }
+
 }

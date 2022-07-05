@@ -16,6 +16,7 @@ use App\Transformer\ListRoomTransformer;
 use App\Transformer\PutRoomTransformer;
 use App\Transformer\ValidatorTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,12 +39,13 @@ class RoomController extends AbstractController
 
     #[Route('/hotels/{id}/rooms', name: 'list', methods: ['GET'])]
     public function index(
-        Request $request,
-        Hotel $hotel,
-        ListRoomRequest $listRoomRequest,
-        RoomService $roomService,
+        Request             $request,
+        Hotel               $hotel,
+        ListRoomRequest     $listRoomRequest,
+        RoomService         $roomService,
         ListRoomTransformer $listRoomTransformer
-    ): Response {
+    ): Response
+    {
         $filters = $request->query->all();
         $roomRequest = $listRoomRequest->fromArray($filters);
         $errors = $this->validator->validate($roomRequest);
@@ -60,12 +62,13 @@ class RoomController extends AbstractController
 
     #[Route('/hotels/{id}/rooms', name: 'create_rooms', methods: ['POST'])]
     public function create(
-        Request $request,
-        RoomService $roomService,
-        CreateRoomRequest $createRoomRequest,
-        Hotel $hotel,
+        Request               $request,
+        RoomService           $roomService,
+        CreateRoomRequest     $createRoomRequest,
+        Hotel                 $hotel,
         CreateRoomTransformer $createRoomTransformer,
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $request = json_decode($request->getContent(), true);
         $createRoomRequest->fromArray($request);
         $errors = $this->validator->validate($createRoomRequest);
@@ -81,10 +84,11 @@ class RoomController extends AbstractController
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'detail', methods: ['GET'])]
     #[Entity('hotel', options: ['id' => 'hotelId'])]
     public function detail(
-        Room $room,
-        RoomRepository $roomRepository,
+        Room                $room,
+        RoomRepository      $roomRepository,
         ListRoomTransformer $listRoomTransformer
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $room = $roomRepository->getDetails($room);
         $roomArray = $listRoomTransformer->toArray($room);
 
@@ -111,13 +115,14 @@ class RoomController extends AbstractController
     #[Route('/hotels/{hotelId}/rooms/{id}', name: 'put_rooms', methods: ['PUT'])]
     #[Entity('hotel', options: ['id' => 'hotelId'])]
     public function put(
-        Request $request,
-        RoomService $roomService,
-        PutRoomRequest $putRoomRequest,
-        Hotel $hotel,
-        Room $room,
+        Request            $request,
+        RoomService        $roomService,
+        PutRoomRequest     $putRoomRequest,
+        Hotel              $hotel,
+        Room               $room,
         PutRoomTransformer $putRoomTransformer,
-    ): JsonResponse {
+    ): JsonResponse
+    {
         if (!$this->checkRoomInHotel($room, $hotel)) {
             return $this->error('Room not found in Hotel');
         }
@@ -132,14 +137,17 @@ class RoomController extends AbstractController
 
         return $this->success($result, Response::HTTP_CREATED);
     }
+
     #[Route('/hotels/{hotelId}/rooms/{id}/bookings', name: 'rooms_list_bookings', methods: 'GET')]
     #[Entity('hotel', options: ['id' => 'hotelId'])]
+    #[IsGranted('ROLE_HOTEL')]
     public function listBookings(
-        Hotel $hotel,
-        Room $room,
-        RoomRepository $roomRepository,
+        Hotel                       $hotel,
+        Room                        $room,
+        RoomRepository              $roomRepository,
         ListRoomBookingsTransformer $bookingTransformer,
-    ): JsonResponse {
+    ): JsonResponse
+    {
         if (!$this->checkRoomInHotel($room, $hotel)) {
             return $this->error('Room not found in Hotel');
         }
@@ -147,6 +155,22 @@ class RoomController extends AbstractController
         $result = $bookingTransformer->listToArray($bookings);
 
         return $this->success($result);
+    }
+    #[Route('/hotels/{hotelId}/rooms/{id}/revenue', name: 'rooms_get_revenue', methods: 'GET')]
+    #[Entity('hotel', options: ['id' => 'hotelId'])]
+    #[IsGranted('ROLE_HOTEL')]
+    public function getYearlyRevenue(
+        Room $room,
+        Hotel $hotel,
+        RoomRepository $roomRepository,
+    ): JsonResponse {
+        if (!$this->checkRoomInHotel($room, $hotel)) {
+
+            return $this->error('Room not found in Hotel');
+        }
+        $revenue = $roomRepository->getYearlyRevenue($room);
+
+        return $this->success($revenue);
     }
 
     private function checkRoomInHotel(Room $room, Hotel $hotel): bool
