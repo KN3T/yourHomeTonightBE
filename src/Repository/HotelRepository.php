@@ -37,7 +37,7 @@ class HotelRepository extends BaseRepository
     public function list(ListHotelRequest $hotelRequest): array
     {
         $hotels = $this->createQueryBuilder(static::HOTEL_ALIAS)
-            ->select('h, MIN(r.price) AS price, SUM(ra.rating)/count(ra.rating)  as rating')
+            ->select('h, MIN(r.price) AS price, SUM(ra.rating)/count(ra.rating)  as rating, COUNT(ra.rating) as ratingCount')
             ->join(Address::class, 'ad', Join::WITH, 'ad.hotel = h.id')
             ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
             ->leftJoin(Booking::class, 'b', Join::WITH, 'b.room = r.id')
