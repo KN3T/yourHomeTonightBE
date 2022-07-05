@@ -48,6 +48,12 @@ class RoomRepository extends BaseRepository
             $rooms->expr()->eq('b.status', Booking::DONE),
             $rooms->expr()->isNull('b.status'),
         ));
+
+        $rooms->orWhere($rooms->expr()->orX(
+            $rooms->expr()->eq('b.status', Booking::CANCELLED),
+            $rooms->expr()->eq('b.status', Booking::DONE),
+            $rooms->expr()->isNull('b.status'),
+        ));
         $rooms = $this->filterByPrice($rooms, $roomRequest->getMinPrice(), $roomRequest->getMaxPrice());
         $rooms = $this->andFilter($rooms, 'beds', $roomRequest->getBeds());
         $rooms = $this->andFilter($rooms, 'type', $roomRequest->getType());
