@@ -16,6 +16,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @extends ServiceEntityRepository<Hotel>
@@ -28,6 +29,20 @@ use Doctrine\Persistence\ManagerRegistry;
 class HotelRepository extends BaseRepository
 {
     public const HOTEL_ALIAS = 'h';
+    public const MONTHS = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+    ];
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -113,19 +128,33 @@ class HotelRepository extends BaseRepository
         return $ratings->getQuery()->getResult();
     }
 
-    public function getYearlyRevenue(Hotel $hotel)
+    /**
+     * @throws Exception
+     */
+    public function getYearlyRevenue(Hotel $hotel): array
     {
-        $revenue = $this->createQueryBuilder(static::HOTEL_ALIAS)
-            ->select('SUM(b.total) as revenue, r.id as roomId, r.number as roomNumber')
-            ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
-            ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
-            ->where('h.id = :hotelId')->setParameter('hotelId', $hotel->getId())
-            ->andWhere('b.status = :status')->setParameter('status', Booking::DONE)
-            ->andWhere('b.checkOut >= :year')->setParameter('year', new DateTime('first day of January this year'))
-            ->groupBy('r.id')
-        ;
+        $result = [];
+        foreach (self::MONTHS as $month) {
+            $startDate = new \DateTimeImmutable('first day of '.$month);
+            $endDate = $startDate->modify('last day of this month')->setTime(23, 59, 59);
+            $revenue = $this->createQueryBuilder(static::HOTEL_ALIAS)
+                ->select('SUM(b.total) as revenue')
+                ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
+                ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
+                ->where('h.id = :hotelId')->setParameter('hotelId', $hotel->getId())
+                ->andWhere('b.status = :status')->setParameter('status', Booking::DONE)
+                ->andWhere('b.createdAt BETWEEN :startDate AND :endDate')
+                ->setParameter('startDate', $startDate)
+                ->setParameter('endDate', $endDate)
+                ->groupBy('r.id')
+            ;
+            $result[] = [
+                'month' => $month,
+                'revenue' => $revenue->getQuery()->getOneOrNullResult()['revenue'] ?? 0,
+            ];
+        }
 
-        return $revenue->getQuery()->getResult();
+        return $result;
     }
 
     private function orderByPrice(QueryBuilder $hotels, ListHotelRequest $hotelRequest): QueryBuilder

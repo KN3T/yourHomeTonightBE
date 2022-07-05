@@ -32,5 +32,4 @@ class BookingRepository extends BaseRepository
             ->getQuery()
             ->getResult();
     }
-
 }
