@@ -22,4 +22,15 @@ class BookingRepository extends BaseRepository
     {
         parent::__construct($registry, Booking::class);
     }
+
+    // function find bookings by status
+    public function findByStatus($status)
+    {
+        return $this->createQueryBuilder(static::BOOKING_ALIAS)
+            ->where(static::BOOKING_ALIAS . '.status = :status')
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getResult();
+    }
+
 }

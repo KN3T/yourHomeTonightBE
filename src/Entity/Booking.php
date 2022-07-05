@@ -15,6 +15,7 @@ class Booking extends BaseEntity
     public const SUCCESS = 2;
     public const CANCELLED = 3;
     public const DONE = 4;
+    public const TIME_TO_EXPIRED = 300;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
