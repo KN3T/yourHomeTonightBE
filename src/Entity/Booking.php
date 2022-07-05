@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\BookingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class Booking extends BaseEntity
 {
     public const VAT = 0.1;
@@ -19,11 +21,11 @@ class Booking extends BaseEntity
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'bookings')]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist','remove'], inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    #[ORM\ManyToOne(targetEntity: Room::class, cascade: ['persist'], inversedBy: 'bookings')]
+    #[ORM\ManyToOne(targetEntity: Room::class, cascade: ['persist','remove'], inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
     private $room;
 
@@ -57,8 +59,11 @@ class Booking extends BaseEntity
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $purchasedAt;
 
-    #[ORM\OneToOne(mappedBy: 'booking', targetEntity: Rating::class, cascade: ['persist'])]
+    #[ORM\OneToOne(mappedBy: 'booking', targetEntity: Rating::class, cascade: ['persist','remove'])]
     private $rating;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $deletedAt;
 
     public function __construct()
     {
@@ -230,6 +235,18 @@ class Booking extends BaseEntity
         }
 
         $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

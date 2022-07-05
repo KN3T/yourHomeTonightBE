@@ -157,4 +157,14 @@ class RoomRepository extends BaseRepository
             ->setParameter('rating', $rating - 0.25)
             ->setParameter('ratingBias', $rating + 0.25);
     }
+
+    public function listBookings(Room $room)
+    {
+        $ratings = $this->createQueryBuilder(static::ROOM_ALIAS)
+            ->select('b as booking')
+            ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
+            ->where('r.id = :roomId')->setParameter('roomId', $room->getId());
+
+        return $ratings->getQuery()->getResult();
+    }
 }

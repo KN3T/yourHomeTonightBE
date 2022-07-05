@@ -11,6 +11,7 @@ use App\Request\Room\PutRoomRequest;
 use App\Service\RoomService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\CreateRoomTransformer;
+use App\Transformer\ListRoomBookingsTransformer;
 use App\Transformer\ListRoomTransformer;
 use App\Transformer\PutRoomTransformer;
 use App\Transformer\ValidatorTransformer;
@@ -118,7 +119,7 @@ class RoomController extends AbstractController
         PutRoomTransformer $putRoomTransformer,
     ): JsonResponse {
         if (!$this->checkRoomInHotel($room, $hotel)) {
-            return $this->error('Room not in Hotel');
+            return $this->error('Room not found in Hotel');
         }
         $request = json_decode($request->getContent(), true);
         $putRoomRequest->fromArray($request);
@@ -131,8 +132,24 @@ class RoomController extends AbstractController
 
         return $this->success($result, Response::HTTP_CREATED);
     }
+    #[Route('/hotels/{hotelId}/rooms/{id}/bookings', name: 'rooms_list_bookings', methods: 'GET')]
+    #[Entity('hotel', options: ['id' => 'hotelId'])]
+    public function listBookings(
+        Hotel $hotel,
+        Room $room,
+        RoomRepository $roomRepository,
+        ListRoomBookingsTransformer $bookingTransformer,
+    ): JsonResponse {
+        if (!$this->checkRoomInHotel($room, $hotel)) {
+            return $this->error('Room not found in Hotel');
+        }
+        $bookings = $roomRepository->listBookings($room);
+        $result = $bookingTransformer->listToArray($bookings);
 
-    private function checkRoomInHotel(Room $room, Hotel $hotel)
+        return $this->success($result);
+    }
+
+    private function checkRoomInHotel(Room $room, Hotel $hotel): bool
     {
         if ($room->getHotel() === $hotel) {
             return true;

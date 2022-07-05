@@ -10,7 +10,9 @@ use App\Request\Hotel\ListHotelRequest;
 use App\Request\Hotel\PutHotelRequest;
 use App\Service\HotelService;
 use App\Traits\JsonResponseTrait;
+use App\Transformer\BookingTransformer;
 use App\Transformer\HotelTransformer;
+use App\Transformer\ListHotelBookingsTransformer;
 use App\Transformer\ListHotelRatingsTransformer;
 use App\Transformer\ListHotelTransformer;
 use App\Transformer\ValidatorTransformer;
@@ -148,6 +150,18 @@ class HotelController extends AbstractController
     ): JsonResponse {
         $ratings = $hotelRepository->listRatings($hotel);
         $result = $listHotelRatingsTransformer->listToArray($ratings);
+
+        return $this->success($result);
+    }
+
+    #[Route('/{id}/bookings', name: 'list_bookings', methods: 'GET')]
+    public function listBookings(
+        Hotel $hotel,
+        HotelRepository $hotelRepository,
+        ListHotelBookingsTransformer $bookingTransformer
+    ): JsonResponse {
+        $bookings = $hotelRepository->listBookings($hotel);
+        $result = $bookingTransformer->listToArray($bookings);
 
         return $this->success($result);
     }
