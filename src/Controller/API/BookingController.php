@@ -10,6 +10,7 @@ use App\Service\StripePaymentService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\BookingTransformer;
 use App\Transformer\ValidatorTransformer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
@@ -108,6 +109,18 @@ class BookingController extends AbstractController
         $booking->setStatus(Booking::CANCELLED)->setUpdatedAt(new \DateTime('now'));
 
         return $this->error('Payment failed');
+    }
+    //create function to set booking status to done and set updated at to now
+    #[Route('/bookings/{id}/done', name: 'booking_done', methods: ['POST'])]
+    #[IsGranted("ROLE_HOTEL")]
+    public function done(
+        Booking $booking,
+        BookingService $bookingService,
+        BookingTransformer $bookingTransformer
+    ): JsonResponse {
+        $bookingService->setBookingDone($booking);
+        $booking = $bookingTransformer->toArray($booking);
+        return $this->success($booking);
     }
 
     private function getCheckoutInfo(

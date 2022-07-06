@@ -36,4 +36,12 @@ class BookingService
 
         return $booking;
     }
+    public function setBookingDone(Booking $booking): Booking
+    {
+        $booking->setStatus(Booking::DONE);
+        $booking->setUpdatedAt(new \DateTimeImmutable('now'));
+        $this->bookingRepository->save($booking);
+
+        return $booking;
+    }
 }
