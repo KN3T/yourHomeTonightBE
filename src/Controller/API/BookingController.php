@@ -10,6 +10,7 @@ use App\Service\StripePaymentService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\BookingTransformer;
 use App\Transformer\ValidatorTransformer;
+use Aws\Sqs\SqsClient;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
@@ -27,12 +28,15 @@ class BookingController extends AbstractController
     private ParameterBagInterface $parameterBag;
     private ValidatorTransformer $validatorTransformer;
     private ValidatorInterface $validator;
+    private SqsClient $sqsClient;
 
     public function __construct(
         ParameterBagInterface $parameterBag,
         ValidatorTransformer $validatorTransformer,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        SqsClient $sqsClient
     ) {
+        $this->sqsClient = $sqsClient;
         $this->parameterBag = $parameterBag;
         $this->validator = $validator;
         $this->validatorTransformer = $validatorTransformer;
@@ -102,6 +106,7 @@ class BookingController extends AbstractController
                 ->setPurchasedAt(new \DateTime('now'))
                 ->setUpdatedAt(new \DateTime('now'));
             $bookingRepository->save($booking);
+            $this->sendMailToQueue($booking->getId());
 
             return $this->success($this->getCheckoutInfo($result, $bookingTransformer, $booking));
         }
@@ -125,5 +130,15 @@ class BookingController extends AbstractController
             ],
             'booking' => $bookingResult,
         ];
+    }
+
+    private function sendMailToQueue(int $bookingId): void
+    {
+        $sqsUrl = $this->parameterBag->get('sqsUrl');
+        $params = [
+            'MessageBody' => $bookingId,
+            'QueueUrl' => $sqsUrl,
+        ];
+        $this->sqsClient->sendMessage($params);
     }
 }

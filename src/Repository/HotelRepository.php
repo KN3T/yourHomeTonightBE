@@ -179,6 +179,7 @@ class HotelRepository extends BaseRepository
             'totalRevenue' => $revenue->getQuery()->getOneOrNullResult()['revenue'] ?? 0,
             'totalBookings' => $revenue->getQuery()->getOneOrNullResult()['bookings'] ?? 0,
         ];
+
         return $result;
     }
 

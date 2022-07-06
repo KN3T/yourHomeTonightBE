@@ -22,11 +22,11 @@ class Booking extends BaseEntity
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist','remove'], inversedBy: 'bookings')]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    #[ORM\ManyToOne(targetEntity: Room::class, cascade: ['persist','remove'], inversedBy: 'bookings')]
+    #[ORM\ManyToOne(targetEntity: Room::class, cascade: ['persist', 'remove'], inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
     private $room;
 
@@ -60,7 +60,7 @@ class Booking extends BaseEntity
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $purchasedAt;
 
-    #[ORM\OneToOne(mappedBy: 'booking', targetEntity: Rating::class, cascade: ['persist','remove'])]
+    #[ORM\OneToOne(mappedBy: 'booking', targetEntity: Rating::class, cascade: ['persist', 'remove'])]
     private $rating;
 
     #[ORM\Column(type: 'datetime', nullable: true)]

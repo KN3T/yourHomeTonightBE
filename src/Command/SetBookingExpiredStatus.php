@@ -2,13 +2,13 @@
 
 namespace App\Command;
 
+use App\Entity\Booking;
 use App\Repository\BookingRepository;
 use App\Traits\DateTimeTraits;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\Entity\Booking;
 
 #[AsCommand(
     name: 'app:set:booking:expired-status',
@@ -32,12 +32,13 @@ class SetBookingExpiredStatus extends Command
         $now = new \DateTimeImmutable('now');
         $bookings = $this->bookingRepository->findByStatus(Booking::PENDING);
         foreach ($bookings as $booking) {
-            if ($now->getTimestamp() - $booking->getCreatedAt()->getTimestamp() >   Booking::TIME_TO_EXPIRED) {
-                $output->writeln('Booking id: ' . $booking->getId() . ' is expired');
+            if ($now->getTimestamp() - $booking->getCreatedAt()->getTimestamp() > Booking::TIME_TO_EXPIRED) {
+                $output->writeln('Booking id: '.$booking->getId().' is expired');
                 $booking->setStatus(Booking::CANCELLED);
                 $this->bookingRepository->save($booking);
             }
         }
+
         return Command::SUCCESS;
     }
 }
