@@ -176,10 +176,10 @@ class RoomRepository extends BaseRepository
             ->where('r.id = :roomId')->setParameter('roomId', $room->getId())
             ->andWhere('b.status = :status')->setParameter('status', Booking::DONE)
             ->andWhere('b.checkOut >= :year')->setParameter('year', new \DateTime('first day of January this year'));
-        ;
 
         return $revenue->getQuery()->getOneOrNullResult();
     }
+
     public function getLastYearRevenue(Room $room)
     {
         $revenue = $this->createQueryBuilder(static::ROOM_ALIAS)
@@ -188,7 +188,6 @@ class RoomRepository extends BaseRepository
             ->where('r.id = :roomId')->setParameter('roomId', $room->getId())
             ->andWhere('b.status = :status')->setParameter('status', Booking::DONE)
             ->andWhere('b.checkOut >= :year')->setParameter('year', new \DateTime('first day of January last year'));
-        ;
 
         return $revenue->getQuery()->getOneOrNullResult();
     }

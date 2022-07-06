@@ -10,8 +10,6 @@ use App\Request\Hotel\ListHotelRequest;
 use App\Request\Hotel\PutHotelRequest;
 use App\Service\HotelService;
 use App\Traits\JsonResponseTrait;
-use App\Transformer\BookingTransformer;
-use App\Transformer\HotelRevenueTransformer;
 use App\Transformer\HotelTransformer;
 use App\Transformer\ListHotelBookingsTransformer;
 use App\Transformer\ListHotelRatingsTransformer;
@@ -175,7 +173,6 @@ class HotelController extends AbstractController
         HotelService $hotelService,
         Security $security,
     ): JsonResponse {
-
         /**
          * @var User $currentUser
          */
@@ -198,10 +195,8 @@ class HotelController extends AbstractController
         Hotel $hotel,
         HotelRepository $hotelRepository,
         HotelService $hotelService,
-        Security    $security,
+        Security $security,
     ): JsonResponse {
-
-
         /**
          * @var User $currentUser
          */
@@ -223,10 +218,8 @@ class HotelController extends AbstractController
         Hotel $hotel,
         HotelRepository $hotelRepository,
         HotelService $hotelService,
-        Security    $security,
+        Security $security,
     ): JsonResponse {
-
-
         /**
          * @var User $currentUser
          */

@@ -20,9 +20,9 @@ class HotelService
     private PutHotelRequestToHotel $putHotelRequestToHotel;
 
     public function __construct(
-        HotelRepository           $hotelRepository,
+        HotelRepository $hotelRepository,
         CreateHotelRequestToHotel $createHotelRequestToHotel,
-        PutHotelRequestToHotel    $putHotelRequestToHotel,
+        PutHotelRequestToHotel $putHotelRequestToHotel,
     ) {
         $this->hotelRepository = $hotelRepository;
         $this->createHotelRequestToHotel = $createHotelRequestToHotel;
@@ -57,7 +57,7 @@ class HotelService
 
     public function checkHotelOwner(Hotel $hotel, User $user): bool
     {
-        return ($hotel->getUser() === $user || $user->isAdmin());
+        return $hotel->getUser() === $user || $user->isAdmin();
     }
 
     public function findAll(ListHotelRequest $hotelRequest): array

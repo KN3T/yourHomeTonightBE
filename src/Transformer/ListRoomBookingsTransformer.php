@@ -10,7 +10,6 @@ class ListRoomBookingsTransformer extends BaseTransformer
     {
         $bookingEntity = $booking['booking'];
 
-
         return $this->transform($bookingEntity, static::ALLOW);
     }
 

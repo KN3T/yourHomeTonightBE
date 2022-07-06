@@ -10,6 +10,7 @@ class HotelRevenueTransformer extends BaseTransformer
         $result['roomId'] = $hotelRevenue['roomId'];
         $result['roomNumber'] = $hotelRevenue['roomNumber'];
         $result['revenue'] = $hotelRevenue['revenue'];
+
         return $result;
     }
 

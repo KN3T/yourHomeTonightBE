@@ -2,6 +2,14 @@ parameters:
     s3url: '%env(S3_URL)%'
     stripeKey: '%env(STRIPE_SECRET_KEY)%'
     appUrl: '%env(APP_URL)%'
+    sqsUrl: '%env(SQS_URL)%'
+    emailConfig:
+        smtp:
+            host: '%env(EMAIL_HOST)%'
+            port: '%env(EMAIL_PORT)%'
+        name: '%env(EMAIL_NAME)%'
+        username: '%env(EMAIL_USERNAME)%'
+        password: '%env(EMAIL_PASSWORD)%'
 services:
     _defaults:
         autowire: true
@@ -39,6 +47,13 @@ services:
         arguments:
             -   version: '%env(S3_BUCKET_VERSION)%'
                 region: '%env(S3_BUCKET_REGION)%'
+                credentials:
+                    key: '%env(AWS_KEY_ID)%'
+                    secret: '%env(AWS_SECRET)%'
+    Aws\Sqs\SqsClient:
+        arguments:
+            -   version: 'latest'
+                region: 'ap-southeast-1'
                 credentials:
                     key: '%env(AWS_KEY_ID)%'
                     secret: '%env(AWS_SECRET)%'
