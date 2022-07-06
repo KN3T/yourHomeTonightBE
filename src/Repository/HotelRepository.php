@@ -157,6 +157,31 @@ class HotelRepository extends BaseRepository
         return $result;
     }
 
+    public function getLast3MonthsRevenue(Hotel $hotel): array
+    {
+        $result = [];
+        $date = new \DateTimeImmutable('last day of this month');
+        $endDate = $date->modify('last day of this month')->setTime(23, 59, 59);
+        $startDate = $date->modify('-3 months')->setTime(0, 0, 0);
+        $revenue = $this->createQueryBuilder(static::HOTEL_ALIAS)
+            ->select('SUM(b.total) as revenue, COUNT(b.id) as bookings')
+            ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
+            ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
+            ->where('h.id = :hotelId')->setParameter('hotelId', $hotel->getId())
+            ->andWhere('b.status = :status')->setParameter('status', Booking::DONE)
+            ->andWhere('b.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->groupBy('r.id')
+        ;
+        $result[] = [
+            'month' => 'last 3 months',
+            'totalRevenue' => $revenue->getQuery()->getOneOrNullResult()['revenue'] ?? 0,
+            'totalBookings' => $revenue->getQuery()->getOneOrNullResult()['bookings'] ?? 0,
+        ];
+        return $result;
+    }
+
     private function orderByPrice(QueryBuilder $hotels, ListHotelRequest $hotelRequest): QueryBuilder
     {
         return $hotels

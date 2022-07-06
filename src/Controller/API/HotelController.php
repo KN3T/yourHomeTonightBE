@@ -192,7 +192,7 @@ class HotelController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route('/{id}/revenue', name: 'get_revenue', methods: 'GET')]
+    #[Route('/{id}/revenue', name: 'get_revenue_yearly', methods: 'GET')]
     #[IsGranted('ROLE_HOTEL')]
     public function getYearlyRevenue(
         Hotel $hotel,
@@ -210,6 +210,31 @@ class HotelController extends AbstractController
             return $this->error('Access denied', Response::HTTP_FORBIDDEN);
         }
         $revenues = $hotelRepository->getYearlyRevenue($hotel);
+
+        return $this->success($revenues);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/{id}/revenue/last3Months', name: 'get_revenue_last3Months', methods: 'GET')]
+    #[IsGranted('ROLE_HOTEL')]
+    public function get3MonthsRevenue(
+        Hotel $hotel,
+        HotelRepository $hotelRepository,
+        HotelService $hotelService,
+        Security    $security,
+    ): JsonResponse {
+
+
+        /**
+         * @var User $currentUser
+         */
+        $currentUser = $security->getUser();
+        if (!$hotelService->checkHotelOwner($hotel, $currentUser)) {
+            return $this->error('Access denied', Response::HTTP_FORBIDDEN);
+        }
+        $revenues = $hotelRepository->getLast3MonthsRevenue($hotel);
 
         return $this->success($revenues);
     }
