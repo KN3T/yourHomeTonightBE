@@ -115,9 +115,8 @@ class BookingController extends AbstractController
 
         return $this->error('Payment failed');
     }
-    //create function to set booking status to done and set updated at to now
+
     #[Route('/bookings/{id}/done', name: 'booking_done', methods: ['POST'])]
-    #[IsGranted("ROLE_HOTEL")]
     public function done(
         Booking $booking,
         BookingService $bookingService,

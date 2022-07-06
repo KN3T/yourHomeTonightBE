@@ -55,7 +55,7 @@ security:
         - { path: ^/api/profile, methods: 'PUT', roles: ROLE_USER }
         - { path: ^/api/bookings, methods: 'POST', roles: ROLE_USER }
         - { path: ^/api/bookings, methods: 'PUT', roles: ROLE_USER }
-
+        - { path: ^/api/bookings/[ 0-9 ]+/done, methods: 'POST', roles: ROLE_HOTEL }
 when@test:
     security:
         password_hashers:
