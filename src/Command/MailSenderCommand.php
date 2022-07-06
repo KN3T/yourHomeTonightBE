@@ -42,7 +42,7 @@ class MailSenderCommand extends Command
         foreach ($bookingIds as $bookingId) {
             $booking = $this->bookingRepository->find($bookingId);
             $this->mailerService->send($booking);
-            $output->writeln('Mail sent to '.$booking->getEmail());
+            $output->writeln('Mail sent to ' . $booking->getEmail());
         }
 
         return Command::SUCCESS;
@@ -67,10 +67,11 @@ class MailSenderCommand extends Command
             }
 
             $bookingId = $result->get('Messages')[0]['Body'];
-            $this->sqsClient->deleteMessage([
-                'QueueUrl' => $sqsUrl,
-                'ReceiptHandle' => $result->get('Messages')[0]['ReceiptHandle'],
-            ]);
+//            $this->sqsClient->deleteMessage([
+//                'QueueUrl' => $sqsUrl,
+//                'ReceiptHandle' => $result->get('Messages')[0]['ReceiptHandle'],
+//            ]);
+            dump($bookingId);
             $bookingIds[] = $bookingId;
         }
 

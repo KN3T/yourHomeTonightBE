@@ -10,10 +10,13 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class MailerService
 {
     private array $emailConfig;
+    private $projectDir;
 
-    public function __construct(ParameterBagInterface $parameterBag)
+
+    public function __construct(ParameterBagInterface $parameterBag, string $projectDir)
     {
         $this->emailConfig = $parameterBag->get('emailConfig');
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -36,17 +39,29 @@ class MailerService
         $mail->addAddress($booking->getEmail(), $booking->getFullName());
 
         $mail->isHTML(true);
-        $mail->Subject = 'Booking #'.$booking->getId();
-        $mail->Body = '<div style="font-size: 23px; ">
-        Total:'.$booking->getTotal().
-            '<br>'.'Booking date: '.$booking->getCreatedAt()->format('Y-m-d H:i:s').
-            '<br>'.'Booking user: '.$booking->getFullName().
-            '<br>'.'Booking user email: '.$booking->getEmail().
-            '<br>'.'Booking user phone: '.$booking->getPhone().
-            '</div>';
+        $mail->Subject = 'Booking #' . $booking->getId();
+        $mail->Body = $this->getEmailTemplate($booking);
 
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
         $mail->send();
+    }
+
+    private function getEmailTemplate(Booking $booking): string
+    {
+        $now = new \DateTime();
+        $now = $now->format('Y-m-d');
+        $mailBody = file_get_contents($this->projectDir . '/templates/emailTemplate.html');
+        $mailBody = str_replace('%now%', $now, $mailBody);
+        $mailBody = str_replace('%hotelName%', $booking->getRoom()->getHotel()->getName(), $mailBody);
+        $mailBody = str_replace('%name%', $booking->getFullName(), $mailBody);
+        $mailBody = str_replace('%hotelDescription%', $booking->getRoom()->getHotel()->getDescription(), $mailBody);
+        $mailBody = str_replace('%roomNumber%', $booking->getRoom()->getNumber(), $mailBody);
+        $mailBody = str_replace('%checkin%', $booking->getCheckIn()->format('Y-m-d'), $mailBody);
+        $mailBody = str_replace('%checkout%', $booking->getCheckOut()->format('Y-m-d'), $mailBody);
+        $mailBody = str_replace('%total%', $booking->getTotal(), $mailBody);
+        $mailBody = str_replace('%imageHotel%',
+            $booking->getRoom()->getHotel()->getHotelImages()->toArray()[0]->getImage()->getPath(), $mailBody);
+        return $mailBody;
     }
 }
