@@ -37,7 +37,6 @@ class CreateBookingRequestBookingMapper
         $currentUser = $this->security->getUser();
         $room = $this->roomRepository->find($createBookingRequest->getRoomId());
         $booking->setUser($currentUser)->setRoom($room);
-        dd($booking);
         $room->addBooking($booking);
         $currentUser->addBooking($booking);
 
