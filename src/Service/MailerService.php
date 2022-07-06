@@ -12,7 +12,6 @@ class MailerService
     private array $emailConfig;
     private $projectDir;
 
-
     public function __construct(ParameterBagInterface $parameterBag, string $projectDir)
     {
         $this->emailConfig = $parameterBag->get('emailConfig');
@@ -39,7 +38,7 @@ class MailerService
         $mail->addAddress($booking->getEmail(), $booking->getFullName());
 
         $mail->isHTML(true);
-        $mail->Subject = 'Booking #' . $booking->getId();
+        $mail->Subject = 'Booking #'.$booking->getId();
         $mail->Body = $this->getEmailTemplate($booking);
 
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
@@ -51,7 +50,7 @@ class MailerService
     {
         $now = new \DateTime();
         $now = $now->format('Y-m-d');
-        $mailBody = file_get_contents($this->projectDir . '/templates/emailTemplate.html');
+        $mailBody = file_get_contents($this->projectDir.'/templates/emailTemplate.html');
         $mailBody = str_replace('%now%', $now, $mailBody);
         $mailBody = str_replace('%hotelName%', $booking->getRoom()->getHotel()->getName(), $mailBody);
         $mailBody = str_replace('%name%', $booking->getFullName(), $mailBody);
@@ -62,6 +61,7 @@ class MailerService
         $mailBody = str_replace('%total%', $booking->getTotal(), $mailBody);
         $mailBody = str_replace('%imageHotel%',
             $booking->getRoom()->getHotel()->getHotelImages()->toArray()[0]->getImage()->getPath(), $mailBody);
+
         return $mailBody;
     }
 }

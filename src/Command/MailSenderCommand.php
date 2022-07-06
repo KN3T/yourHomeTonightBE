@@ -42,7 +42,7 @@ class MailSenderCommand extends Command
         foreach ($bookingIds as $bookingId) {
             $booking = $this->bookingRepository->find($bookingId);
             $this->mailerService->send($booking);
-            $output->writeln('Mail sent to ' . $booking->getEmail());
+            $output->writeln('Mail sent to '.$booking->getEmail());
         }
 
         return Command::SUCCESS;
@@ -54,7 +54,7 @@ class MailSenderCommand extends Command
         $bookingIds = [];
 
         while (true) {
-            $result = $this->sqsClient->receiveMessage([
+            $receiveMessage = $this->sqsClient->receiveMessage([
                 'AttributeNames' => ['SentTimestamp'],
                 'MaxNumberOfMessages' => 1,
                 'MessageAttributeNames' => ['All'],
@@ -62,16 +62,15 @@ class MailSenderCommand extends Command
                 'WaitTimeSeconds' => 0,
             ]);
 
-            if (null === $result->get('Messages')) {
+            if (null === $receiveMessage->get('Messages')) {
                 break;
             }
 
-            $bookingId = $result->get('Messages')[0]['Body'];
-//            $this->sqsClient->deleteMessage([
-//                'QueueUrl' => $sqsUrl,
-//                'ReceiptHandle' => $result->get('Messages')[0]['ReceiptHandle'],
-//            ]);
-            dump($bookingId);
+            $bookingId = $receiveMessage->get('Messages')[0]['Body'];
+            $this->sqsClient->deleteMessage([
+                'QueueUrl' => $sqsUrl,
+                'ReceiptHandle' => $receiveMessage->get('Messages')[0]['ReceiptHandle'],
+            ]);
             $bookingIds[] = $bookingId;
         }
 
