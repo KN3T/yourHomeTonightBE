@@ -5,7 +5,6 @@ namespace App\Controller\API;
 use App\Mapping\UserRegisterRequestUserMapper;
 use App\Repository\UserRepository;
 use App\Request\User\UserRegisterRequest;
-use App\Service\UserService;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\UserTransformer;
 use App\Transformer\ValidatorTransformer;
