@@ -26,7 +26,6 @@ class UserRegisterRequest extends BaseRequest
     private $fullName;
 
     #[Assert\Type('boolean')]
-    #[Assert\NotNull]
     private $isHotel;
 
     /**
