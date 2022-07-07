@@ -26,10 +26,7 @@ class ListCityRequest extends BaseRequest
     {
         return $this->search;
     }
-
-    /**
-     * @param null $search
-     */
+    
     public function setSearch($search): void
     {
         $this->search = $search;
