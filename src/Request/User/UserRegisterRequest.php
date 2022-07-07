@@ -2,8 +2,6 @@
 
 namespace App\Request\User;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
 use App\Request\BaseRequest;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -34,12 +32,6 @@ class UserRegisterRequest extends BaseRequest
     #[Assert\Type('boolean')]
     #[Assert\NotBlank]
     private $isHotel;
-
-    private static UserRepository $userRepository;
-    public function __construct(UserRepository $userRepository)
-    {
-        self::$userRepository = $userRepository;
-    }
 
     /**
      * @return mixed
@@ -105,21 +97,6 @@ class UserRegisterRequest extends BaseRequest
         $this->fullName = $fullName;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param mixed $phone
-     */
-    public function setPhone($phone): void
-    {
-        $this->phone = $phone;
-    }
 
     /**
      * @return mixed
@@ -139,11 +116,6 @@ class UserRegisterRequest extends BaseRequest
 
     public static function validate(UserRegisterRequest $userRegisterRequest, ExecutionContextInterface $context)
     {
-        if (UserRegisterRequest::$userRepository->findOneBy(['email' => $userRegisterRequest->getEmail()])) {
-            $context->buildViolation('Email already exists')
-                ->atPath('email')
-                ->addViolation();
-        }
         if (strcmp($userRegisterRequest->getPassword(), $userRegisterRequest->getConfirmPassword())) {
             $context->buildViolation('Confirm password does not match!')
                 ->atPath('confirmPassword')

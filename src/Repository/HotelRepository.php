@@ -138,7 +138,7 @@ class HotelRepository extends BaseRepository
             $startDate = new \DateTimeImmutable('first day of '.$month);
             $endDate = $startDate->modify('last day of this month')->setTime(23, 59, 59);
             $revenue = $this->createQueryBuilder(static::HOTEL_ALIAS)
-                ->select('SUM(b.total) as revenue')
+                ->select('SUM(b.total) as revenue, COUNT(b.id) as totalBookings')
                 ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
                 ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
                 ->where('h.id = :hotelId')->setParameter('hotelId', $hotel->getId())
@@ -151,6 +151,7 @@ class HotelRepository extends BaseRepository
             $result[] = [
                 'month' => $month,
                 'revenue' => $revenue->getQuery()->getOneOrNullResult()['revenue'] ?? 0,
+                'totalBookings' => $revenue->getQuery()->getOneOrNullResult()['totalBookings'] ?? 0,
             ];
         }
 
