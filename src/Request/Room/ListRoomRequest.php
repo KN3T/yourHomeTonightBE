@@ -68,33 +68,22 @@ class ListRoomRequest extends BaseRequest
         $this->checkOut = $this->datetime2Timestamp($future);
     }
 
-    /**
-     * @return null
-     */
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * @param null $type
-     */
     public function setType($type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return null
-     */
+
     public function getBeds()
     {
         return $this->beds;
     }
 
-    /**
-     * @param null $beds
-     */
     public function setBeds($beds): void
     {
         $this->beds = $beds;
@@ -200,17 +189,12 @@ class ListRoomRequest extends BaseRequest
         $this->children = $children;
     }
 
-    /**
-     * @return null
-     */
     public function getRating()
     {
         return $this->rating;
     }
 
-    /**
-     * @param null $rating
-     */
+
     public function setRating($rating): void
     {
         $this->rating = $rating;

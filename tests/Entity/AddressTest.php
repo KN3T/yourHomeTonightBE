@@ -12,6 +12,5 @@ class AddressTest extends TestCase
     {
         $address = new Address();
         $address->setAddress('123 Main St');
-
     }
 }
