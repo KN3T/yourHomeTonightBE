@@ -146,7 +146,7 @@ class HotelRepository extends BaseRepository
                 ->andWhere('b.createdAt BETWEEN :startDate AND :endDate')
                 ->setParameter('startDate', $startDate)
                 ->setParameter('endDate', $endDate)
-                ->groupBy('r.id')
+                ->groupBy('h.id')
             ;
             $result[] = [
                 'month' => $month,
@@ -172,7 +172,7 @@ class HotelRepository extends BaseRepository
             ->andWhere('b.createdAt BETWEEN :startDate AND :endDate')
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
-            ->groupBy('r.id')
+            ->groupBy('h.id')
         ;
         $result[] = [
             'month' => 'last 3 months',
