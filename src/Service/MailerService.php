@@ -42,7 +42,6 @@ class MailerService
         $mail->Body = $this->getEmailTemplate($booking);
 
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
         $mail->send();
     }
 

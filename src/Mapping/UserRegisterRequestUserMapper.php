@@ -27,6 +27,7 @@ class UserRegisterRequestUserMapper
         } else {
             $user->setRoles(['ROLE_USER']);
         }
+
         return $user;
     }
 }

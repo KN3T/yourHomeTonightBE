@@ -36,6 +36,7 @@ class BookingService
 
         return $booking;
     }
+
     public function setBookingDone(Booking $booking): Booking
     {
         $booking->setStatus(Booking::DONE);

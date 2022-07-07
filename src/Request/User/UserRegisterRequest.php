@@ -25,10 +25,6 @@ class UserRegisterRequest extends BaseRequest
     #[Assert\NotBlank]
     private $fullName;
 
-    #[Assert\Type('string')]
-    #[Assert\NotBlank]
-    private $phone;
-
     #[Assert\Type('boolean')]
     #[Assert\NotBlank]
     private $isHotel;
@@ -96,7 +92,6 @@ class UserRegisterRequest extends BaseRequest
     {
         $this->fullName = $fullName;
     }
-
 
     /**
      * @return mixed

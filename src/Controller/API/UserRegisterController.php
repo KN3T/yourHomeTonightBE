@@ -31,10 +31,10 @@ class UserRegisterController extends AbstractController
     #[Route('/register', name: 'register', methods: ['POST'])]
     public function register(
         UserRegisterRequest $userRegisterRequest,
-        UserRepository         $userRepository,
-        UserTransformer     $userTransformer,
+        UserRepository $userRepository,
+        UserTransformer $userTransformer,
         UserRegisterRequestUserMapper $mapper,
-        Request            $request,
+        Request $request,
     ): JsonResponse {
         $jsonRequest = json_decode($request->getContent(), true);
         $userRegisterRequest->fromArray($jsonRequest);
