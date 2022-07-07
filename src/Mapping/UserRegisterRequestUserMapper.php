@@ -22,12 +22,12 @@ class UserRegisterRequestUserMapper
         $password = $this->passwordHasher->hashPassword($user, $userRegisterRequest->getPassword());
         $user->setPassword($password);
         $user->setFullName($userRegisterRequest->getFullName());
-        $user->setPhone($userRegisterRequest->getPhone());
         if ($userRegisterRequest->getIsHotel()) {
             $user->setRoles(['ROLE_HOTEL']);
         } else {
             $user->setRoles(['ROLE_USER']);
         }
+
         return $user;
     }
 }

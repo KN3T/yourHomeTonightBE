@@ -2,7 +2,6 @@
 
 namespace App\Request\User;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Request\BaseRequest;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -27,15 +26,13 @@ class UserRegisterRequest extends BaseRequest
     #[Assert\NotBlank]
     private $fullName;
 
-    #[Assert\Type('string')]
-    #[Assert\NotBlank]
-    private $phone;
 
     #[Assert\Type('boolean')]
     #[Assert\NotBlank]
     private $isHotel;
 
     private static UserRepository $userRepository;
+
     public function __construct(UserRepository $userRepository)
     {
         self::$userRepository = $userRepository;
@@ -104,22 +101,7 @@ class UserRegisterRequest extends BaseRequest
     {
         $this->fullName = $fullName;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param mixed $phone
-     */
-    public function setPhone($phone): void
-    {
-        $this->phone = $phone;
-    }
+    
 
     /**
      * @return mixed

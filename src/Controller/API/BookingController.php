@@ -3,6 +3,7 @@
 namespace App\Controller\API;
 
 use App\Entity\Booking;
+use App\Event\PurchaseBookingEvent;
 use App\Repository\BookingRepository;
 use App\Request\Booking\CreateBookingRequest;
 use App\Service\BookingService;
@@ -11,12 +12,12 @@ use App\Traits\JsonResponseTrait;
 use App\Transformer\BookingTransformer;
 use App\Transformer\ValidatorTransformer;
 use Aws\Sqs\SqsClient;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,17 +31,20 @@ class BookingController extends AbstractController
     private ValidatorTransformer $validatorTransformer;
     private ValidatorInterface $validator;
     private SqsClient $sqsClient;
+    private EventDispatcherInterface $dispatcher;
 
     public function __construct(
         ParameterBagInterface $parameterBag,
         ValidatorTransformer $validatorTransformer,
         ValidatorInterface $validator,
-        SqsClient $sqsClient
+        SqsClient $sqsClient,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->sqsClient = $sqsClient;
         $this->parameterBag = $parameterBag;
         $this->validator = $validator;
         $this->validatorTransformer = $validatorTransformer;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -109,6 +113,9 @@ class BookingController extends AbstractController
             $bookingRepository->save($booking);
             $this->sendMailToQueue($booking->getId());
 
+            $event = new PurchaseBookingEvent($booking);
+            $this->dispatcher->dispatch($event, PurchaseBookingEvent::SENDMAIL);
+
             return $this->success($this->getCheckoutInfo($result, $bookingTransformer, $booking));
         }
         $booking->setStatus(Booking::CANCELLED)->setUpdatedAt(new \DateTime('now'));
@@ -124,6 +131,7 @@ class BookingController extends AbstractController
     ): JsonResponse {
         $bookingService->setBookingDone($booking);
         $booking = $bookingTransformer->toArray($booking);
+
         return $this->success($booking);
     }
 
