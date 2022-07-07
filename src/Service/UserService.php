@@ -28,4 +28,11 @@ class UserService
 
         return $user;
     }
+
+    public function create(User $user): User
+    {
+        $this->userRepository->save($user);
+
+        return $user;
+    }
 }

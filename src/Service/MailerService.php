@@ -59,8 +59,11 @@ class MailerService
         $mailBody = str_replace('%checkin%', $booking->getCheckIn()->format('Y-m-d'), $mailBody);
         $mailBody = str_replace('%checkout%', $booking->getCheckOut()->format('Y-m-d'), $mailBody);
         $mailBody = str_replace('%total%', $booking->getTotal(), $mailBody);
-        $mailBody = str_replace('%imageHotel%',
-            $booking->getRoom()->getHotel()->getHotelImages()->toArray()[0]->getImage()->getPath(), $mailBody);
+        $mailBody = str_replace(
+            '%imageHotel%',
+            $booking->getRoom()->getHotel()->getHotelImages()->toArray()[0]->getImage()->getPath(),
+            $mailBody
+        );
 
         return $mailBody;
     }
