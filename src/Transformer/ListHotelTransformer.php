@@ -4,7 +4,7 @@ namespace App\Transformer;
 
 class ListHotelTransformer extends BaseTransformer
 {
-    public const ALLOW = ['id', 'name', 'description', 'phone', 'email'];
+    public const ALLOW = ['id', 'name', 'description', 'phone', 'email', 'rules'];
 
     private AddressTransformer $addressTransformer;
     private HotelImageTransformer $hotelImageTransformer;
