@@ -39,7 +39,6 @@ class UserRegisterController extends AbstractController
         $userRegisterRequest->fromArray($jsonRequest);
         $errors = $this->validator->validate($userRegisterRequest);
         if (count($errors) > 0) {
-
             return $this->error($this->validatorTransformer->toArray($errors));
         }
         $user = $mapper->mapping($userRegisterRequest);
