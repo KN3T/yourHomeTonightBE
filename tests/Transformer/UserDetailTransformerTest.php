@@ -8,20 +8,21 @@ use PHPUnit\Framework\TestCase;
 
 class UserDetailTransformerTest extends TestCase
 {
-    /**
-     * @var UserDetailTransformer
-     */
-    private $userDetailTransformer;
-
-    protected function setUp(): void
-    {
-        $this->userDetailTransformer = new UserDetailTransformer();
-    }
-
     public function testTransform(): void
     {
         $user = new User();
-        $user->setId(1);
-        $user->setEmail();
+        $user->setEmail('user@g.com');
+        $user->setFullName('User G');
+        $user->setPhone('123-456-7890');
+        $userTransformer = new UserDetailTransformer();
+        $userTransformed = $userTransformer->toArray($user);
+        $expectedArray = [
+            "id" => null,
+            "email" => "user@g.com",
+            "fullName" => "User G",
+            "phone" => "123-456-7890",
+        ];
+        $this->assertEquals($expectedArray, $userTransformed);
+
     }
 }
