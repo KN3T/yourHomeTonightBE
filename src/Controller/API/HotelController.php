@@ -151,13 +151,6 @@ class HotelController extends AbstractController
         Security $security,
         HotelService $hotelService,
     ): JsonResponse {
-        /**
-         * @var User $currentUser
-         */
-        $currentUser = $security->getUser();
-        if (!$hotelService->checkHotelOwner($hotel, $currentUser)) {
-            return $this->error('Access denied', Response::HTTP_FORBIDDEN);
-        }
         $ratings = $hotelRepository->listRatings($hotel);
         $result = $listHotelRatingsTransformer->listToArray($ratings);
 
