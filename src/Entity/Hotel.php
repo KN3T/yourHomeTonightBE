@@ -24,10 +24,10 @@ class Hotel extends BaseEntity
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $phone;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -97,7 +97,7 @@ class Hotel extends BaseEntity
         return $this->phone;
     }
 
-    public function setPhone(string $phone): self
+    public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
 
@@ -109,7 +109,7 @@ class Hotel extends BaseEntity
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -121,9 +121,9 @@ class Hotel extends BaseEntity
         return $this->rules;
     }
 
-    public function setRules(array $rules): self
+    public function setRules(?array $rules): self
     {
-        $this->rules = $rules;
+        $this->rules = $rules ?? [];
 
         return $this;
     }

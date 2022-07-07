@@ -43,11 +43,12 @@ class CreateHotelRequestToHotel
         $this->addressRepository->save($address);
         $hotel->setAddress($address);
         $hotelImages = $this->createHotelRequestToHotelImages->mapping($createHotelRequest, $hotel);
-        foreach ($hotelImages as $hotelImage) {
-            $this->hotelImageRepository->save($hotelImage);
-            $hotel->addHotelImage($hotelImage);
+        if (!empty($hotelImages)) {
+            foreach ($hotelImages as $hotelImage) {
+                $this->hotelImageRepository->save($hotelImage);
+                $hotel->addHotelImage($hotelImage);
+            }
         }
-
         return $hotel;
     }
 }

@@ -14,13 +14,13 @@ class Address extends BaseEntity
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $address;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $city;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $province;
 
     #[ORM\Column(type: 'datetime')]
@@ -49,7 +49,7 @@ class Address extends BaseEntity
         return $this->address;
     }
 
-    public function setAddress(string $address): self
+    public function setAddress(?string $address): self
     {
         $this->address = $address;
 
@@ -61,7 +61,7 @@ class Address extends BaseEntity
         return $this->city;
     }
 
-    public function setCity(string $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
 
@@ -73,7 +73,7 @@ class Address extends BaseEntity
         return $this->province;
     }
 
-    public function setProvince(string $province): self
+    public function setProvince(?string $province): self
     {
         $this->province = $province;
 
