@@ -8,6 +8,7 @@ use App\Request\User\UserRegisterRequest;
 use App\Traits\JsonResponseTrait;
 use App\Transformer\UserTransformer;
 use App\Transformer\ValidatorTransformer;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +36,7 @@ class UserRegisterController extends AbstractController
         UserTransformer $userTransformer,
         UserRegisterRequestUserMapper $mapper,
         Request $request,
+        JWTTokenManagerInterface $JWTTokenManager,
     ): JsonResponse {
         $jsonRequest = json_decode($request->getContent(), true);
         $userRegisterRequest->fromArray($jsonRequest);
@@ -47,7 +49,9 @@ class UserRegisterController extends AbstractController
         }
         $user = $mapper->mapping($userRegisterRequest);
         $userRepository->save($user);
+        $token = $JWTTokenManager->create($user);
         $userResult = $userTransformer->toArray($user);
+        $userResult['token'] = $token;
 
         return $this->success($userResult);
     }
