@@ -28,3 +28,4 @@
 ###< friendsofphp/php-cs-fixer ###
 
 phpunit.xml.dist
+/coverage/
