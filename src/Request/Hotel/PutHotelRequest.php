@@ -12,34 +12,27 @@ class PutHotelRequest extends BaseRequest
     private $name;
 
     #[Assert\Type('string')]
-    #[Assert\NotBlank]
     private $email;
 
     #[Assert\Type('string')]
-    #[Assert\NotBlank]
     private $phone;
 
     #[Assert\Type('string')]
-    #[Assert\NotBlank]
     private $city;
 
     #[Assert\Type('string')]
-    #[Assert\NotBlank]
     private $province;
 
     #[Assert\Type('string')]
-    #[Assert\NotBlank]
     private $address;
 
     #[Assert\Type('string')]
     private $description;
 
     #[Assert\Type('array')]
-    #[Assert\NotNull]
     private $rules;
 
     #[Assert\Type('array')]
-    #[Assert\NotNull]
     private $images = [];
 
     /**
@@ -167,7 +160,7 @@ class PutHotelRequest extends BaseRequest
      */
     public function setRules($rules): void
     {
-        $this->rules = $rules;
+        $this->rules = $rules ?? [];
     }
 
     /**

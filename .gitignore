@@ -28,6 +28,5 @@
 ###< friendsofphp/php-cs-fixer ###
 
 phpunit.xml.dist
-
-/.phpunit.cache/
 /coverage/
+/.phpunit.cache/
