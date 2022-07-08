@@ -169,7 +169,7 @@ class HotelRepository extends BaseRepository
             ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
             ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
             ->where('h.id = :hotelId')->setParameter('hotelId', $hotel->getId())
-            ->andWhere('b.status = :status')->setParameter('status', Booking::DONE)
+            ->andWhere('b.status = :status')->setParameter('status', Booking::SUCCESS)
             ->andWhere('b.createdAt BETWEEN :startDate AND :endDate')
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
