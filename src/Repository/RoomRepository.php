@@ -33,6 +33,8 @@ class RoomRepository extends BaseRepository
 
     public function list(Hotel $hotel, ListRoomRequest $roomRequest)
     {
+        $roomsNotAvailableIds = $this->getNotAvailableRoomsIds($roomRequest);
+
         $rooms = $this->createQueryBuilder(static::ROOM_ALIAS)
             ->select('r, SUM(ra.rating)/count(ra.rating)  as rating')
             ->join(Hotel::class, 'h', Join::WITH, 'h.id=r.hotel')
@@ -41,25 +43,19 @@ class RoomRepository extends BaseRepository
             ->groupBy('r.id');
         $rooms = $this->filterByRating($rooms, $roomRequest->getRating());
         $rooms->where('1=1');
-        $rooms = $this->filterByDate($rooms, $roomRequest->getCheckIn(), $roomRequest->getCheckOut());
 
-        $rooms->orWhere($rooms->expr()->orX(
-            $rooms->expr()->eq('b.status', Booking::CANCELLED),
-            $rooms->expr()->eq('b.status', Booking::DONE),
-            $rooms->expr()->isNull('b.status'),
-        ));
 
-        $rooms->orWhere($rooms->expr()->orX(
-            $rooms->expr()->eq('b.status', Booking::CANCELLED),
-            $rooms->expr()->eq('b.status', Booking::DONE),
-            $rooms->expr()->isNull('b.status'),
-        ));
         $rooms = $this->filterByPrice($rooms, $roomRequest->getMinPrice(), $roomRequest->getMaxPrice());
         $rooms = $this->andFilter($rooms, 'beds', $roomRequest->getBeds());
         $rooms = $this->andFilter($rooms, 'type', $roomRequest->getType());
 
         $rooms = $this->filterByPeople($rooms, $roomRequest->getAdults(), $roomRequest->getChildren());
         $rooms->andWhere('h.id=:hotelID')->setParameter('hotelID', $hotel->getId());
+
+        if (count($roomsNotAvailableIds) > 0) {
+            $rooms->andWhere($rooms->expr()->notIn('r.id', $roomsNotAvailableIds));
+        }
+
         $rooms = $this->sortBy($rooms, $roomRequest->getSortBy(), $roomRequest->getOrder());
         $rooms->setMaxResults($roomRequest->getLimit())->setFirstResult($roomRequest->getOffset());
 
@@ -80,6 +76,29 @@ class RoomRepository extends BaseRepository
             ->setParameter('minPrice', $minPrice)
             ->andWhere('r.price <= :maxPrice')
             ->setParameter('maxPrice', $maxPrice);
+    }
+
+    /**
+     * @param ListRoomRequest $roomRequest
+     * @return array
+     */
+    public function getNotAvailableRoomsIds(ListRoomRequest $roomRequest): array
+    {
+        $roomsNotAvailable = $this->createQueryBuilder(static::ROOM_ALIAS)
+            ->select('r.id as roomId')
+            ->join(Booking::class, 'b', Join::WITH, 'r.id=b.room')
+            ->where('b.checkIn <= :checkOut')
+            ->andWhere('b.checkOut >= :checkIn')
+            ->setParameter('checkIn', $roomRequest->getCheckIn())
+            ->setParameter('checkOut', $roomRequest->getCheckOut());
+
+        $roomsNotAvailable->andWhere($roomsNotAvailable->expr()->orX(
+            $roomsNotAvailable->expr()->eq('b.status', Booking::PENDING),
+            $roomsNotAvailable->expr()->eq('b.status', Booking::SUCCESS),
+            $roomsNotAvailable->expr()->isNull('b.status'),
+        ));
+        $roomsNotAvailableArray = $roomsNotAvailable->getQuery()->getResult();
+        return array_column($roomsNotAvailableArray, 'roomId');
     }
 
     private function filterByDate(QueryBuilder $rooms, ?\DateTime $checkIn, ?\DateTime $checkOut): QueryBuilder
