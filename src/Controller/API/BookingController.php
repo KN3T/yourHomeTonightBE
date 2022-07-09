@@ -21,6 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BookingController extends AbstractController
@@ -156,7 +157,7 @@ class BookingController extends AbstractController
          * @var User $user
          */
         $user = $this->getUser();
-        if ($user->getId() === $booking->getUser()->getId() || $user->isAdmin()) {
+        if ($user === $booking->getRoom()->getHotel()->getUser() || $user->isAdmin()) {
             return true;
         }
         return false;
