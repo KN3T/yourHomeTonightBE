@@ -50,15 +50,15 @@ class PutHotelRequestToHotelImages
 
     private function hotelImagesDiff(array $hotelImages1, array $hotelImages2): array
     {
-        $arr1 = [];
-        $arr2 = [];
+        $hotelImages1Ids = [];
+        $hotelImages2Ids = [];
         foreach ($hotelImages1 as $hotelImage) {
-            $arr1[] = $hotelImage->getId();
+            $hotelImages1Ids[] = $hotelImage->getId();
         }
         foreach ($hotelImages2 as $hotelImage) {
-            $arr2[] = $hotelImage->getId();
+            $hotelImages2Ids[] = $hotelImage->getId();
         }
 
-        return array_diff($arr1, $arr2);
+        return array_diff($hotelImages1Ids, $hotelImages2Ids);
     }
 }

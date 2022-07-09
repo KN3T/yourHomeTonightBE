@@ -3,6 +3,7 @@
 namespace App\Controller\API;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use App\Event\PurchaseBookingEvent;
 use App\Repository\BookingRepository;
 use App\Request\Booking\CreateBookingRequest;
@@ -113,7 +114,6 @@ class BookingController extends AbstractController
 
             return $this->success($this->getCheckoutInfo($result, $bookingTransformer, $booking));
         }
-        $booking->setStatus(Booking::CANCELLED)->setUpdatedAt(new \DateTime('now'));
 
         return $this->error('Payment failed');
     }
@@ -124,6 +124,9 @@ class BookingController extends AbstractController
         BookingService $bookingService,
         BookingTransformer $bookingTransformer
     ): JsonResponse {
+        if (!$this->checkUserPrivilege($booking)) {
+            return $this->error('You are not allowed to do this');
+        }
         $bookingService->setBookingDone($booking);
         $booking = $bookingTransformer->toArray($booking);
 
@@ -147,4 +150,15 @@ class BookingController extends AbstractController
         ];
     }
 
+    private function checkUserPrivilege(Booking $booking): bool
+    {
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+        if ($user->getId() === $booking->getUser()->getId() || $user->isAdmin()) {
+            return true;
+        }
+        return false;
+    }
 }
