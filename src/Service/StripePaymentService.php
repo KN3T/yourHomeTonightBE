@@ -40,8 +40,8 @@ class StripePaymentService
                 ],
             ],
             'mode' => 'payment',
-            'success_url' => $this->parameterBag->get('appUrl') . '/#/checkoutVerify?bookId=' . $booking->getId() . '&sessionId={CHECKOUT_SESSION_ID}',
-            'cancel_url' => $this->parameterBag->get('appUrl') . '/#/checkoutVerify?bookId=' . $booking->getId() . '&sessionId={CHECKOUT_SESSION_ID}',
+            'success_url' => $this->parameterBag->get('appUrl') . '/checkoutVerify?bookId=' . $booking->getId() . '&sessionId={CHECKOUT_SESSION_ID}',
+            'cancel_url' => $this->parameterBag->get('appUrl') . '/checkoutVerify?bookId=' . $booking->getId() . '&sessionId={CHECKOUT_SESSION_ID}',
         ];
     }
 }
