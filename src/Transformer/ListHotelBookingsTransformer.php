@@ -9,8 +9,10 @@ class ListHotelBookingsTransformer extends BaseTransformer
     public function toArray(array $booking): array
     {
         $bookingEntity = $booking['booking'];
+        $result = $this->transform($bookingEntity, static::ALLOW);
+        $result['roomNumber'] = $bookingEntity->getRoom()->getNumber();
 
-        return $this->transform($bookingEntity, static::ALLOW);
+        return $result;
     }
 
     public function listToArray(array $hotelBookings): array
