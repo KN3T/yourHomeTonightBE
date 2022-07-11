@@ -3,6 +3,7 @@
 namespace App\Tests\Transformer;
 
 use App\Entity\Booking;
+use App\Entity\Room;
 use App\Transformer\ListHotelBookingsTransformer;
 use PHPUnit\Framework\TestCase;
 
@@ -11,6 +12,8 @@ class ListHotelBookingsTransformerTest extends TestCase
     public function testToArray()
     {
         $booking = new Booking();
+        $room = new Room();
+        $booking->setRoom($room);
         $bookingArray = [
             "booking" => $booking
         ];
@@ -26,6 +29,7 @@ class ListHotelBookingsTransformerTest extends TestCase
             "checkIn" => null,
             "checkOut" => null,
             "createdAt" => $booking->getCreatedAt(),
+            "roomNumber" => null,
         ];
         $this->assertEquals($expected, $result);
     }
@@ -33,6 +37,8 @@ class ListHotelBookingsTransformerTest extends TestCase
     public function testListToArray()
     {
         $booking = new Booking();
+        $room = new Room();
+        $booking->setRoom($room);
         $bookingArray = [
             "booking" => $booking
         ];
@@ -51,6 +57,7 @@ class ListHotelBookingsTransformerTest extends TestCase
                     "checkIn" => null,
                     "checkOut" => null,
                     "createdAt" => $booking->getCreatedAt(),
+                    "roomNumber" => null,
                 ],
             ],
         ];
