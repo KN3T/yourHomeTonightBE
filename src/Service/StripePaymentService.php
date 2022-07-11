@@ -26,13 +26,18 @@ class StripePaymentService
 
     private function getPaymentInfo(Booking $booking): array
     {
+        $description = $booking->getRoom()->getHotel()->getName() . " - Room No." . $booking->getRoom()->getNumber();
         return [
             'line_items' => [
                 [
                     'price_data' => [
                         'currency' => 'usd',
                         'product_data' => [
-                            'name' => 'Room ' . $booking->getRoom()->getNumber(),
+                            'name' => 'Booking #' . $booking->getId(),
+                            'description' => $description,
+                            'images' => [
+                                $booking->getRoom()->getRoomImages()->get(0)->getImage()->getPath(),
+                            ],
                         ],
                         'unit_amount' => $booking->getTotal() * 100,
                     ],
