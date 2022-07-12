@@ -51,6 +51,7 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     private $phone;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Booking::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private $bookings;
 
     public function __construct()
