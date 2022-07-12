@@ -19,6 +19,7 @@ class ListHotelRatingsTransformer extends BaseTransformer
         $user = $ratingEntity->getBooking()->getUser();
         $ratingArray = $this->transform($ratingEntity, ListHotelRatingsTransformer::ALLOW);
         $ratingArray['roomNumber'] = $hotelRating['roomNumber'];
+        $ratingArray['roomType'] = $hotelRating['roomType'];
         $ratingArray['user'] = $this->userTransformer->toArray($user);
 
         return $ratingArray;

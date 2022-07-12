@@ -28,6 +28,7 @@ class ListHotelRatingsTransformerTest extends TestCase
         $ratingArray = [
             "review" => $rating,
             "roomNumber" => $booking->getRoom()->getNumber(),
+            "roomType" => $booking->getRoom()->getType(),
         ];
 
         $result = $listHotelRatingsTransformer->toArray($ratingArray);
@@ -39,6 +40,7 @@ class ListHotelRatingsTransformerTest extends TestCase
             "createdAt" => $rating->getCreatedAt(),
             "updatedAt" => $rating->getUpdatedAt(),
             "roomNumber" => $booking->getRoom()->getNumber(),
+            "roomType" => $booking->getRoom()->getType(),
             "user" => [
                 "id" => null,
                 "email" => null,
@@ -67,6 +69,7 @@ class ListHotelRatingsTransformerTest extends TestCase
             [
                 "review" => $rating,
                 "roomNumber" => $booking->getRoom()->getNumber(),
+                "roomType" => $booking->getRoom()->getType(),
             ]
         ];
 
@@ -81,6 +84,7 @@ class ListHotelRatingsTransformerTest extends TestCase
                     "createdAt" => $rating->getCreatedAt(),
                     "updatedAt" => $rating->getUpdatedAt(),
                     "roomNumber" => $booking->getRoom()->getNumber(),
+                    "roomType" => $booking->getRoom()->getType(),
                     "user" => [
                         "id" => null,
                         "email" => null,
