@@ -108,7 +108,7 @@ class HotelRepository extends BaseRepository
     public function listRatings(Hotel $hotel)
     {
         $ratings = $this->createQueryBuilder(static::HOTEL_ALIAS)
-            ->select('r.number as roomNumber, ra as review')
+            ->select('r.number as roomNumber, ra as review, r.type as roomType')
             ->join(Room::class, 'r', Join::WITH, 'r.hotel = h.id')
             ->join(Booking::class, 'b', Join::WITH, 'b.room = r.id')
             ->join(Rating::class, 'ra', Join::WITH, 'ra.booking = b.id')
