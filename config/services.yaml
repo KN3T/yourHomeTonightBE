@@ -1,24 +1,68 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    s3url: '%env(S3_URL)%'
+    stripeKey: '%env(STRIPE_SECRET_KEY)%'
+    appUrl: '%env(APP_URL)%'
+    sqsUrl: '%env(SQS_URL)%'
+    emailConfig:
+        smtp:
+            host: '%env(EMAIL_HOST)%'
+            port: '%env(EMAIL_PORT)%'
+        name: '%env(EMAIL_NAME)%'
+        username: '%env(EMAIL_USERNAME)%'
+        password: '%env(EMAIL_PASSWORD)%'
 services:
-    # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+        autowire: true
+        autoconfigure: true
+        bind:
+            $projectDir: '%kernel.project_dir%'
+    
     App\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\EventListener\AuthenticationFailureListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
+
+    App\EventListener\AuthenticationSuccessListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+
+    App\EventListener\JWTInvalidListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
+
+    Gedmo\SoftDeleteable\SoftDeleteableListener:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]
+    Aws\S3\S3Client:
+        arguments:
+            -   version: '%env(S3_BUCKET_VERSION)%'
+                region: '%env(S3_BUCKET_REGION)%'
+                credentials:
+                    key: '%env(AWS_KEY_ID)%'
+                    secret: '%env(AWS_SECRET)%'
+    Aws\Sqs\SqsClient:
+        arguments:
+            -   version: 'latest'
+                region: 'ap-southeast-1'
+                credentials:
+                    key: '%env(AWS_KEY_ID)%'
+                    secret: '%env(AWS_SECRET)%'
+    App\Manager\FileManager:
+        arguments:
+            $targetDirectory: '%kernel.project_dir%/public/upload/image/'
+            $bucketName: '%env(S3_BUCKET_NAME)%'
+    App\Transformer\ImageTransformer:
+        arguments:
+            $s3Url: '%env(S3_URL)%'
